@@ -1,0 +1,22 @@
+{
+  "name": "kmutt-library",
+  "version": "1.0.0",
+  "author": "Gura team",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "turbo run dev",
+    "dev:frontend": "yarn dev --filter=frontend",
+    "dev:backend": "yarn dev --filter=backend",
+    "db:generate": "npx ts-node packages/database"
+  },
+  "devDependencies": {
+    "turbo": "^1.8.3"
+  },
+  "engines": {
+    "npm": "please-use-yarn"
+  }
+}
