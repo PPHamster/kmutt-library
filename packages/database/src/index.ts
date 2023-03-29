@@ -1,7 +1,8 @@
 import mysql from "mysql2/promise";
 import * as dotenv from "dotenv";
+import { readFileSync } from "fs";
 import { exit } from "process";
-dotenv.config({path: `${__dirname}/../../../.env`});
+dotenv.config({ path: `${__dirname}/../../../.env` });
 
 const main = async () => {
   const db = await mysql.createConnection({
@@ -11,11 +12,24 @@ const main = async () => {
     database: process.env.DB_NAME
   });
 
-  const [rows] = await db.query('SELECT * FROM User');
-  console.log(rows);
+  const generateFile = readFileSync(`${__dirname}/generate.sql`).toString();
+
+  const ddlArray = generateFile.split(';');
+
+  for (const ddl of ddlArray) {
+    if (ddl.trim() !== '') {
+      await db.query(ddl);
+    }
+  }
 }
 
-main().then(() => {
-  console.log('Generate database successfully');
-  exit(1);
-});
+main()
+  .then(() => {
+    console.log('Generate database successfully');
+    exit(0);
+  })
+  .catch((error: unknown) => {
+    if (error instanceof Error) {
+      console.log(error);
+    }
+  });

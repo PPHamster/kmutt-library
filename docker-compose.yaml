@@ -9,7 +9,7 @@ services:
     volumes:
       - ./volumes/db:/var/lib/mysql
     environment:
-      MY_SQL_DATABASE: kmutt-library
+      MYSQL_DATABASE: kmutt-library
       MYSQL_ROOT_PASSWORD: $DB_PASS
 
   phpmyadmin:
