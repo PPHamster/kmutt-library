@@ -22,7 +22,7 @@ DROP TABLE IF EXISTS `Role`;
 
 -- Create Table User
 CREATE TABLE `User` (
-  `id` VARCHAR(11) NOT NULL,
+  `id` VARCHAR(20) NOT NULL,
   `email` VARCHAR(150) NOT NULL,
   `tel` VARCHAR(10) NOT NULL,
   `firstname` VARCHAR(150) NOT NULL,
@@ -94,8 +94,7 @@ CREATE TABLE `Category` (
 CREATE TABLE `Order` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `createdAt` DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
-  `latestNotify` DATETIME,
-  `userId` VARCHAR(11) NOT NULL,
+  `userId` VARCHAR(20) NOT NULL,
 
   UNIQUE INDEX `OrderIdUnique`(`id`),
   PRIMARY KEY (`id`)
@@ -162,7 +161,7 @@ CREATE TABLE `Blog` (
   `article` TEXT NOT NULL,
   `createdAt` DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
   `updatedAt` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL,
-  `userId` VARCHAR(11) NOT NULL,
+  `userId` VARCHAR(20) NOT NULL,
   `bookId` INT NOT NULL,
 
   UNIQUE INDEX `BlogIdUnique`(`id`),
@@ -188,7 +187,7 @@ CREATE TABLE `BookCategory` (
 
 -- Create Table Link User and Book
 CREATE TABLE `CartItem` (
-  `userId` VARCHAR(11) NOT NULL,
+  `userId` VARCHAR(20) NOT NULL,
   `bookId` INT NOT NULL,
 
   PRIMARY KEY (`userId`, `bookId`)
@@ -197,7 +196,7 @@ CREATE TABLE `CartItem` (
 -- Create Table Link Event and User
 CREATE TABLE `EventMember` (
   `eventId` INT NOT NULL,
-  `userId` VARCHAR(11) NOT NULL,
+  `userId` VARCHAR(20) NOT NULL,
 
   PRIMARY KEY (`eventId`, `userId`)
 );
@@ -205,7 +204,7 @@ CREATE TABLE `EventMember` (
 -- Create Table Link BookingRoom and User
 CREATE TABLE `BookingMember` (
   `bookingRoomId` INT NOT NULL,
-  `userId` VARCHAR(11) NOT NULL,
+  `userId` VARCHAR(20) NOT NULL,
 
   PRIMARY KEY (`bookingRoomId`, `userId`)
 );
@@ -214,6 +213,7 @@ CREATE TABLE `BookingMember` (
 CREATE TABLE `OrderItem` (
   `orderId` INT NOT NULL,
   `bookId` INT NOT NULL,
+  `latestNotify` DATETIME,
   `receivedDate` DATETIME,
   `returnedDate` DATETIME,
 
