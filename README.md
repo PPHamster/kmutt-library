@@ -11,6 +11,11 @@ Fill all env file
   - Frontend
   - Backend
 
+Install all package with
+```bash
+yarn install
+```
+
 Prepare the database using [**Docker**](https://www.docker.com/)
 ```bash
 docker compose up -d
