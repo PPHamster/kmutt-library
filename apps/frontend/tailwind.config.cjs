@@ -5,7 +5,11 @@ module.exports = {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      backgroundImage: {
+        'library': "url('../public/image/kmutt_library.jpg')",
+      },
+    },
   },
   plugins: [],
 }

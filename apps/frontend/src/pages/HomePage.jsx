@@ -1,3 +1,5 @@
+import Navbar from "@/components/Navbar";
+import Recommend from "@/components/Home/Recommend";
 import { popup } from '@/utils/Popup';
 
 export const HomePage = () => {
@@ -11,7 +13,9 @@ export const HomePage = () => {
 
   return (
     <>
-      <section className="px-[30px] py-[15px] bg-slate-800 min-h-[100vh] font-sans">
+    <div>
+      <Navbar/>
+      <Recommend/>
         <div className="max-w-[700px] mx-auto text-center">
           <div className="text-white text-center text-6xl">Is Gubaaa!!</div>
           <img src="https://img1.picmix.com/output/stamp/normal/2/3/4/4/1774432_0219c.gif" className="mx-auto" />
@@ -20,7 +24,7 @@ export const HomePage = () => {
             onClick={onBtnClick}
           >Click ?</button>
         </div>
-      </section>
+      </div>
     </>
   )
 };
