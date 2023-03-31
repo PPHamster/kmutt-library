@@ -6,7 +6,7 @@ export default function Navbar() {
     const handleScroll = () => {
         const offset = window.scrollY;
         // set offset to handle scrolling
-        if (offset > 200) setScrolled(true);
+        if (offset > 220) setScrolled(true);
         else setScrolled(false);
     };
 
@@ -15,14 +15,18 @@ export default function Navbar() {
         window.addEventListener("scroll", handleScroll);
     });
 
-    //navbar class css
-    let navbarClass = ["fixed pt-2 min-h-[7vh] top-0 w-full z-1 transition ease-in-out duration-1000"];
+    //navbar&list class css
+    let navbarClass = ["fixed pt-2 h-[9.7vh] top-0 w-full z-50 transition ease-in-out duration-1000"];
+    let textClass = "relative font-normal font-poppins mt-1 ease-in-out duration-300 text-black hover:font-bold hover:border-t-4";
 
     // scroll class css 
-    if (scrolled) navbarClass.push("fixed top-0 left-0 z-1 bg-[#19376D] transition ease-in-out duration-1000");
+    if (scrolled) 
+    {
+        navbarClass.push("bg-brown2");
+        textClass = "relative font-normal font-poppins mt-1 ease-in-out duration-300 text-white hover:font-bold hover:border-t-4";
+    };
 
-    // text&list style
-    const textClass = "relative font-normal mt-1 ease-in-out duration-300 text-white hover:font-bold hover:border-t-4 ";
+    // list style
     const listClass = "float-left list-none ml-5 mr-5 mt-0.5";
     return (
         <>
