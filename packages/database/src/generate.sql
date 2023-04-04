@@ -57,8 +57,8 @@ CREATE TABLE `Role` (
   `isBookingTeachingRoom` TINYINT NOT NULL,
   `canManage` TINYINT NOT NULL,
   `accessServerRoom` TINYINT NOT NULL,
-  `accessStaffRroom` TINYINT NOT NULL,
-  `manageBacklist` TINYINT NOT NULL,
+  `accessStaffRoom` TINYINT NOT NULL,
+  `manageBlacklist` TINYINT NOT NULL,
 
   UNIQUE INDEX `RoleIdUnique`(`id`),
   UNIQUE INDEX `RoleNameUnique`(`name`),
