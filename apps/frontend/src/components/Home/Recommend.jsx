@@ -10,8 +10,8 @@ export default function Recommend() {
             </div>
             <div className='top-[60vh] w-full min-h-[7vh] bg-white'>
                 <h1 className='font-medium font-poppins text-2xl mt-[4rem] ml-20'>Recommendation</h1>
-                <div className="w-[88%] h-[500px] bg-whitebrown m-auto mt-3.5 rounded-md drop-shadow-brown">
-
+                <div className="w-full h-[500px] bg-whitebrown m-auto mt-3.5 drop-shadow-brown">
+                {/* Recommend column*/}
                     
                 </div>
             </div>
