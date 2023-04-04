@@ -24,11 +24,12 @@ DROP TABLE IF EXISTS `Role`;
 CREATE TABLE `User` (
   `id` VARCHAR(20) NOT NULL,
   `email` VARCHAR(150) NOT NULL,
+  `password` VARCHAR(20) NOT NULL,
   `tel` VARCHAR(10) NOT NULL,
   `firstname` VARCHAR(150) NOT NULL,
   `lastname` VARCHAR(150) NOT NULL,
   `image` VARCHAR(150),
-  `isBlacklist` TINYINT NOT NULL,
+  `isBlacklist` TINYINT DEFAULT 0 NOT NULL,
   `registYear` YEAR NOT NULL,
   `roleId` INT NOT NULL,
   `branchId` INT NOT NULL,

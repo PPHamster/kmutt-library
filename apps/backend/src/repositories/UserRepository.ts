@@ -7,12 +7,13 @@ export class UserRepository {
     @Inject('DATABASE_CONNECTION') private readonly connection: Connection,
   ) {}
 
-  public async createUser(data: UserCreateDto) {
-    const [result] = await this.connection.query(
-      'INSERT INTO User VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+  public async createUser(data: UserCreateDto): Promise<void> {
+    await this.connection.query(
+      'INSERT INTO User VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
       [
         data.id,
         data.email,
+        data.password,
         data.tel,
         data.firstname,
         data.lastname,
@@ -23,6 +24,5 @@ export class UserRepository {
         data.branchId,
       ],
     );
-    return result;
   }
 }

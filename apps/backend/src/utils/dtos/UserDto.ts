@@ -9,6 +9,7 @@ import {
   IsInt,
   Min,
   Max,
+  MinLength,
 } from 'class-validator';
 
 export class UserCreateDto {
@@ -20,6 +21,12 @@ export class UserCreateDto {
   @IsEmail()
   @MaxLength(150)
   public email: string;
+
+  @IsNotEmpty()
+  @IsString()
+  @MinLength(6)
+  @MaxLength(20)
+  public password: string;
 
   @IsPhoneNumber()
   public tel: string;
