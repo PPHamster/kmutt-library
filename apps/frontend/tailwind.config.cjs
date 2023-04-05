@@ -12,6 +12,7 @@ module.exports = {
       fontFamily: {
         'roboto': ['Roboto', 'sans-serif'],
         'poppins': ['Poppins', 'sans-serif'],
+        'kanit': ['Kanit', 'sans-serif'],
       },
       dropShadow: {
         'brown': '3px 4px 2px rgb(200, 182, 166, 0.5)',

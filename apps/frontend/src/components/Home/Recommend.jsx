@@ -14,6 +14,8 @@ export default function Recommend() {
         1440: { items: 5,
              itemsFit: 'contain',},
     };
+
+    //dummy data test template
     const bookdata = [
         {   
             bookid: 'MILF01',
