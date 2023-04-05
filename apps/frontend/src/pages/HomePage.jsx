@@ -32,7 +32,7 @@ export const HomePage = () => {
         </div>
       </div>
       <footer>
-        <div className="flex flex-col w-full h-[14vh] bg-[#8D4120] columns-2">
+        <div className="flex flex-col w-full h-[150px] bg-[#8D4120] columns-2">
           <div className="mt-6 ml-40">
             <p className="font-semi-bold font-poppins text-white text-lg">CONTACT US</p>
             <div className="columns-2">
