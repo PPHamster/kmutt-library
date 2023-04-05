@@ -12,7 +12,7 @@ export default function Book(props) {
                 <img src={props.image} className={imageStyle}/>
                 <p className='font-bold font-roboto text-[#696969] text-lg text-center'>{props.bookname}</p>
                 <button
-                    className="w-[135px] h-[40px] ml-[15%] rounded-md bg-cyan-500 hover:bg-cyan-700 font-bold font-poppins text-white text-xl my-[20px] ease-out duration-300"
+                    className="w-[135px] h-[40px] ml-[20%] rounded-md bg-cyan-500 hover:bg-cyan-700 font-bold font-poppins text-white text-xl my-[20px] ease-out duration-300"
                     onClick={props.onClick}
                     >see more</button>
             </section>

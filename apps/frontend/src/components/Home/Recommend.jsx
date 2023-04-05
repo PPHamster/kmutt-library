@@ -29,6 +29,7 @@ export default function Recommend() {
             bookname: "example book1",
             category: ['anime','action','horror'],
             type: 'manga',
+            publisher: 'tokyo writer',
             author: 'kobayashi tohru',
             story: 'keep it simple',
         },
@@ -38,6 +39,7 @@ export default function Recommend() {
             bookname: "example book2",
             category: ['anime','action','horror'],
             type: 'manga',
+            publisher: 'tokyo writer',
             author: 'kobayashi tohru',
             story: 'keep it simple',
         },
@@ -47,6 +49,7 @@ export default function Recommend() {
             bookname: "example book3",
             category: ['anime','action','horror'],
             type: 'manga',
+            publisher: 'tokyo writer',
             author: 'kobayashi tohru',
             story: 'keep it simple',
         },
@@ -56,6 +59,7 @@ export default function Recommend() {
             bookname: "example book4",
             category: ['anime','action','horror'],
             type: 'manga',
+            publisher: 'tokyo writer',
             author: 'kobayashi tohru',
             story: 'keep it simple',
         },
@@ -65,6 +69,7 @@ export default function Recommend() {
             bookname: "example book5",
             category: ['anime','action','horror'],
             type: 'manga',
+            publisher: 'tokyo writer',
             author: 'kobayashi tohru',
             story: 'keep it simple',
         },
@@ -74,6 +79,7 @@ export default function Recommend() {
             bookname: "example book6",
             category: ['anime','action','horror'],
             type: 'manga',
+            publisher: 'tokyo writer',
             author: 'kobayashi tohru',
             story: 'keep it simple',
         },
@@ -83,6 +89,7 @@ export default function Recommend() {
             bookname: "example book7",
             category: ['anime','action','horror'],
             type: 'manga',
+            publisher: 'tokyo writer',
             author: 'kobayashi tohru',
             story: 'keep it simple',
         },
@@ -112,8 +119,11 @@ export default function Recommend() {
                             />
                         ))} 
                 />
-                {selectedBook && (
-                    <div className="fixed top-0 left-0 right-0 bottom-0">
+
+                </div>
+            </div>                
+            {selectedBook && (
+                    <div className="fixed top-0 left-0 right-0 bottom-0 z-40">
                         <Bookpopup 
                             book={selectedBook} 
                             onClose={() => handleBookClick(null)}
@@ -121,8 +131,6 @@ export default function Recommend() {
                         />
                     </div>
                     )}
-                </div>
-            </div>
         </>
     )
     
