@@ -1,10 +1,16 @@
-import React from 'react';
+import React , { useState } from 'react';
 import Book from '@/components/Book';
+import Bookpopup from '@/components/Bookoverlay';
 import AliceCarousel from 'react-alice-carousel';
 import 'react-alice-carousel/lib/alice-carousel.css';
 
 export default function Recommend() {
 
+    const [selectedBook, setSelectedBook] = useState(null)
+    const handleBookClick = (book) => {
+        setSelectedBook(book);
+      };
+    
     const imageStyle = "bg-auto bg-fixed h-500";
     const responsive = {
         0: { items: 1 },
@@ -102,13 +108,19 @@ export default function Recommend() {
                             key={data.bookid}
                             image={data.image} 
                             bookname={data.bookname}
-                            category={data.category}
-                            type={data.type}
-                            author={data.author}
-                            story={data.story}
+                            onClick={() => handleBookClick(data)}
                             />
                         ))} 
                 />
+                {selectedBook && (
+                    <div className="fixed top-0 left-0 right-0 bottom-0">
+                        <Bookpopup 
+                            book={selectedBook} 
+                            onClose={() => handleBookClick(null)}
+                            open={selectedBook !== null}
+                        />
+                    </div>
+                    )}
                 </div>
             </div>
         </>
