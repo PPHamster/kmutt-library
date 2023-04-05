@@ -18,7 +18,7 @@ export default function Recommend() {
         {   
             bookid: 'MILF01',
             image: "./image/kmutt_library.jpg",
-            bookname: "example book",
+            bookname: "example book1",
             category: ['anime','action','horror'],
             type: 'manga',
             author: 'kobayashi tohru',
@@ -27,7 +27,7 @@ export default function Recommend() {
         {   
             bookid: 'MILF02',
             image: "./image/kmutt_library.jpg",
-            bookname: "example book",
+            bookname: "example book2",
             category: ['anime','action','horror'],
             type: 'manga',
             author: 'kobayashi tohru',
@@ -36,7 +36,7 @@ export default function Recommend() {
         {   
             bookid: 'MILF03',
             image: "./image/kmutt_library.jpg",
-            bookname: "example book",
+            bookname: "example book3",
             category: ['anime','action','horror'],
             type: 'manga',
             author: 'kobayashi tohru',
@@ -45,7 +45,7 @@ export default function Recommend() {
         {   
             bookid: 'MILF04',
             image: "./image/kmutt_library.jpg",
-            bookname: "example book",
+            bookname: "example book4",
             category: ['anime','action','horror'],
             type: 'manga',
             author: 'kobayashi tohru',
@@ -54,7 +54,7 @@ export default function Recommend() {
         {   
             bookid: 'MILF05',
             image: "./image/kmutt_library.jpg",
-            bookname: "example book",
+            bookname: "example book5",
             category: ['anime','action','horror'],
             type: 'manga',
             author: 'kobayashi tohru',
@@ -63,7 +63,7 @@ export default function Recommend() {
         {   
             bookid: 'MILF06',
             image: "./image/kmutt_library.jpg",
-            bookname: "example book",
+            bookname: "example book6",
             category: ['anime','action','horror'],
             type: 'manga',
             author: 'kobayashi tohru',
@@ -72,7 +72,7 @@ export default function Recommend() {
         {   
             bookid: 'MILF07',
             image: "./image/kmutt_library.jpg",
-            bookname: "example book",
+            bookname: "example book7",
             category: ['anime','action','horror'],
             type: 'manga',
             author: 'kobayashi tohru',
