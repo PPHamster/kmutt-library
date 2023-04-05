@@ -4359,13 +4359,15 @@ range-parser@~1.2.1:
   resolved "https://registry.npmjs.org/range-parser/-/range-parser-1.2.1.tgz"
   integrity sha512-Hrgsx+orqoygnmhFbKaHE6c296J+HTAQXoxEF6gNupROmmGJRoyzfG3ccAveqCBrwr/2yxQ5BVd/GTl5agOwSg==
 
-
-react-alice-carousel@^2.7.1:
-  version "2.7.1"
-  resolved "https://registry.yarnpkg.com/react-alice-carousel/-/react-alice-carousel-2.7.1.tgz#0a92db78535d2d7e010633f39dd483f44dc8cfae"
-  integrity sha512-8ljKi5y+eqlsRkO4qRxEXIP0067w/4zvZvpJ66w+eAbeF0hIgC3iLeSmVtNc+F6ISzFsEJX0cOx7jIawXs0G8A==
+raw-body@2.5.1:
+  version "2.5.1"
+  resolved "https://registry.yarnpkg.com/raw-body/-/raw-body-2.5.1.tgz#fe1b1628b181b700215e5fd42389f98b71392857"
+  integrity sha512-qqJBtEyVgS0ZmPGdCFPWJ3FreoqvG4MVQln/kCgF7Olq95IbOp0/BWyMwbdtn4VTvkM8Y7khCQ2Xgk/tcrCXig==
   dependencies:
-    vanilla-swipe "^2.4.1"
+    bytes "3.1.2"
+    http-errors "2.0.0"
+    iconv-lite "0.4.24"
+    unpipe "1.0.0"
 
 raw-body@2.5.2:
   version "2.5.2"
@@ -4377,6 +4379,12 @@ raw-body@2.5.2:
     iconv-lite "0.4.24"
     unpipe "1.0.0"
 
+react-alice-carousel@^2.7.1:
+  version "2.7.1"
+  resolved "https://registry.yarnpkg.com/react-alice-carousel/-/react-alice-carousel-2.7.1.tgz#0a92db78535d2d7e010633f39dd483f44dc8cfae"
+  integrity sha512-8ljKi5y+eqlsRkO4qRxEXIP0067w/4zvZvpJ66w+eAbeF0hIgC3iLeSmVtNc+F6ISzFsEJX0cOx7jIawXs0G8A==
+  dependencies:
+    vanilla-swipe "^2.4.1"
 
 react-dom@^18.2.0:
   version "18.2.0"
@@ -5228,15 +5236,15 @@ v8-to-istanbul@^9.0.1:
     "@types/istanbul-lib-coverage" "^2.0.1"
     convert-source-map "^1.6.0"
 
-vanilla-swipe@^2.4.1:
-  version "2.4.1"
-  resolved "https://registry.yarnpkg.com/vanilla-swipe/-/vanilla-swipe-2.4.1.tgz#697d58bde3729db3c80fd3de488a54a8eae05664"
-  integrity sha512-o6pfI0dipet88ZnPLV4Jx04Ia+U3xANh14vhROW2TOe/mrwk2JGG68+Z0BPoD1YUcQQEnK4SZBXkqFe+K1l7/w==
-
 validator@^13.7.0:
   version "13.9.0"
   resolved "https://registry.yarnpkg.com/validator/-/validator-13.9.0.tgz#33e7b85b604f3bbce9bb1a05d5c3e22e1c2ff855"
   integrity sha512-B+dGG8U3fdtM0/aNK4/X8CXq/EcxU2WPrPEkJGslb47qyHsxmbggTWK0yEA4qnYVNF+nxNlN88o14hIcPmSIEA==
+
+vanilla-swipe@^2.4.1:
+  version "2.4.1"
+  resolved "https://registry.yarnpkg.com/vanilla-swipe/-/vanilla-swipe-2.4.1.tgz#697d58bde3729db3c80fd3de488a54a8eae05664"
+  integrity sha512-o6pfI0dipet88ZnPLV4Jx04Ia+U3xANh14vhROW2TOe/mrwk2JGG68+Z0BPoD1YUcQQEnK4SZBXkqFe+K1l7/w==
 
 vary@^1, vary@~1.1.2:
   version "1.1.2"
