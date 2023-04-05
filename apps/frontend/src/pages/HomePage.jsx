@@ -40,7 +40,7 @@ export const HomePage = () => {
                 Tel. 02-423-5522 {<br/>}
                 Email : kmutt_library@kmutt.ac.th
             </p>
-            <p className="font-regular font-roboto text-white text-md">
+            <p className="font-regular font-kanit text-white text-md">
                 Location : 91 ถนน พุทธบูชา {<br/>}
                 แขวงบางมด เขตทุ่งครุ {<br/>}
                 กรุงเทพมหานคร 10140

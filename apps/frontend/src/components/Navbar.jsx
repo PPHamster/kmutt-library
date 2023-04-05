@@ -41,7 +41,7 @@ export default function Navbar() {
                     <li className={listClass}><Link to='/'>
                         <p className={textClass}>Service</p></Link>
                     </li>
-                    <li className={listClass}><Link to='/'>
+                    <li className={listClass}><Link to='/event'>
                         <p className={textClass}>Event</p></Link>
                     </li>
                 </nav>
