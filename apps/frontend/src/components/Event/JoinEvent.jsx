@@ -1,5 +1,5 @@
 import React from 'react'
-import Event from '@/components/Event'
+import Event from '@/components/Eventlist'
 
 export default function JoinEvent() {
 
