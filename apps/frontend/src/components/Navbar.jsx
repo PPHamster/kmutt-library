@@ -16,7 +16,7 @@ export default function Navbar() {
     });
 
     //navbar&list class css
-    let navbarClass = ["fixed pt-2 h-[9.7vh] top-0 left-0 w-full z-50 transition ease-in-out duration-1000"];
+    let navbarClass = ["fixed pt-2 h-[7.7vh] top-0 left-0 w-full z-50 transition ease-in-out duration-1000"];
     let textClass = "relative font-normal font-poppins mt-1 ease-in-out duration-300 text-black hover:font-bold hover:border-t-4";
 
     // scroll class css 
