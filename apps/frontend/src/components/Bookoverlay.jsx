@@ -22,7 +22,7 @@ export default function Bookpopup(props) {
                     </div>
                     <div className="flex">
                         <button className="m-1 mt-4 mb-6 pt-1 pb-1 pl-4 pr-4 bg-white border-black border-2 rounded-full">
-                            <p className="font-roboto font-bold">burrow</p>
+                            <p className="font-roboto font-bold">Burrow</p>
                         </button>
                         <div className="m-1 mt-4 mb-6 ml-3">
                             <Link to="/service">

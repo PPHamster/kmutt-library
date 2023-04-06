@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { HomePage } from '@/pages/HomePage';
-import { EventPage } from './pages/EventPage';
+import { EventPage } from '@/pages/EventPage';
+import { ServicePage } from '@/pages/ServicePage';
 
 export const App = () => {
   return (
@@ -8,6 +9,7 @@ export const App = () => {
       <Routes>
         <Route path='/' element={ <HomePage /> } />
         <Route path='/event' element={ <EventPage /> } />
+        <Route path='/service' element={ <ServicePage /> } />
       </Routes>
     </BrowserRouter>
   );

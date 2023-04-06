@@ -1,22 +1,19 @@
 import React , { useState } from 'react';
 import Book from '@/components/Book';
 import Bookpopup from '@/components/Bookoverlay';
-import AliceCarousel from 'react-alice-carousel';
-import 'react-alice-carousel/lib/alice-carousel.css';
 
-export default function Recommend() {
+export default function Borrowbook() {
 
     const [selectedBook, setSelectedBook] = useState(null)
     const handleBookClick = (book) => {
         setSelectedBook(book);
       };
-      const renderPrevButton = ({ isDisabled }) => {
-        return <span style={{ opacity: isDisabled ? '0.5' : 1 }}>&lt;</span>;
-    };
-    
-    const renderNextButton = ({ isDisabled }) => {
-        return <span style={{ opacity: isDisabled ? '0.5' : 1 }}>&gt;</span>;
-    };
+
+    const handleKeyDown = (event) => {
+        if (event.key === 'Enter') {
+          console.log('do validate')
+        }
+    }
 
     const responsive = {
         0: { items: 1 },
@@ -112,36 +109,44 @@ export default function Recommend() {
     ]
 
     return (
-        <>
-            <div className="flex h-[60vh] w-full left-0 top-0">
-                <div className="bg-fixed bg-library bg-cover top-0 left-0 h-full w-full"></div>
+        <>  
+            <div className='relative flex flex-row min-h-[7vh] mb-64 top-[150px]'>
+                <div className='w-[22.2vw] flex flex-col'>
+
+                </div>
+                <div className='flex flex-col'>
+                    <div>
+                        <div class='max-w-lg ml-[70px]'>
+                            <div class="relative flex items-center w-full h-12 rounded-lg focus-within:shadow-lg bg-white overflow-hidden border-2">
+                                <div class="grid place-items-center h-full w-12 text-gray-300">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                    </svg>
+                                </div>
+
+                                <input
+                                class="peer h-full w-full outline-none text-sm text-gray-700 pr-2"
+                                type="text"
+                                id="search"
+                                placeholder="Search something.." /> 
+                            </div>
+                        </div>
+                    </div>
+                    <div className='w-full min-h-[7vh] left-0 bg-white mt-4'>
+                        <div className='w-[80vw] h-[70vh] grid gap-4 grid-auto-fit-[17rem] overflow-y-scroll overflow-x-hidden p-12'>
+                                {bookdata.map((data) => (
+                                    <Book 
+                                    key={data.bookid}
+                                    image={data.image} 
+                                    bookname={data.bookname}
+                                    onClick={() => handleBookClick(data)}
+                                />))}
+                        </div>
+                    </div>                       
+                </div>
+                
             </div>
-            <div className='top-[60vh] w-full min-h-[7vh] bg-white'>
-                <div className='flex flex-row'>
-                    <h1 className='font-bold font-poppins text-[#454545] text-3xl mt-[4rem] ml-36'>Recommendation</h1>
-                    <h1 className='font-regular font-kanit text-[#797979] text-2xl mt-[4.2rem] ml-4'>หนังสือยอดนิยม</h1>                   
-                </div>
-                <div className="w-full h-[800px] bg-whitebrown m-auto mt-[2.5rem] drop-shadow-brown pt-16 pl-24 pr-24">
-                <AliceCarousel 
-                    mouseTracking
-                    disableButtonsControls
-                    autoWidth
-                    disableDotsControls
-                    responsive={responsive}
-                    renderPrevButton={renderPrevButton}
-                    renderNextButton={renderNextButton}
-                    items={
-                   bookdata.map((data) => (
-                            <Book 
-                            key={data.bookid}
-                            image={data.image} 
-                            bookname={data.bookname}
-                            onClick={() => handleBookClick(data)}
-                            />
-                        ))} 
-                />
-                </div>
-            </div>                
+         
             {selectedBook && (
                     <div className="fixed top-0 left-0 right-0 bottom-0 z-40">
                         <Bookpopup 
@@ -150,7 +155,7 @@ export default function Recommend() {
                             open={selectedBook !== null}
                         />
                     </div>
-                    )}
+            )}
         </>
     )
     
