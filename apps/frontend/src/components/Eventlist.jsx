@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 
 export default function Event(props) {
 
-    const [OpenPopup, SetOpenPopup] = useState(false)
     const infoEvent = 'max-h-[250px] max-w-[250px] rounded-lg object-scale-down mt-[20px]';
 
     return (
