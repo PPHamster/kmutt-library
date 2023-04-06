@@ -5,6 +5,7 @@ export const EventPage = () => {
 
     return (
         <>
+            
             <div>
                 <Navbar />
                 <JoinEvent />
