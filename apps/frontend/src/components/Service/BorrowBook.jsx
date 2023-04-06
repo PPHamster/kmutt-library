@@ -7,21 +7,68 @@ export default function Borrowbook() {
 
     const [SearchText, setSearchText] = useState('');
     const [selectedBook, setSelectedBook] = useState(null)
+
+    // book data handling
     const handleBookClick = (book) => {
         setSelectedBook(book);
       };
-
+    
+    // key press handling
     const handleKeyDown = (event) => {
         if (event.key === 'Enter') {
           console.log(SearchText)
         }
     }
 
+    //check list of categories
+    const [checked, setChecked] = useState([]);
+    const handleCheck = (event) => {
+        var updatedList = [...checked];
+        if (event.target.checked) {
+          updatedList = [...checked, event.target.value];
+        } else {
+          updatedList.splice(checked.indexOf(event.target.value), 1);
+        }
+        setChecked(updatedList);
+      };
+    const Category = ["English", "Japanese", "Action", "Comedy", "Romance"];
+
     return (
         <>  
             <div className='relative flex flex-row min-h-[7vh] mb-64 top-[150px]'>
-                <div className='w-[22.2vw] flex flex-col'>
-
+                <div className='w-[22.2vw] flex flex-col ml-[5.2vw]'>
+                    <p className='font-kanit text-2xl text-gray-700 font-medium mb-3'>หมวดหมู่</p>
+                    <div className='h-[400px] px-3 pb-3 overflow-y-auto text-sm text-gray-700'>
+                        {Category.map((item, index) => (
+                            <div key={index} className="p-1">  
+                                <div className="flex items-center mr-4 mb-2">  
+                                    <input value={item} type="checkbox" id="item" name="A3-confirmation" className="opacity-0 absolute h-6 w-6" onChange={handleCheck} />  
+                                        <div className="bg-white border-2 rounded-md border-blue-400 w-6 h-6 flex flex-shrink-0 justify-center items-center mr-2 focus-within:border-blue-500">  
+                                            <svg className="fill-current hidden w-3 h-3 text-blue-600 pointer-events-none" version="1.1" viewBox="0 0 17 12" xmlns="http://www.w3.org/2000/svg">  
+                                                <g fill="none" fillRule="evenodd">  
+                                                    <g transform="translate(-9 -11)" fill="#1F73F1" fillRule="nonzero">  
+                                                        <path d="m25.576 11.414c0.56558 0.55188 0.56558 1.4439 0 1.9961l-9.404 9.176c-0.28213 0.27529-0.65247 0.41385-1.0228 0.41385-0.37034 0-0.74068-0.13855-1.0228-0.41385l-4.7019-4.588c-0.56584-0.55188-0.56584-1.4442 0-1.9961 0.56558-0.55214 1.4798-0.55214 2.0456 0l3.679 3.5899 8.3812-8.1779c0.56558-0.55214 1.4798-0.55214 2.0456 0z" />  
+                                                    </g>  
+                                                </g>  
+                                            </svg>  
+                                        </div>  
+                                    <label htmlFor="item" className="select-none">{item}</label>  
+                                </div>  
+                                </div>
+                        ))}
+                    </div>
+                    <p className='font-kanit text-2xl text-gray-700 font-medium mb-3'>ปีที่พิมพ์</p>
+                    <div>
+                        {/* years function */}
+                    </div>
+                    <p className='font-kanit text-2xl text-gray-700 font-medium mb-3'>สำนักพิมพ์</p>
+                    <div>
+                        {/* publisher function */}
+                    </div>
+                    <p className='font-kanit text-2xl text-gray-700 font-medium mb-3'>ภาษา</p>
+                    <div>
+                        {/* language function */}
+                    </div>
                 </div>
                 <div className='flex flex-col'>
                     <div>

@@ -8,7 +8,7 @@ export default function Book(props) {
         <div className='box-content h-[495px] w-[275px] pr-[25px] pl-[25px] bg-transparent'>
             <section className='h-[475px] w-[275px] bg-white rounded-[0.55rem] p-[37.5px] select-none mr-10 drop-shadow-md'>
                 <img src={props.image} className={imageStyle} alt='book cover' draggable="false" onClick={props.onClick} />
-                <div className='w-[200px] h-[50px] font-bold font-roboto text-[#696969] whitespace-normal mt-2 text-lg text-center'>{props.bookname}</div>
+                <p className='w-[200px] max-h-[67px] font-bold font-roboto text-[#696969] whitespace-normal mt-2 text-lg text-center '>{props.bookname}</p>
                 <button
                     className="w-[110px] h-[30px] ml-[45px] rounded-full bg-white border-2 hover:bg-gray-200 font-regular font-poppins text-[#696969] text-md my-[20px] ease-out duration-300"
                     onClick={props.onClick}
