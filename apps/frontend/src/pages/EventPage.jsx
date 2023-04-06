@@ -6,7 +6,8 @@ export const EventPage = () => {
     return (
         <>
             
-            <div className=" bg-[#FFD4D4]">
+            <div className="fixed w-full h-full top-0 bg-[#FFD4D4] z-[-1]">
+            </div>
                 <Navbar />
                 <JoinEvent />
                 <footer>
@@ -27,7 +28,7 @@ export const EventPage = () => {
                         </div>
                     </div>
                 </footer>
-            </div>
+            
         </>
     )
 };

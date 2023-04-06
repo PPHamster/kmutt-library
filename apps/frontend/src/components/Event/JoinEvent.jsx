@@ -52,7 +52,7 @@ export default function JoinEvent() {
     ]
 
     return (
-        <div className="w-full h-[700px] mt-[9rem] px-[8rem] max-sm:px-[20px] max-lg:px-[4rem]">
+        <div className="w-full h-[700px] mt-[9rem] px-[8rem] max-sm:px-[20px] max-lg:px-[4rem] ">
             <div className="w-full ">
                 <h1 className='font-bold font-kanit text-3xl text-[#454545] ml-[30px]'>เข้าร่วมกิจกรรม</h1>
                 <div className="w-full h-auto m-auto drop-shadow-md pt-10 ">
