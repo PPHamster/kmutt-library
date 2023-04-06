@@ -90,14 +90,14 @@ export default function Recommend() {
             story: "Master spy Twilight is unparalleled when it comes to going undercover on dangerous missions for the betterment of the world. But when he receives the ultimate assignment—to get married and have a kid—he may finally be in over his head!",
         },
         {   
-            bookid: 'MILF07',
-            image: "./image/kmutt_library.jpg",
-            bookname: "example book7",
-            category: ['anime','action','horror'],
-            type: 'manga',
-            publisher: 'tokyo writer',
-            author: 'kobayashi tohru',
-            story: 'keep it simple',
+            bookid: 'M07',
+            image: "./bookimages/onimai_i'm_now_your_sister_volume_1.jpg",
+            bookname: "Onimai I'm now your sister vol. 1",
+            category: ['English','Comedy','Slice of life'],
+            type: 'Manga',
+            publisher: 'Kodansha Comics',
+            author: 'Nekotofu',
+            story: "Mahiro Oyama was just a normal erotic-game loving dude... until he woke up one morning as a woman! Turns out his mad-scientist little sister, Mihari, tried out one of her new experiments on him... with a disastrous outcome, as far as Mahiro's concerned! But Mihari is as determined to study him as he is determined to go back to his shut-in, game-playing life, and one thing's for sure... life is going to get a whole lot weirder from here on out!",
         },
     ]
 
@@ -130,7 +130,6 @@ export default function Recommend() {
                             />
                         ))} 
                 />
-
                 </div>
             </div>                
             {selectedBook && (
