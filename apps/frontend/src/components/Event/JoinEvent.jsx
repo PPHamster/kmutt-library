@@ -7,8 +7,8 @@ export default function JoinEvent() {
         {   
             eventid: 'EV01',
             image: "./image/PAX.jpg",
-            eventname: "example event1",
-            category: 'Talk',
+            eventname: "กิจกรรมแลกเปลี่ยนความคิดเห็นหนังสือเรื่อง “Pax”",
+            category: 'กิจกรรมแลกเปลี่ยนความคิดเห็นหลังการอ่านหนังสือ',
             host: 'd. chamberlin',
             eventdes: 'Oh wow SQL',
             location: 'Floor 4, Room 2',
@@ -16,8 +16,8 @@ export default function JoinEvent() {
         {   
             eventid: 'EV02',
             image: "./image/kmutt_library.jpg",
-            eventname: "example event2",
-            category: 'Talk',
+            eventname: "กิจกรรมแลกเปลี่ยนความคิดเห็นหนังสือเรื่อง “Kmutt library”",
+            category: 'กิจกรรมแลกเปลี่ยนความคิดเห็นหลังการอ่านหนังสือ',
             host: 'd. chamberlin',
             eventdes: 'Oh wow SQL',
             location: 'Floor 4, Room 2',
@@ -26,7 +26,7 @@ export default function JoinEvent() {
             eventid: 'EV03',
             image: "./image/kmutt_library.jpg",
             eventname: "example event3",
-            category: 'Talk',
+            category: 'กิจกรรมแลกเปลี่ยนความคิดเห็นหลังการอ่านหนังสือ',
             host: 'd. chamberlin',
             eventdes: 'Oh wow SQL',
             location: 'Floor 4, Room 2',
@@ -35,7 +35,7 @@ export default function JoinEvent() {
             eventid: 'EV04',
             image: "./image/Eventimg.jpg",
             eventname: "example event4",
-            category: 'Talk',
+            category: 'กิจกรรมแลกเปลี่ยนความคิดเห็นหลังการอ่านหนังสือ',
             host: 'd. chamberlin',
             eventdes: 'Oh wow SQL',
             location: 'Floor 4, Room 2',
@@ -44,7 +44,7 @@ export default function JoinEvent() {
             eventid: 'EV05',
             image: "./image/kmutt_library.jpg",
             eventname: "example event5",
-            category: 'Talk',
+            category: 'กิจกรรมแลกเปลี่ยนความคิดเห็นหลังการอ่านหนังสือ',
             host: 'd. chamberlin',
             eventdes: 'Oh wow SQL',
             location: 'Floor 4, Room 2',
@@ -52,7 +52,7 @@ export default function JoinEvent() {
     ]
 
     return (
-        <div className=" w-full h-[700px] mt-[9rem] px-[8rem]">
+        <div className="w-full h-[700px] mt-[9rem] px-[8rem] max-sm:px-[20px] max-lg:px-[4rem]">
             <div className="w-full ">
                 <h1 className='font-bold font-kanit text-3xl text-[#454545] ml-[30px]'>เข้าร่วมกิจกรรม</h1>
                 <div className="w-full h-auto m-auto drop-shadow-md pt-10 ">

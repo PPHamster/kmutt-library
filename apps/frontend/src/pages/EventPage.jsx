@@ -6,7 +6,7 @@ export const EventPage = () => {
     return (
         <>
             
-            <div>
+            <div className=" bg-[#FFD4D4]">
                 <Navbar />
                 <JoinEvent />
                 <footer>
