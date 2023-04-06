@@ -42,7 +42,7 @@ export default function Borrowbook() {
                         {Category.map((item, index) => (
                             <div key={index} className="p-1">  
                                 <div className="flex items-center mr-4 mb-2">  
-                                    <input value={item} type="checkbox" id="item" name="A3-confirmation" className="opacity-0 absolute h-6 w-6" onChange={handleCheck} />  
+                                    <input value={item} type="checkbox" id="item" name="category" className="opacity-0 absolute h-6 w-6" onChange={handleCheck} />  
                                         <div className="bg-white border-2 rounded-md border-blue-400 w-6 h-6 flex flex-shrink-0 justify-center items-center mr-2 focus-within:border-blue-500">  
                                             <svg className="fill-current hidden w-3 h-3 text-blue-600 pointer-events-none" version="1.1" viewBox="0 0 17 12" xmlns="http://www.w3.org/2000/svg">  
                                                 <g fill="none" fillRule="evenodd">  

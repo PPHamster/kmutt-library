@@ -6,7 +6,7 @@ export default function Book(props) {
     const imageStyle = 'h-[300px] w-[200px] rounded-lg object-scale-down';
     return (
         <div className='box-content h-[495px] w-[275px] pr-[25px] pl-[25px] bg-transparent'>
-            <section className='h-[475px] w-[275px] bg-white rounded-[0.55rem] p-[37.5px] select-none mr-10 drop-shadow-md'>
+            <section className='h-[475px] w-[275px] bg-white rounded-[0.55rem] p-[37.5px] select-none mr-10 drop-shadow-md hover:drop-shadow-lg'>
                 <img src={props.image} className={imageStyle} alt='book cover' draggable="false" onClick={props.onClick} />
                 <p className='w-[200px] max-h-[67px] font-bold font-roboto text-[#696969] whitespace-normal mt-2 text-lg text-center '>{props.bookname}</p>
                 <button
