@@ -1,5 +1,6 @@
 import Navbar from "@/components/Navbar";
 import JoinEvent from "@/components/Event/JoinEvent";
+import Eventpopup from "@/components/EventPopup";
 
 export const EventPage = () => {
 
@@ -10,6 +11,7 @@ export const EventPage = () => {
             </div>
                 <Navbar />
                 <JoinEvent />
+                <Eventpopup />
                 <footer>
                     <div className="flex flex-col w-full h-[150px] bg-[#8D4120] columns-2 max-sm:h-[120px]">
                         <div className="mt-6 ml-40">
