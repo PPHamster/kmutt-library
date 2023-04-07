@@ -1,9 +1,13 @@
-import React from 'react'
+import React , { useState } from 'react';
 import Event from '@/components/Eventlist'
 import Eventpopup from '@/components/EventPopup'
 
 export default function JoinEvent() {
 
+    const [selectedEvent, setSelectedEvent] = useState(false)
+    const handleEventClick = (event) => {
+        setSelectedEvent(event);
+    };
 
     const eventdata = [
         {
@@ -12,7 +16,7 @@ export default function JoinEvent() {
             eventname: "กิจกรรมแลกเปลี่ยนความคิดเห็นหนังสือเรื่อง “Pax”",
             category: 'กิจกรรมแลกเปลี่ยนความคิดเห็นหลังการอ่านหนังสือ',
             host: 'd. chamberlin',
-            eventdes: 'Oh wow SQL',
+            eventdes: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
             location: 'Floor 4, Room 2',
         },
         {
@@ -55,26 +59,36 @@ export default function JoinEvent() {
 
     return (
         <>
-        <div className="w-full h-[700px] mt-[5rem] pt-[2rem] px-[8rem] max-sm:px-[20px] max-lg:px-[4rem]">
-            <div className="w-full ">
-                <h1 className='font-bold font-kanit text-3xl text-[#454545] ml-[30px]'>เข้าร่วมกิจกรรม</h1>
-                <div className="w-full h-auto m-auto drop-shadow-md pt-10 ">
-                    {eventdata.map((data) => {
-                        return (
-                            <Event
-                                key={data.eventid}
-                                eventimage={data.image}
-                                eventname={data.eventname}
-                                category={data.category}
-                                host={data.host}
-                                eventdes={data.eventdes}
-                                location={data.location}
-                            />
-                        );
-                    })}
+            <div className="w-full h-[700px] mt-[5rem] pt-[2rem] px-[8rem] max-sm:px-[20px] max-lg:px-[4rem]">
+                <div className="w-full ">
+                    <h1 className='font-bold font-kanit text-3xl text-[#454545] ml-[30px]'>เข้าร่วมกิจกรรม</h1>
+                    <div className="w-full h-auto m-auto drop-shadow-md pt-10 ">
+                        {eventdata.map((data) => {
+                            return (
+                                <Event
+                                    key={data.eventid}
+                                    eventimage={data.image}
+                                    eventname={data.eventname}
+                                    category={data.category}
+                                    host={data.host}
+                                    eventdes={data.eventdes}
+                                    location={data.location}
+                                    onClick={() => handleEventClick(data)}
+                                />
+                            );
+                        })}
+                    </div>
                 </div>
             </div>
-        </div>
+            {selectedEvent && (
+                <div className="fixed top-0 left-0 right-0 bottom-0 z-40">
+                    <Eventpopup
+                        event={selectedEvent}
+                        onClose={() => handleEventClick(null)}
+                        open={selectedEvent !== null}
+                    />
+                </div>
+            )}
         </>
     )
 }

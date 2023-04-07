@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 
 export default function Event(props) {
 
-    const infoEvent = 'max-h-[250px] max-w-[250px] rounded-lg object-scale-down mt-[20px]';
+    const infoEvent = 'max-h-[250px] max-w-[250px] rounded-lg object-scale-down mt-[20px] cursor-pointer';
 
     return (
         // row
@@ -12,7 +12,7 @@ export default function Event(props) {
                 {/* content */}
                 <div className='bg-white rounded-lg p-[20px] w-[350px] h-[480px] my-8 max-sm:my-2 max-lg:my-4'>
                     <div className='w-[250px] h-[250px] flex justify-center items-center mx-7'>
-                    <img src={props.eventimage} className={infoEvent} />
+                    <img src={props.eventimage} className={infoEvent} onClick={props.onClick} />
                     </div>
                     <p className='font-semibold font-kanit text-[#454545] text-lg text-center mt-4'>{props.eventname}</p>
                     <p className='font-normal font-kanit text-[#454545] text-sm text-center mt-4'>{props.category}</p>
