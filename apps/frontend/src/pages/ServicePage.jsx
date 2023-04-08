@@ -1,11 +1,15 @@
-import Navbar from "@/components/Navbar";
+import NavbarStatic from "@/components/NavbarStatic";
+import Navbar from "@/components/NavbarStatic";
 import Borrowbook from "@/components/Service/BorrowBook";
 
 export const ServicePage = () => {
 
   return (
     <>
-      <Navbar/>
+      <NavbarStatic
+        bgcolor = 'bg-white hover:drop-shadow-md' 
+        textcolor = 'text-black'
+      />
       <Borrowbook/>
 
       <footer>

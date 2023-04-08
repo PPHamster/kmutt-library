@@ -49,6 +49,7 @@ export default function Borrowbook() {
     }
     // publisher
     const [publisher, setPublisher] = useState('');
+
     // language 
     const Language = ["English", "Japanese", "Thai"]
     var currentValue = '';
@@ -168,7 +169,7 @@ export default function Borrowbook() {
                                         image={data.image} 
                                         bookname={data.bookname}
                                         onClick={() => handleBookClick(data)}
-                                        id={setSelectedRoom}
+                                        id={selectedRoom}
                                     />))}
                             </div>
                         </div>                       
