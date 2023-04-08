@@ -1,4 +1,4 @@
-import Navbar from "@/components/Navbar";
+import NavbarStatic from "@/components/NavbarStatic";
 import JoinEvent from "@/components/Event/JoinEvent";
 import Eventpopup from "@/components/EventPopup";
 
@@ -9,7 +9,10 @@ export const EventPage = () => {
             
             <div className="fixed w-full h-full top-0 bg-[#FFD4D4] z-[-1]">
             </div>
-                <Navbar />
+                <NavbarStatic
+                    bgcolor='bg-[#a88b8b]'
+                    textcolor='text-white'
+                />
                 <JoinEvent />
                 <Eventpopup />
                 <footer>
