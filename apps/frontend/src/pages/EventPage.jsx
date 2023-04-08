@@ -1,20 +1,18 @@
 import NavbarStatic from "@/components/NavbarStatic";
 import JoinEvent from "@/components/Event/JoinEvent";
-import Eventpopup from "@/components/EventPopup";
 
 export const EventPage = () => {
 
     return (
         <>
             
-            <div className="fixed w-full h-full top-0 bg-[#FFD4D4] z-[-1]">
+            <div className="fixed w-full h-full top-0 bg-[#ffffff] z-[-1]">
             </div>
                 <NavbarStatic
-                    bgcolor='bg-[#a88b8b]'
-                    textcolor='text-white'
+                    bgcolor='bg-white hover:drop-shadow-md'
+                    textcolor='text-black'
                 />
                 <JoinEvent />
-                <Eventpopup />
                 <footer>
                     <div className="flex flex-col w-full h-[150px] bg-[#8D4120] columns-2 max-sm:h-[120px]">
                         <div className="mt-6 ml-40">

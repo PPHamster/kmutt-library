@@ -18,6 +18,7 @@ export default function JoinEvent() {
             host: 'd. chamberlin',
             eventdes: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
             location: 'Floor 4, Room 2',
+            participant: 'Lalita Kanya, Malai Kamon, Lalita Malai, Porntip Kanchana, Malai Somporn'
         },
         {
             eventid: 'EV02',
@@ -27,6 +28,7 @@ export default function JoinEvent() {
             host: 'd. chamberlin',
             eventdes: 'Oh wow SQL',
             location: 'Floor 4, Room 2',
+            participant: 'Intira Arthit, Somboon Intira, Kamon Pakpao, Somsak Kamon, Kanya Sasithorn'
         },
         {
             eventid: 'EV03',
@@ -36,6 +38,7 @@ export default function JoinEvent() {
             host: 'd. chamberlin',
             eventdes: 'Oh wow SQL',
             location: 'Floor 4, Room 2',
+            participant: 'Lalita Kanya, Malai Kamon, Lalita Malai, Porntip Kanchana, Malai Somporn'
         },
         {
             eventid: 'EV04',
@@ -45,6 +48,7 @@ export default function JoinEvent() {
             host: 'd. chamberlin',
             eventdes: 'Oh wow SQL',
             location: 'Floor 4, Room 2',
+            participant: 'Lalita Kanya, Malai Kamon, Lalita Malai, Porntip Kanchana, Malai Somporn'
         },
         {
             eventid: 'EV05',
@@ -54,6 +58,7 @@ export default function JoinEvent() {
             host: 'd. chamberlin',
             eventdes: 'Oh wow SQL',
             location: 'Floor 4, Room 2',
+            participant: 'Intira Arthit, Somboon Intira, Kamon Pakpao, Somsak Kamon, Kanya Sasithorn'
         },
     ]
 
