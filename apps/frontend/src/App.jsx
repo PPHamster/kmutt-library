@@ -2,6 +2,8 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { HomePage } from '@/pages/HomePage';
 import { EventPage } from '@/pages/EventPage';
 import { ServicePage } from '@/pages/ServicePage';
+import  RoomService from '@/pages/RoomService';
+import  BookPage from '@/pages/BookPage';
 
 export const App = () => {
   return (
@@ -10,6 +12,8 @@ export const App = () => {
         <Route path='/' element={ <HomePage /> } />
         <Route path='/event' element={ <EventPage /> } />
         <Route path='/service' element={ <ServicePage /> } />
+        <Route path="/service/room/:roomid" element={ <RoomService/> } />
+        <Route path="/book/:bookid" element={ <BookPage/> } />
       </Routes>
     </BrowserRouter>
   );
