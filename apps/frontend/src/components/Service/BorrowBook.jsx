@@ -7,9 +7,15 @@ import { roomdata } from '@/utils/roomdata';
 
 export default function Borrowbook() {
 
-    const [SearchText, setSearchText] = useState('');
+    //subset function
+    function isArraySubset(subset, superset) {
+        return subset.every(item => superset.includes(item));
+      }
+    
+    //book selected
     const [selectedBook, setSelectedBook] = useState(null)
-
+    const [filteredBook, setFilteredBook] = useState(bookdata);
+    const [searchTerm, setSearchTerm] = useState('');
     // book data handling
     const handleBookClick = (book) => {
         setSelectedBook(book);
@@ -17,10 +23,23 @@ export default function Borrowbook() {
     
     // key press handling
     const handleKeyDown = (event) => {
-        if (event.key === 'Enter') {
-          console.log(SearchText)
-        }
+        const keyword = event.target.value;
+        setSearchTerm(keyword);
+        const matchingBooks = bookdata.filter(
+            book => book.bookname.toLowerCase().includes(keyword.toLowerCase())
+        );
+        setFilteredBook(matchingBooks);
     }
+    
+    //check categories in JSON file
+    const updatebooklist = (list) => {
+        const matchingCategoryBooks = bookdata.filter(book => {
+        const bookCategories = book.category;
+        return isArraySubset(list, bookCategories);
+      });
+        setFilteredBook(matchingCategoryBooks);
+      }; 
+    
 
     //check list of categories
     const [checked, setChecked] = useState([]);
@@ -31,10 +50,21 @@ export default function Borrowbook() {
         } else {
           updatedList.splice(checked.indexOf(event.target.value), 1);
         }
-        setChecked(updatedList);
-      };
-    const Category = ["English", "Japanese", "Action", "Comedy", "Romance"];
-    
+        setChecked(updatedList); 
+        console.log(updatedList);
+        updatebooklist(updatedList);
+    }
+
+    const Category = [];
+    //find unique category in bookdata
+    bookdata.forEach(book => {
+        book.category.forEach(category => {
+          if (!Category.includes(category)) {
+            Category.push(category); 
+          }
+        });
+      });
+
     // year publisher 
     const [yearpublisher, setYearpublisher] = useState(0);
     const [yearpublisherEnd, setYearpublisherEnd] = useState(new Date().getFullYear());
@@ -55,6 +85,7 @@ export default function Borrowbook() {
     var currentValue = '';
     const handleValue = (event) => {
         currentValue = event;
+        updatebooklist(currentValue);
     }
 
     //reversation room
@@ -69,9 +100,9 @@ export default function Borrowbook() {
             <div className='relative flex flex-col min-h-[7vh] mb-64 top-[80px]'>
                 <p className='font-kanit font-semibold text-3xl ml-[100px] mb-[22px] text-gray-800'>ยืมหนังสือ</p>
                 <div className='flex flex-row'>  
-                    <div className='w-[22.2vw] flex flex-col ml-[5.2vw]'>
+                    <div className='min-w-[310px] w-[310px] flex flex-col ml-[5.2vw]'>
                         <p className='font-kanit text-xl text-gray-700 font-medium mb-3'>หมวดหมู่</p>
-                        <div className='max-h-[400px] px-3 pb-3 mb-3 overflow-y-auto text-sm text-gray-700'>
+                        <div className='max-h-[222px] px-3 pb-3 mb-3 overflow-y-auto text-sm text-gray-700'>
                             {Category.map((item, index) => (
                                 <div key={index} className="p-1">  
                                     <div className="flex items-center mr-4 mb-2">  
@@ -141,7 +172,7 @@ export default function Borrowbook() {
                         </div>
                         </div>
                     </div>
-                    <div className='flex flex-col'>
+                    <div className='flex flex-col min-w-[512px]'>
                         <div>
                             <div className='max-w-lg ml-[70px]'>
                                 <div className="relative flex items-center w-full h-10 rounded-lg focus-within:shadow-lg bg-white overflow-hidden border-2">
@@ -155,15 +186,14 @@ export default function Borrowbook() {
                                     type="text"
                                     id="search"
                                     placeholder="Search something.." 
-                                    onChange={(event) => setSearchText(event.currentTarget.value)}
-                                    onKeyDown={handleKeyDown}
+                                    onChange={handleKeyDown}
                                     /> 
                                 </div>
                             </div>
                         </div>
                         <div className='w-full min-h-[7vh] left-0 bg-white mt-4 '>
-                            <div className='w-[80vw] h-[77vh] grid grid-auto-fit-[16rem] overflow-y-scroll overflow-x-hidden pt-3 px-9'>
-                                    {bookdata.map((data) => (
+                            <div className='max-w-[80vw] min-w-[40vw] h-[77vh] grid gap-0 grid-auto-fit-[241px] overflow-y-scroll overflow-x-hidden pt-3 px-9'>
+                                    {filteredBook.map((data) => (
                                         <Book 
                                         key={data.bookid}
                                         image={data.image} 

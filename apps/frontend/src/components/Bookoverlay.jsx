@@ -18,14 +18,14 @@ export default function Bookpopup(props) {
                         <p className={textStyle}>ต้นฉบับ: {props.book.type}</p>
                         <p className={textStyle}>สิขสิทธิ์: {props.book.publisher}</p>
                         <p className={textStyle}>ผู้แต่ง: {props.book.author}</p>
-                        <div className='text-md font-kanit whitespace-normal w-[400px] min-h-[120px] text-[#696969]'>[เรื่องย่อ] {<br/>}{props.book.story}</div>
+                        <p className='text-md font-kanit whitespace-normal w-[400px] min-h-[120px] max-h-[290px] overflow-hidden text-ellipsis text-[#696969] resize-none'>[เรื่องย่อ] {<br/>}{props.book.story + ' ...'}</p>
                     </div>
                     <div className="flex">
                         <button className="m-1 mt-4 mb-6 pt-1 pb-1 pl-4 pr-4 bg-white border-black border-2 rounded-full">
                             <p className="font-roboto font-bold">Burrow</p>
                         </button>
                         <div className="m-1 mt-4 mb-6 ml-3">
-                            <Link to="/service">
+                            <Link to={`/book/${props.book.bookid}`}>
                                 <div className="pt-1 pb-1 pl-4 pr-4 bg-white border-black border-2 rounded-full">
                                     <p className="font-roboto font-bold">Visit page</p>
                                 </div>
