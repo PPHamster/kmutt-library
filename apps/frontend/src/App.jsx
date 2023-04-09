@@ -2,9 +2,9 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { HomePage } from '@/pages/HomePage';
 import { EventPage } from '@/pages/EventPage';
 import { ServicePage } from '@/pages/ServicePage';
-import  RoomService from '@/pages/RoomService';
-import  BookPage from '@/pages/BookPage';
 import EventbyId from './pages/Eventbyid';
+import RoomService from '@/pages/RoomService';
+import { BookPage } from '@/pages/BookPage';
 
 export const App = () => {
   return (

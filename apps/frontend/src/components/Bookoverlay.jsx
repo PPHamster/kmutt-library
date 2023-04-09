@@ -13,7 +13,7 @@ export default function Bookpopup(props) {
                 <div className='fixed top-[8px] right-[18px] p-2' onClick={props.onClose}><p  className="select-none">X</p></div>
                 <div className="flex flex-col mt-[42px] ml-[64px]">
                     <div>
-                        <p className='text-lg font-kanit font-medium'>{props.book.bookname}</p>
+                        <p className='text-lg font-kanit font-medium'>{props.book.title}</p>
                         <p className={textStyle}>ประเภท: {(props.book.category).join(" / ")}</p>
                         <p className={textStyle}>ต้นฉบับ: {props.book.type}</p>
                         <p className={textStyle}>สิขสิทธิ์: {props.book.publisher}</p>

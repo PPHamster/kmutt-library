@@ -1,10 +1,10 @@
-import React , { useState } from 'react';
+import React , { useState , useEffect } from 'react';
 import Book from '@/components/Book';
 import Room from '@/components/Room';
 import Bookpopup from '@/components/Bookoverlay';
 import { bookdata } from '@/utils/bookdata';
 import { roomdata } from '@/utils/roomdata';
-
+import { Checkbox } from '@mui/material';
 export default function Borrowbook() {
 
     //subset function
@@ -25,21 +25,7 @@ export default function Borrowbook() {
     const handleKeyDown = (event) => {
         const keyword = event.target.value;
         setSearchTerm(keyword);
-        const matchingBooks = bookdata.filter(
-            book => book.bookname.toLowerCase().includes(keyword.toLowerCase())
-        );
-        setFilteredBook(matchingBooks);
     }
-    
-    //check categories in JSON file
-    const updatebooklist = (list) => {
-        const matchingCategoryBooks = bookdata.filter(book => {
-        const bookCategories = book.category;
-        return isArraySubset(list, bookCategories);
-      });
-        setFilteredBook(matchingCategoryBooks);
-      }; 
-    
 
     //check list of categories
     const [checked, setChecked] = useState([]);
@@ -50,9 +36,7 @@ export default function Borrowbook() {
         } else {
           updatedList.splice(checked.indexOf(event.target.value), 1);
         }
-        setChecked(updatedList); 
-        console.log(updatedList);
-        updatebooklist(updatedList);
+        setChecked(updatedList)
     }
 
     const Category = [];
@@ -66,28 +50,57 @@ export default function Borrowbook() {
       });
 
     // year publisher 
-    const [yearpublisher, setYearpublisher] = useState(0);
-    const [yearpublisherEnd, setYearpublisherEnd] = useState(new Date().getFullYear());
+    const [startYear, setStartYear] = useState(0);
+    const [endYear, setEndYear] = useState(new Date().getFullYear());
     const allow = /^[0-9\b]+$/;
     const handleYearStart = (event) => {
-        if (event.target.value === '' || allow.test(event.target.value)) setYearpublisher(event.target.value)
+        if (event.target.value === '' || allow.test(event.target.value)) setStartYear(event.target.value)
 
     }
     const handleYearEnd = (event) => {
-        if (event.target.value === '' || allow.test(event.target.value)) setYearpublisherEnd(event.target.value)
-        
+        if (event.target.value === '' || allow.test(event.target.value)) setEndYear(event.target.value)
     }
     // publisher
     const [publisher, setPublisher] = useState('');
 
     // language 
     const Language = ["English", "Japanese", "Thai"]
-    var currentValue = '';
-    const handleValue = (event) => {
-        currentValue = event;
-        updatebooklist(currentValue);
+    const [ language, setLanguage] = useState([])
+    const handleLanguage = (event) => {
+        var updatedList = [...language];
+        if (event.target.checked) {
+          updatedList = [...language, event.target.value];
+        } else {
+          updatedList.splice(language.indexOf(event.target.value), 1);
+        }
     }
 
+
+        useEffect(() => {
+    //filter data
+    function matchingbook() {
+        //text search
+        const filteredBySearch = bookdata.filter(book =>
+            book.title.toLowerCase().includes(searchTerm.toLowerCase())
+          );
+        
+        //category search
+        const filteredByCategory = checked.length > 0 ? filteredBySearch.filter(book =>
+            book.category.some(category => checked.includes(category))
+          ) : filteredBySearch;
+          
+        //publish date search
+        const filteredByPublishDate = startYear && endYear 
+        ? filteredByCategory.filter(book => {
+            const publishYear = new Date(book.publishdate).getFullYear();
+            return publishYear >= startYear && publishYear <= endYear;
+          })
+        : filteredByCategory;
+        //return
+        return filteredByPublishDate
+    }
+        setFilteredBook(matchingbook());
+          }, [checked, searchTerm, startYear, endYear]);  
     //reversation room
     const [ selectedRoom, setSelectedRoom] = useState(null);
 
@@ -100,24 +113,17 @@ export default function Borrowbook() {
             <div className='relative flex flex-col min-h-[7vh] mb-64 top-[80px]'>
                 <p className='font-kanit font-semibold text-3xl ml-[100px] mb-[22px] text-gray-800'>ยืมหนังสือ</p>
                 <div className='flex flex-row'>  
-                    <div className='min-w-[310px] w-[310px] flex flex-col ml-[5.2vw]'>
+                    <div className='min-w-[310px] w-[310px] flex flex-col ml-[120px]'>
                         <p className='font-kanit text-xl text-gray-700 font-medium mb-3'>หมวดหมู่</p>
-                        <div className='max-h-[222px] px-3 pb-3 mb-3 overflow-y-auto text-sm text-gray-700'>
+                        <div className='max-h-[222px] px-3 pb-3 mb-3 overflow-y-scroll text-sm text-gray-700'>
                             {Category.map((item, index) => (
-                                <div key={index} className="p-1">  
-                                    <div className="flex items-center mr-4 mb-2">  
-                                        <input value={item} type="checkbox" id="item" name="category" className="opacity-0 absolute h-6 w-6" onChange={handleCheck} />  
-                                            <div className="bg-white border-2 rounded-md border-blue-400 w-6 h-6 flex flex-shrink-0 justify-center items-center mr-2 focus-within:border-blue-500">  
-                                                <svg className="fill-current hidden w-3 h-3 text-blue-600 pointer-events-none" version="1.1" viewBox="0 0 17 12" xmlns="http://www.w3.org/2000/svg">  
-                                                    <g fill="none" fillRule="evenodd">  
-                                                        <g transform="translate(-9 -11)" fill="#1F73F1" fillRule="nonzero">  
-                                                            <path d="m25.576 11.414c0.56558 0.55188 0.56558 1.4439 0 1.9961l-9.404 9.176c-0.28213 0.27529-0.65247 0.41385-1.0228 0.41385-0.37034 0-0.74068-0.13855-1.0228-0.41385l-4.7019-4.588c-0.56584-0.55188-0.56584-1.4442 0-1.9961 0.56558-0.55214 1.4798-0.55214 2.0456 0l3.679 3.5899 8.3812-8.1779c0.56558-0.55214 1.4798-0.55214 2.0456 0z" />  
-                                                        </g>  
-                                                    </g>  
-                                                </svg>  
-                                            </div>  
-                                        <label htmlFor="item" className="select-none">{item}</label>  
-                                    </div>  
+                                <div key={index} className="p-1 flex flex-row">  
+                                    <div className="flex items-center mr-4 mb-0">  
+                                        <Checkbox value={item} 
+                                                className='h-8 w-8'
+                                               onChange={handleCheck} />
+                                    </div>
+                                        <p className='font-light font-roboto text-md mt-[6px]'>{item}</p> 
                                     </div>
                             ))}
                         </div>
@@ -154,18 +160,12 @@ export default function Borrowbook() {
                         <div className='max-h-[400px] px-3 pb-3 mb-3 overflow-y-auto text-sm text-gray-700'>
                             {Language.map((item, index) => (
                                 <div key={index} className="p-1">  
-                                    <div className="flex items-center mr-4 mb-2">  
-                                        <input value={item} type="radio" id="item" name="language" className="opacity-0 absolute h-6 w-6" onChange={(event) => handleValue(event.target.value)} />  
-                                            <div className="bg-white border-2 rounded-md border-blue-400 w-6 h-6 flex flex-shrink-0 justify-center items-center mr-2 focus-within:border-blue-500">  
-                                                <svg className="fill-current hidden w-3 h-3 text-blue-600 pointer-events-none" version="1.1" viewBox="0 0 17 12" xmlns="http://www.w3.org/2000/svg">  
-                                                    <g fill="none" fillRule="evenodd">  
-                                                        <g transform="translate(-9 -11)" fill="#1F73F1" fillRule="nonzero">  
-                                                            <path d="m25.576 11.414c0.56558 0.55188 0.56558 1.4439 0 1.9961l-9.404 9.176c-0.28213 0.27529-0.65247 0.41385-1.0228 0.41385-0.37034 0-0.74068-0.13855-1.0228-0.41385l-4.7019-4.588c-0.56584-0.55188-0.56584-1.4442 0-1.9961 0.56558-0.55214 1.4798-0.55214 2.0456 0l3.679 3.5899 8.3812-8.1779c0.56558-0.55214 1.4798-0.55214 2.0456 0z" />  
-                                                        </g>  
-                                                    </g>  
-                                                </svg>  
-                                            </div>  
-                                        <label htmlFor="item" className="select-none">{item}</label>  
+                                    <div className="flex flex-row mr-4 mb-2">  
+                                        <Checkbox 
+                                            value={item}
+                                            className="h-8 w-8" 
+                                            onChange={handleLanguage} />  
+                                        <p className='font-light font-roboto text-md ml-4 mt-[6px]'>{item}</p>    
                                     </div>  
                                     </div>
                             ))}
@@ -197,7 +197,7 @@ export default function Borrowbook() {
                                         <Book 
                                         key={data.bookid}
                                         image={data.image} 
-                                        bookname={data.bookname}
+                                        title={data.title}
                                         onClick={() => handleBookClick(data)}
                                         id={selectedRoom}
                                     />))}

@@ -52,7 +52,7 @@ export default function Recommend() {
                             <Book 
                             key={data.bookid}
                             image={data.image} 
-                            bookname={data.bookname}
+                            title={data.title}
                             onClick={() => handleBookClick(data)}
                             />
                         ))} 

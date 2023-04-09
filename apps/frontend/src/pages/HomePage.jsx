@@ -2,7 +2,8 @@ import Navbar from "@/components/Navbar";
 import Recommend from "@/components/Home/Recommend";
 import Service from "@/components/Home/Service";
 import Aboutme from "@/components/Home/Aboutme";
-import Event from "@/components/Home/Event";
+import EventComponent from "@/components/Home/Event";
+import Blog from "@/components/Home/Blog";
 import { popup } from '@/utils/Popup';
 
 export const HomePage = () => {
@@ -21,7 +22,8 @@ export const HomePage = () => {
       <Recommend/>
       <Service/>
       <Aboutme/>
-      <Event/>
+      <EventComponent/>
+      <Blog/>
         <div className="max-w-[700px] mx-auto text-center">
           <div className="text-white text-center text-6xl">Is Gubaaa!!</div>
           <img src="https://img1.picmix.com/output/stamp/normal/2/3/4/4/1774432_0219c.gif" className="mx-auto" />

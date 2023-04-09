@@ -2,7 +2,7 @@ export const bookdata = [
     {   
         bookid: 'M01',
         image: "./bookimages/chainsawman_volume_1.jpg",
-        bookname: "Chainsawman, vol. 1",
+        title : "Chainsawman, vol. 1",
         category: ['English','Action','Comedy'],
         type: 'Manga',
         publisher: 'Viz Media, Subs. of Shogakukan Inc (US)',
@@ -12,7 +12,7 @@ export const bookdata = [
     {   
         bookid: 'M02',
         image: "./bookimages/kaguya_sama_love_is_war_volume_1.jpg",
-        bookname: "Kaguya sama love is war, vol. 1",
+        title : "Kaguya sama love is war, vol. 1",
         category: ['English','Comedy','Romance'],
         type: 'Manga',
         publisher: 'Viz Media, Subs. of Shogakukan Inc (US)',
@@ -22,7 +22,7 @@ export const bookdata = [
     {   
         bookid: 'M03',
         image: "./bookimages/chainsawman_volume_5.jpg",
-        bookname: "Chainsawman, vol. 5",
+        title : "Chainsawman, vol. 5",
         category: ['English','Action','Comedy'],
         type: 'Manga',
         publisher: 'Viz Media, Subs. of Shogakukan Inc (US)',
@@ -32,7 +32,7 @@ export const bookdata = [
     {   
         bookid: 'M04',
         image: "./bookimages/Miss_Kobayashi's_Dragon_Maid_Volume_1.jpg",
-        bookname: "Miss kobayashi's Dragon maid, vol. 1",
+        title : "Miss kobayashi's Dragon maid, vol. 1",
         category: ['English','Comedy','Slice of life'],
         type: 'Manga',
         publisher: 'Seven Seas Entertainment',
@@ -42,7 +42,7 @@ export const bookdata = [
     {   
         bookid: 'M05',
         image: "./bookimages/dr_stone_volume_1.jpg",
-        bookname: "Dr.stone, vol. 1",
+        title : "Dr.stone, vol. 1",
         category: ['English','Action','Science','Comedy'],
         type: 'Manga',
         publisher: 'VIZ Media LLC',
@@ -52,7 +52,7 @@ export const bookdata = [
     {   
         bookid: 'M06',
         image: "./bookimages/spy_x_family_volume_1.jpg",
-        bookname: "Spy x family, vol. 1",
+        title : "Spy x family, vol. 1",
         category: ['English','Action','Comedy'],
         type: 'Manga',
         publisher: 'VIZ Media LLC',
@@ -62,7 +62,7 @@ export const bookdata = [
     {   
         bookid: 'M07',
         image: "./bookimages/onimai_i'm_now_your_sister_volume_1.jpg",
-        bookname: "Onimai I'm now your sister, vol. 1",
+        title : "Onimai I'm now your sister, vol. 1",
         category: ['English','Comedy','Slice of life'],
         type: 'Manga',
         publisher: 'Kodansha Comics',
@@ -72,7 +72,7 @@ export const bookdata = [
     {   
         bookid: 'M08',
         image: "./bookimages/bocchi_the_rock_volume_1.jpg",
-        bookname: "Bocchi the rock, vol. 1",
+        title : "Bocchi the rock, vol. 1",
         category: ['Japanese','Comedy','Slice of life','Music'],
         type: 'Manga',
         publisher: 'Houbunsha',
@@ -82,7 +82,7 @@ export const bookdata = [
     {   
         bookid: 'L01',
         image: "./bookimages/that_time_i_got_reincarnated_as_a_slime_volume_1.jpeg",
-        bookname: "That Time I Got Reincarnated as a Slime, Vol. 1",
+        title : "That Time I Got Reincarnated as a Slime, Vol. 1",
         category: ['English','Comedy','Fantasy','Isekai'],
         type: 'Light novel',
         publisher: 'Yen On',
@@ -92,11 +92,35 @@ export const bookdata = [
     {   
         bookid: 'M09',
         image: "./bookimages/little_witch_academia_volume_1.jpg",
-        bookname: "Little witch academia, Vol. 1",
+        title : "Little witch academia, Vol. 1",
         category: ['English','Comedy','Fantasy','Slice of life'],
         type: 'Manga',
         publisher: 'JY',
         author: 'Yoh Yoshinari',
         story: "Those words changed young Atsuko 'Akko' Kagari forever, sparking in her a lifelong dream of becoming a real witch. Now she's been accepted to the same school as her childhood hero, Shiny Chariot-the prestigious Luna Nova Witchcraft Academy. As the only student to come from a non-magical family, Akko finds herself surrounded by prodigies from around the world, but giving up isn't in her vocabulary. Whether it's making friends, proving the doubters wrong, or just flying on a broom, Akko is going to make her fantasy a reality!"
     },
+    {   
+        bookid: 'L02',
+        image: "./bookimages/lycoris_recoil_volume_1.jpg",
+        title : "Lycoris recoil, Vol. 1",
+        category: ['English','Comedy','Action','Suspense'],
+        type: 'Light novel',
+        publisher: 'Kadokawa',
+        author: 'Asaura',
+        story: `This is a small story depicting the everyday extraordinary life of Cafe Rico Rico!
+        "Welcome to Cafe Licorico!"
+        　A stylish and delicious cafe on the east side of Tokyo overlooking the destroyed old radio tower - that is Cafe LicoRico.
+        　This work is a little story of ordinary extraordinary things woven by signboard girls such as Senzoku Nishiki and Takina Inoue, which were not drawn in the original TV animation "Lycoris Recoil". Delicious sweets, gun action, games, human drama, zombies and monsters, road movies ...
+        　and a faint love 　!? As they go on, their bonds are born--the original creator himself turned into a spin-off novel of an assortment of anything like a variety pack of sweets with bonuses!`
+      },
+      {   
+        bookid: 'M10',
+        image: "./bookimages/girls_last_tour_volume_1.jpg",
+        title : "Girl's last tour, Vol. 1",
+        category: ['English','Adventure','Drama'],
+        type: 'Manga',
+        publisher: 'Yen Press; Illustrated edition',
+        author: 'Tsukumizu',
+        story: "Civilization is dead, but not Chito and Yuuri. Time to hop aboard their beloved Kettenkrad motorbike and wander what's left of the world! Sharing a can of soup or scouting for spare parts might not be the experience they were hoping for, but all in all, life isn't too bad..."
+      },
 ]
