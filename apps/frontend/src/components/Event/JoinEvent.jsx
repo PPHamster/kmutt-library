@@ -1,6 +1,6 @@
 import React , { useState } from 'react';
 import Event from '@/components/Eventlist'
-import Eventpopup from '@/components/EventPopup'
+import { eventdata } from '@/utils/eventdata';
 
 export default function JoinEvent() {
 
@@ -8,60 +8,7 @@ export default function JoinEvent() {
     const handleEventClick = (event) => {
         setSelectedEvent(event);
     };
-
-    const eventdata = [
-        {
-            eventid: 'EV01',
-            image: "./image/PAX.jpg",
-            eventname: "กิจกรรมแลกเปลี่ยนความคิดเห็นหนังสือเรื่อง “Pax”",
-            category: 'กิจกรรมแลกเปลี่ยนความคิดเห็นหลังการอ่านหนังสือ',
-            host: 'd. chamberlin',
-            eventdes: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-            location: 'Floor 4, Room 2',
-            participant: 'Lalita Kanya, Malai Kamon, Lalita Malai, Porntip Kanchana, Malai Somporn'
-        },
-        {
-            eventid: 'EV02',
-            image: "./image/kmutt_library.jpg",
-            eventname: "กิจกรรมแลกเปลี่ยนความคิดเห็นหนังสือเรื่อง “Kmutt library”",
-            category: 'กิจกรรมแลกเปลี่ยนความคิดเห็นหลังการอ่านหนังสือ',
-            host: 'd. chamberlin',
-            eventdes: 'Oh wow SQL',
-            location: 'Floor 4, Room 2',
-            participant: 'Intira Arthit, Somboon Intira, Kamon Pakpao, Somsak Kamon, Kanya Sasithorn'
-        },
-        {
-            eventid: 'EV03',
-            image: "./image/kmutt_library.jpg",
-            eventname: "example event3",
-            category: 'กิจกรรมแลกเปลี่ยนความคิดเห็นหลังการอ่านหนังสือ',
-            host: 'd. chamberlin',
-            eventdes: 'Oh wow SQL',
-            location: 'Floor 4, Room 2',
-            participant: 'Lalita Kanya, Malai Kamon, Lalita Malai, Porntip Kanchana, Malai Somporn'
-        },
-        {
-            eventid: 'EV04',
-            image: "./image/Eventimg.jpg",
-            eventname: "example event4",
-            category: 'กิจกรรมแลกเปลี่ยนความคิดเห็นหลังการอ่านหนังสือ',
-            host: 'd. chamberlin',
-            eventdes: 'Oh wow SQL',
-            location: 'Floor 4, Room 2',
-            participant: 'Lalita Kanya, Malai Kamon, Lalita Malai, Porntip Kanchana, Malai Somporn'
-        },
-        {
-            eventid: 'EV05',
-            image: "./image/kmutt_library.jpg",
-            eventname: "example event5",
-            category: 'กิจกรรมแลกเปลี่ยนความคิดเห็นหลังการอ่านหนังสือ',
-            host: 'd. chamberlin',
-            eventdes: 'Oh wow SQL',
-            location: 'Floor 4, Room 2',
-            participant: 'Intira Arthit, Somboon Intira, Kamon Pakpao, Somsak Kamon, Kanya Sasithorn'
-        },
-    ]
-
+    
     return (
         <>
             <div className="w-full h-[700px] mt-[5rem] pt-[2rem] px-[8rem] max-sm:px-[20px] max-lg:px-[4rem]">
@@ -71,13 +18,14 @@ export default function JoinEvent() {
                         {eventdata.map((data) => {
                             return (
                                 <Event
-                                    key={data.eventid}
+                                    eventid={data.eventid}
                                     eventimage={data.image}
                                     eventname={data.eventname}
                                     category={data.category}
                                     host={data.host}
                                     eventdes={data.eventdes}
                                     location={data.location}
+                                    meetingtime={data.meetingtime}
                                     onClick={() => handleEventClick(data)}
                                 />
                             );
@@ -85,15 +33,6 @@ export default function JoinEvent() {
                     </div>
                 </div>
             </div>
-            {selectedEvent && (
-                <div className="fixed top-0 left-0 right-0 bottom-0 z-40">
-                    <Eventpopup
-                        event={selectedEvent}
-                        onClose={() => handleEventClick(null)}
-                        open={selectedEvent !== null}
-                    />
-                </div>
-            )}
         </>
     )
 }
