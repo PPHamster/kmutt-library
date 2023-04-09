@@ -50,7 +50,7 @@ export default function EventbyId() {
         textcolor='text-black'
       />
       <div className="w-[80%] mx-[10%] h-[350px] bg-whitebrown mt-[10vh] flex justify-center items-center">
-        <img src={event.image} className={imgevent} />
+        <img src={'../'+ event.image} className={imgevent} />
       </div>
       <div className="mx-[10%] pr-[20%]">
         <p className='font-semibold font-kanit text-orange-600 text-lg text-left mt-6'>{formattedMeetingTime}</p>
@@ -77,12 +77,12 @@ export default function EventbyId() {
           {modalIsOpen && (
             <div className="fixed flex justify-center items-center w-full h-full top-0 left-0 z-50 bg-black/50">
               <div className="flex flex-wrap rounded-lg shadow-lg shadow-gray-700 w-[62%] min-h-[450px] max-h-[80%] bg-white">
-                <span className="absolute right-[20%] text-3xl" onClick={closeModal}>
+                <span className="absolute right-[20%] text-3xl cursor-pointer" onClick={closeModal}>
                   &times;
                 </span>
                   <div className="text-center justify-center mx-[10%]  w-[80%] p-[16px]">
                     <h1 className="font-medium font-kanit text-[#454545] text-2xl my-5 text-center">รายชื่อผู้เข้าร่วม</h1>
-                    <div className=" overflow-y-scroll max-h-[45%]">
+                    <div className=" overflow-y-scroll text-lg font-kanit max-h-[40%]">
                     <ul>
                       {participantArray.map((name, index) => (
                         <li key={index}>{name.trim()}</li>
