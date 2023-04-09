@@ -8,7 +8,7 @@ export const eventdata = [
         host: 'd. chamberlin',
         eventdes: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
         location: 'Floor 4, Room 2',
-        participant: 'Lalita Kanya, Malai Kamon, Lalita Malai, Porntip Kanchana, Malai Somporn'
+        participant: 'Lalita Kanya, Malai Kamon, Lalita Malai, Porntip Kanchana, Malai Somporn, Lalita Kanya, Malai Kamon, Lalita Malai, Porntip Kanchana, Malai Somporn, Lalita Kanya, Malai Kamon, Lalita Malai, Porntip Kanchana, Malai Somporn, Lalita Kanya, Malai Kamon, Lalita Malai, Porntip Kanchana, Malai Somporn, Lalita Kanya, Malai Kamon, Lalita Malai, Porntip Kanchana, Malai Somporn, Lalita Kanya, Malai Kamon, Lalita Malai, Porntip Kanchana, Malai Somporn, Lalita Kanya, Malai Kamon, Lalita Malai, Porntip Kanchana, Malai Somporn, Lalita Kanya, Malai Kamon, Lalita Malai, Porntip Kanchana, Malai Somporn'
     },
     {
         eventid: 'EV02',

@@ -9,6 +9,7 @@ export default function Event(props) {
 
     // format the date using the toLocaleString() method
     const formattedMeetingTime = meetingTime.toLocaleString("th-TH", {
+        weekday: "short",
         day: "numeric",
         month: "short",
         year: "numeric",

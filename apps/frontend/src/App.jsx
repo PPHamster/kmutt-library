@@ -2,7 +2,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { HomePage } from '@/pages/HomePage';
 import { EventPage } from '@/pages/EventPage';
 import { ServicePage } from '@/pages/ServicePage';
-import EventbyId from './pages/Eventbyid';
+import EventbyId from './pages/EventbyId';
 import RoomService from '@/pages/RoomService';
 import { BookPage } from '@/pages/BookPage';
 
