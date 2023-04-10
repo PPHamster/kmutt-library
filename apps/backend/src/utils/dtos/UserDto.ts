@@ -28,7 +28,7 @@ export class UserCreateDto {
   @MaxLength(20)
   public password: string;
 
-  @IsPhoneNumber()
+  @IsPhoneNumber('TH')
   public tel: string;
 
   @IsNotEmpty()
@@ -50,11 +50,30 @@ export class UserCreateDto {
   @Max(new Date().getFullYear())
   public registYear: number;
 
-  @IsInt()
-  @Min(1)
-  public roleId: number;
+  @IsNotEmpty()
+  @IsString()
+  @MaxLength(150)
+  public role: string;
 
-  @IsInt()
-  @Min(1)
-  public branchId: number;
+  @IsNotEmpty()
+  @IsString()
+  @MaxLength(150)
+  public branch: string;
+}
+
+export class UserLoginDto {
+  @IsEmail()
+  @MaxLength(150)
+  public email: string;
+
+  @IsNotEmpty()
+  @IsString()
+  @MinLength(6)
+  @MaxLength(20)
+  public password: string;
+}
+
+export class UserUpdateImageDto {
+  @IsBase64()
+  public image: string;
 }

@@ -1,4 +1,4 @@
-export type UserOutputApi = {
+export type User = {
   id: string,
   email: string,
   tel: string,
@@ -7,8 +7,6 @@ export type UserOutputApi = {
   image: string,
   isBlacklist: boolean,
   registYear: number,
-  roleId: number,
-  roleName: string,
-  branchId: number,
-  branchName: string,
+  role: string,
+  branch: string,
 }

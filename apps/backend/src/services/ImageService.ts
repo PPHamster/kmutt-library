@@ -1,22 +1,32 @@
 import { Injectable } from '@nestjs/common';
-import { createWriteStream } from 'fs';
+import { writeFileSync, unlinkSync } from 'fs';
 import * as path from 'path';
 
+type Folder = 'books' | 'events' | 'rooms' | 'users';
 @Injectable()
 export class ImageService {
   public readonly folderPath = path.join(__dirname, '../../images');
 
-  public async saveImageFromBase64(
-    base64: string,
-    fileName: string,
-  ): Promise<string> {
-    const fullPath = path.join(this.folderPath, fileName);
-    const stream = createWriteStream(fullPath);
+  public defaultImagePath(folder: Folder): string {
+    return path.join(this.folderPath, folder, 'default.png');
+  }
 
-    return new Promise((resolve, reject) => {
-      stream.write(base64);
-      stream.on('finish', () => resolve(fullPath));
-      stream.on('error', reject);
-    });
+  public saveImageFromBase64(
+    base64: string,
+    folderName: Folder,
+    fileName: string,
+  ): string {
+    const fullPath = path.join(this.folderPath, folderName, fileName);
+    const buffer = Buffer.from(base64, 'base64');
+    writeFileSync(fullPath, buffer);
+
+    return fullPath;
+  }
+
+  public deleteImageFromName(folderName: Folder, fileName: string): void {
+    const fullPath = path.join(this.folderPath, folderName, fileName);
+    try {
+      unlinkSync(fullPath);
+    } catch (err) {}
   }
 }
