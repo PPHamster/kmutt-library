@@ -13,7 +13,14 @@ import {
 } from 'class-validator';
 
 export class OrderCreateDto {
-    public id: string
+    @IsOptional()
+    @IsNotEmpty()
+    public id?: number
+
+    @IsNotEmpty()
     public userId: string
-    public createAt: Date
+
+    @IsOptional()
+    @IsNotEmpty()
+    public createAt?: Date
 }
