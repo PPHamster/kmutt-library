@@ -5,6 +5,7 @@ import { ServicePage } from '@/pages/ServicePage';
 import EventbyId from './pages/EventbyId';
 import RoomService from '@/pages/RoomService';
 import { BookPage } from '@/pages/BookPage';
+import { StaffPage } from '@/pages/StaffPage';
 
 export const App = () => {
   return (
@@ -16,6 +17,7 @@ export const App = () => {
         <Route path="/service/room/:roomid" element={ <RoomService/> } />
         <Route path="/book/:bookid" element={ <BookPage/> } />
         <Route path='/event/:eventid' element={ <EventbyId/>} />
+        <Route path='/staff' element={ <StaffPage /> } />
       </Routes>
     </BrowserRouter>
   );
