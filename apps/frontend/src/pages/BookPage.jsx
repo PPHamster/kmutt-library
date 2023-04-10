@@ -10,8 +10,10 @@ export const BookPage = () => {
   const book = bookdata.find((book) => book.bookid === bookid);
 
   //style
-  const headStyle = "font-poppins font-semibold text-xl mb-2"
+  const headStyle = "font-poppins font-semibold text-2xl mb-2"
   const textStyle = "font-kanit font-light text-lg"
+
+  const publishDate = new Date(book.publishDate).toLocaleString("en-EN", {dateStyle: 'long'});
   return (      
     <>  
       <NavbarStatic
@@ -26,15 +28,15 @@ export const BookPage = () => {
             <p className={textStyle}>ผู้แต่ง 　 {book.author}</p>
             <p className={textStyle}>ผู้จัดจำหน่าย 　 {book.publisher}</p>
             <p className={textStyle}>ประเภท 　 {(book.category).join(" / ")}</p>
-            <p className={textStyle}>ISBN-13 　 {}</p>
-            <p className={textStyle}>วันที่จำหน่าย 　 {}</p>
-            <p className={textStyle}>pages 　 {} หน้า</p>
-            <p className={textStyle}>ภาษา 　 {}</p>
+            <p className={textStyle}>ISBN-13 　 {book.isbn}</p>
+            <p className={textStyle}>วันที่จำหน่าย 　 {publishDate}</p>
+            <p className={textStyle}>pages 　 {book.pages} หน้า</p>
+            <p className={textStyle}>ภาษา 　 {book.language}</p>
             <p className='mt-4 font-light text-lg font-kanit whitespace-normal w-[700px] h-[36px] max-h-[290px] border-b-2 mb-2'>
               [เรื่องย่อ]
               </p>
             <p className='font-light text-lg font-kanit whitespace-normal w-[720px] min-h-[120px] max-h-[290px] overflow-auto pr-[20px]'>
-              {book.story}
+              {book.description}
               </p>
           </div>
         </div>

@@ -65,16 +65,24 @@ export default function Borrowbook() {
 
     // language 
     const Language = ["English", "Japanese", "Thai"]
-    const [ language, setLanguage] = useState([])
-    const handleLanguage = (event) => {
-        var updatedList = [...language];
-        if (event.target.checked) {
-          updatedList = [...language, event.target.value];
-        } else {
-          updatedList.splice(language.indexOf(event.target.value), 1);
-        }
-    }
+    //find unique category in bookdata
+    bookdata.forEach(book => {
+          if (!Language.includes(book.language)) {
+            language.push(book.language); 
+          }
+      });
 
+    const [ language, setLanguage] = useState([])
+
+    const handleLanguage = (event) => {
+        var updatedLanguage = [...language];
+        if (event.target.checked) {
+          updatedLanguage = [...language, event.target.value];
+        } else {
+          updatedLanguage.splice(language.indexOf(event.target.value), 1);
+        }
+        setLanguage(updatedLanguage);
+    }
 
         useEffect(() => {
     //filter data
@@ -86,21 +94,30 @@ export default function Borrowbook() {
         
         //category search
         const filteredByCategory = checked.length > 0 ? filteredBySearch.filter(book =>
-            book.category.some(category => checked.includes(category))
+            isArraySubset(checked,book.category)
           ) : filteredBySearch;
           
         //publish date search
         const filteredByPublishDate = startYear && endYear 
         ? filteredByCategory.filter(book => {
-            const publishYear = new Date(book.publishdate).getFullYear();
+            const publishYear = new Date(book.publishDate).getFullYear();
             return publishYear >= startYear && publishYear <= endYear;
           })
         : filteredByCategory;
+        //publisher
+        const filteredByPublisher = publisher ? filteredByPublishDate.filter(book =>
+            book.publisher.toLowerCase().includes(publisher.toLowerCase())
+          )
+        : filteredByPublishDate;
+        //language
+        const filteredByLanguage = language.length > 0 ? filteredByPublisher.filter(book =>
+            language.some(item => book.language === item)
+          ) : filteredByPublisher;
         //return
-        return filteredByPublishDate
+        return filteredByLanguage
     }
         setFilteredBook(matchingbook());
-          }, [checked, searchTerm, startYear, endYear]);  
+          }, [checked, searchTerm, startYear, endYear, publisher, language]);  
     //reversation room
     const [ selectedRoom, setSelectedRoom] = useState(null);
 
