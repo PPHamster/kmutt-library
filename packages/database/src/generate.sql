@@ -24,7 +24,7 @@ DROP TABLE IF EXISTS `Role`;
 CREATE TABLE `User` (
   `id` VARCHAR(20) NOT NULL,
   `email` VARCHAR(150) NOT NULL,
-  `password` VARCHAR(20) NOT NULL,
+  `password` VARCHAR(150) NOT NULL,
   `tel` VARCHAR(10) NOT NULL,
   `firstname` VARCHAR(150) NOT NULL,
   `lastname` VARCHAR(150) NOT NULL,
@@ -45,6 +45,7 @@ CREATE TABLE `Branch` (
   `name` VARCHAR(150) NOT NULL,
 
   UNIQUE INDEX `BranchIdUnique`(`id`),
+  UNIQUE INDEX `BranchNameUnique`(`name`),
   PRIMARY KEY (`id`)
 );
 
@@ -52,13 +53,6 @@ CREATE TABLE `Branch` (
 CREATE TABLE `Role` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(150) NOT NULL,
-  `isBorrow` TINYINT NOT NULL,
-  `isBookingWorkingspace` TINYINT NOT NULL,
-  `isBookingTeachingRoom` TINYINT NOT NULL,
-  `canManage` TINYINT NOT NULL,
-  `accessServerRoom` TINYINT NOT NULL,
-  `accessStaffRoom` TINYINT NOT NULL,
-  `manageBlacklist` TINYINT NOT NULL,
 
   UNIQUE INDEX `RoleIdUnique`(`id`),
   UNIQUE INDEX `RoleNameUnique`(`name`),
@@ -123,12 +117,21 @@ CREATE TABLE `TimePeriod` (
   PRIMARY KEY (`id`)
 );
 
+-- Create Table Link Room and TimePeriod
+CREATE TABLE `RoomTimePeriod` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `roomId` INT NOT NULL,
+  `TimePeriodId` INT NOT NULL,
+
+  UNIQUE INDEX `RoomTimePeriodIdUnique`(`id`),
+  PRIMARY KEY (`id`)
+);
+
 -- Create Table BookingRoom
 CREATE TABLE `BookingRoom` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `date` DATE NOT NULL,
-  `timePeriodId` INT NOT NULL,
-  `roomId` INT NOT NULL,
+  `roomTimePeriodId` INT NOT NULL,
 
   UNIQUE INDEX `BookingRoomIdUnique`(`id`),
   PRIMARY KEY (`id`)
@@ -246,11 +249,14 @@ ALTER TABLE `User` ADD CONSTRAINT `UserLinkBranchId` FOREIGN KEY (`branchId`) RE
 -- Add Foreign Key Order - User
 ALTER TABLE `Order` ADD CONSTRAINT `OrderLinkUserId` FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
--- Add Foreign Key BookingRoom - TimePeriod
-ALTER TABLE `BookingRoom` ADD CONSTRAINT `BookingRoomLinkTimePeriodId` FOREIGN KEY (`timePeriodId`) REFERENCES `TimePeriod`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+-- Add Foreign Key RoomTimePeriod - TimePeriod
+ALTER TABLE `RoomTimePeriod` ADD CONSTRAINT `RoomTimePeriodLinkTimePeriodId` FOREIGN KEY (`timePeriodId`) REFERENCES `TimePeriod`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
--- Add Foreign Key BookingRoom - Room
-ALTER TABLE `BookingRoom` ADD CONSTRAINT `BookingRoomLinkRoomId` FOREIGN KEY (`roomId`) REFERENCES `Room`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+-- Add Foreign Key RoomTimePeriod - Room
+ALTER TABLE `RoomTimePeriod` ADD CONSTRAINT `RoomTimePeriodLinkRoomId` FOREIGN KEY (`roomId`) REFERENCES `Room`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- Add Foreign Key BookingRoom - RoomTimePeriod
+ALTER TABLE `BookingRoom` ADD CONSTRAINT `BookingRoomLinkRoomTimePeriodId` FOREIGN KEY (`roomTimePeriodId`) REFERENCES `RoomTimePeriod`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- Add Foreign Key Blog - User
 ALTER TABLE `Blog` ADD CONSTRAINT `BlogLinkUserId` FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
