@@ -8,7 +8,7 @@ import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
-import NavbarStatic from "@/components/navbarStatic";
+import NavbarStatic from "@/components/NavbarStatic";
 import dayjs from 'dayjs';
 import 'dayjs/locale/en';
 
@@ -29,7 +29,7 @@ export default function RoomService() {
     setSelectedDate(date);
   };
 
-  const [selectedTime, setSelectedTime] = useState("");
+  const [selectedTime, setSelectedTime] = useState("8:00 - 10:00");
 
   const handleChange = (event) => {
     setSelectedTime(event.target.value);
@@ -37,6 +37,26 @@ export default function RoomService() {
 
   const handleOnClick = () => {
     console.log(selectedDate.format("YYYY-MM-DD") ,selectedTime)
+  }
+  if (room.status === 'maintenance') {
+    return (
+      <div className="w-screen h-screen bg-slate-200">
+      <div className="relative top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center">
+        <img src='https://media.tenor.com/D0mtfd-0dgEAAAAi/tohru.gif' className="mx-auto max-w-full h-auto w-60"/>
+        <p>This room is currently under maintenance. Please check back later.</p>
+      </div>
+      </div>
+    );
+  }
+  if (room.status === 'closed') {
+      return (
+        <div className="w-screen h-screen bg-slate-200">
+        <div className="relative top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center">
+          <img src='https://media.tenor.com/mhRUMt2EGbAAAAAC/shake-head-kokkoro.gif' className="mx-auto max-w-full h-auto w-60"/>
+          <p>This room is currently close. Please check back later.</p>
+        </div>
+        </div>
+  );
   }
   return (
     <>
@@ -77,7 +97,7 @@ export default function RoomService() {
                   <FormControl>
                     <RadioGroup
                       aria-labelledby="demo-radio-buttons-group-label"
-                      defaultValue="female"
+                      defaultValue="8:00 - 10:00"
                       name="time-radio"
                     >
                       <FormControlLabel value="8:00 - 10:00" control={<Radio />} onChange={handleChange} label="8:00 - 10:00" />
@@ -87,10 +107,11 @@ export default function RoomService() {
                     </RadioGroup>
                   </FormControl>
                 </div>
+                <div className="mt-8 ml-1 font-kanit text-md">| {selectedDate.format("YYYY-MM-DD")} เวลา {selectedTime}</div>
                 <button
                     className="w-[110px] h-[30px] rounded-full bg-white border-2 hover:bg-gray-200 font-regular font-poppins text-[#696969] text-md mt-[22px] ease-out duration-300"
                     onClick={handleOnClick}
-                    >see more
+                    >จอง
                 </button>
               </div>
           </div>

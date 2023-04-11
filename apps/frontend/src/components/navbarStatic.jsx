@@ -26,6 +26,9 @@ export default function NavbarStatic(props) {
                     <li className={listClass}><Link to='/event'>
                         <p className={textClass}>Event</p></Link>
                     </li>
+                    <li className={listClass}><Link to='/blog'>
+                        <p className={textClass}>Blog</p></Link>
+                    </li>
                 </nav>
             </div>
         </>

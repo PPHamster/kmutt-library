@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
 import { eventdata } from "@/utils/eventdata";
 import { useState } from 'react';
-import NavbarStatic from "@/components/navbarStatic";
+import NavbarStatic from "@/components/NavbarStatic";
 import { Link } from "react-router-dom";
 
 export default function EventbyId() {

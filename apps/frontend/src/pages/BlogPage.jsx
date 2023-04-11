@@ -1,9 +1,8 @@
 import React from "react";
-import NavbarStatic from "@/components/navbarStatic";
+import NavbarStatic from "@/components/NavbarStatic";
 import Fab from '@mui/material/Fab';
 import AddIcon from '@mui/icons-material/Add';
 import BlogForum from "@/components/BlogForum";
-import { bookdata } from "@/utils/bookdata";
 import { blogdata } from "@/utils/blogdata";
 
 export default function BlogPage() {
@@ -32,8 +31,28 @@ export default function BlogPage() {
                     blog={item}
                 />
                 ))}   
+                
+                <img src='https://media.tenor.com/IapIQOnrTFUAAAAC/karyl-kyaru.gif' className="mt-12 m-auto h-[250px]"/>
                 </div>
             </div>
+            <footer>
+                <div className="mt-32 flex flex-col w-full h-[150px] bg-[#8D4120] columns-2">
+                <div className="mt-6 ml-40">
+                    <p className="font-semi-bold font-poppins text-white text-lg">CONTACT US</p>
+                    <div className="columns-2">
+                    <p className="font-regular font-roboto text-white text-md">
+                        Tel. 02-423-5522 {<br/>}
+                        Email : kmutt_library@kmutt.ac.th
+                    </p>
+                    <p className="font-regular font-kanit text-white text-md">
+                        Location : 91 ถนน พุทธบูชา {<br/>}
+                        แขวงบางมด เขตทุ่งครุ {<br/>}
+                        กรุงเทพมหานคร 10140
+                    </p>
+                    </div>
+                </div>
+                </div>
+            </footer>
         </>
     )
 }

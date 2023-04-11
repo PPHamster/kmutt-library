@@ -2,10 +2,9 @@ import React from "react";
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 
-export default function blogForum(props) {
+export default function BlogForum(props) {
 
     const createtime = new Date(props.blog.createAt).toLocaleString("en-EN", {dateStyle: 'long'});
-
     return (
         <>
             <div className="w-[80vw] ml-[5vw] mt-[40px] min-h-[333px] max-h-[400px] bg-white rounded-md drop-shadow-md">

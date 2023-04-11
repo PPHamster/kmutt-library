@@ -1,7 +1,7 @@
 import React from "react";
 import { useParams } from "react-router-dom";
 import { bookdata } from "@/utils/bookdata";
-import NavbarStatic from "@/components/navbarStatic";
+import NavbarStatic from "@/components/NavbarStatic";
 
 export const BookPage = () => {
   const { bookid } = useParams();

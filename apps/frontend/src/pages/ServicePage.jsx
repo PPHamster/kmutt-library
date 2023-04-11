@@ -1,5 +1,4 @@
 import NavbarStatic from "@/components/NavbarStatic";
-import Navbar from "@/components/NavbarStatic";
 import Borrowbook from "@/components/Service/BorrowBook";
 
 export const ServicePage = () => {
