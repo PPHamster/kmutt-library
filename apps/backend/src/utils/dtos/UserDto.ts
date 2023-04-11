@@ -61,6 +61,74 @@ export class UserCreateDto {
   public branch: string;
 }
 
+export class UserUpdateDto {
+  @IsOptional()
+  @IsNotEmpty()
+  @IsString()
+  @MinLength(6)
+  @MaxLength(20)
+  public password?: string;
+
+  @IsOptional()
+  @IsPhoneNumber('TH')
+  public tel?: string;
+
+  @IsOptional()
+  @IsNotEmpty()
+  @IsString()
+  @MaxLength(150)
+  public firstname?: string;
+
+  @IsOptional()
+  @IsNotEmpty()
+  @IsString()
+  @MaxLength(150)
+  public lastname?: string;
+}
+
+export class UserUpdateByAdminDto {
+  @IsOptional()
+  @IsNotEmpty()
+  @IsString()
+  @MinLength(6)
+  @MaxLength(20)
+  public password?: string;
+
+  @IsOptional()
+  @IsPhoneNumber('TH')
+  public tel?: string;
+
+  @IsOptional()
+  @IsNotEmpty()
+  @IsString()
+  @MaxLength(150)
+  public firstname?: string;
+
+  @IsOptional()
+  @IsNotEmpty()
+  @IsString()
+  @MaxLength(150)
+  public lastname?: string;
+
+  @IsOptional()
+  @IsInt()
+  @Min(new Date().getFullYear() - 50)
+  @Max(new Date().getFullYear())
+  public registYear?: number;
+
+  @IsOptional()
+  @IsNotEmpty()
+  @IsString()
+  @MaxLength(150)
+  public role?: string;
+
+  @IsOptional()
+  @IsNotEmpty()
+  @IsString()
+  @MaxLength(150)
+  public branch?: string;
+}
+
 export class UserLoginDto {
   @IsEmail()
   @MaxLength(150)

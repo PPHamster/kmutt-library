@@ -53,6 +53,13 @@ export class UserRepository {
     return rows[0];
   }
 
+  public async updateUserById(option: string, value: any[], id: string) {
+    await this.connection.query(`UPDATE User SET ${option} WHERE id = ?`, [
+      ...value,
+      id,
+    ]);
+  }
+
   public async updateUserImageById(data: UserUpdateImageDto, id: string) {
     await this.connection.query('UPDATE User SET image = ? WHERE id = ?', [
       data.image,

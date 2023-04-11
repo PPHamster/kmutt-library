@@ -1,5 +1,9 @@
 import { UserService } from '@/services/UserService';
-import { UserUpdateImageDto } from '@/utils/dtos/UserDto';
+import {
+  UserUpdateByAdminDto,
+  UserUpdateDto,
+  UserUpdateImageDto,
+} from '@/utils/dtos/UserDto';
 import {
   Controller,
   Get,
@@ -13,7 +17,8 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@/utils/guards/AuthGuard';
 import { Response } from 'express';
-import { OwnerGuard } from '@/utils/guards/OwnerGuard';
+import { UserGuard } from '@/utils/guards/UserGuard';
+import { AdminGuard } from '@/utils/guards/AdminGuard';
 
 @Controller('users')
 export class UserController {
@@ -31,8 +36,34 @@ export class UserController {
     return res.status(HttpStatus.OK).json(user);
   }
 
+  @Put(':userId')
+  @UseGuards(AuthGuard, UserGuard)
+  public async updateUserById(
+    @Param('userId') id: string,
+    @Body() body: UserUpdateDto,
+    @Res() res: Response,
+  ) {
+    await this.userService.updateUserById(body, id);
+    return res
+      .status(HttpStatus.OK)
+      .json({ msg: `Update user id ${id} success` });
+  }
+
+  @Put(':userId/admin')
+  @UseGuards(AuthGuard, AdminGuard)
+  public async updateUserByIdFromAdmin(
+    @Param('userId') id: string,
+    @Body() body: UserUpdateByAdminDto,
+    @Res() res: Response,
+  ) {
+    await this.userService.updateUserByIdFromAdmin(body, id);
+    return res
+      .status(HttpStatus.OK)
+      .json({ msg: `Update user id ${id} from admin success` });
+  }
+
   @Delete(':userId')
-  @UseGuards(AuthGuard, OwnerGuard)
+  @UseGuards(AuthGuard, AdminGuard)
   public async deleteUserById(
     @Param('userId') id: string,
     @Res() res: Response,
@@ -45,7 +76,7 @@ export class UserController {
   }
 
   @Put(':userId/image')
-  @UseGuards(AuthGuard, OwnerGuard)
+  @UseGuards(AuthGuard, UserGuard)
   public async updateUserImageById(
     @Param('userId') id: string,
     @Body() body: UserUpdateImageDto,
@@ -58,7 +89,7 @@ export class UserController {
   }
 
   @Delete(':userId/image')
-  @UseGuards(AuthGuard, OwnerGuard)
+  @UseGuards(AuthGuard, UserGuard)
   public async deleteUserImageById(
     @Param('userId') id: string,
     @Res() res: Response,
