@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom';
 
 export default function navbarStaff(props) {
 
@@ -12,7 +13,12 @@ export default function navbarStaff(props) {
                     {/* logo for navigation */}
                 </div>
                 <nav className='flex w-full justify-center  items-center text-center mt-4'>
-                <p className={textClass}>Book & Room & Event<br/>Management</p>
+                    <Link to={'/'}>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="absolute left-[3%] w-6 h-6 -translate-y-4 text-center">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+                    </svg></Link>
+
+                    <p className={textClass}>Book & Room & Event<br />Management</p>
                 </nav>
             </div>
         </>

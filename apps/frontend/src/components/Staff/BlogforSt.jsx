@@ -1,14 +1,15 @@
-import React from 'react';
+import React from 'react'
 
-export default function BookforSt(props) {
-    // image styles
-    const imageStyle = 'h-[300px] w-[200px] rounded-lg object-scale-down';
-    return (
-        <div className='box-content h-[480px] w-[225px] pr-[25px] pl-[25px] bg-transparent'>
-            <section className='h-[455px] w-[225px] bg-white rounded-[0.55rem] p-[17.5px] select-none mr-10 drop-shadow-md hover:drop-shadow-lg'>
-                <img src={props.image} className={imageStyle} alt='book cover' draggable="false" onClick={props.onClick} />
-                <p className='w-[190 px] h-[67px] font-bold font-roboto text-[#696969] whitespace-normal mt-2 text-base leading-[22px] text-center'>{props.title}</p>             
-                <button
+export default function BlogforSt(props) {
+  return (
+    <>
+            <div className="w-[240px] ml-[2vw] px-2 min-h-[460px] bg-white rounded-md drop-shadow-md">
+                <div>
+                    <img src={props.book.image} className='m-[30px] w-[160px] min-h-[220px] max-h-[240px] object-scale-down rounded-lg drop-shadow-md'/>
+                    <div className="px-2">
+                        <p className="w-[200px] whitespace-normal overflow-hidden mt-7 font-kanit text-lg text-gray-700">{props.blog.topic}</p>
+                        <p className="font-kanit text-md text-light text-gray-500">เรื่อง: {props.book.title}</p>
+                        <button
                     className="absolute -translate-x-5 -translate-y-[2px] w-[80px] h-[35px] ml-[44px] rounded-full border-2 bg-[#0092BF]  hover:bg-[#007396] font-regular font-poppins text-white text-md mt-[16px] ease-out duration-300"
                     onClick={props.onClick}
                     >edit
@@ -21,7 +22,9 @@ export default function BookforSt(props) {
                   </svg>
                   
                 </button>
-            </section>
-        </div>
-    )
+                    </div>
+                </div>
+            </div>
+        </>
+  )
 }

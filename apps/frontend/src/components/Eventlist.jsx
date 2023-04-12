@@ -40,7 +40,8 @@ export default function Event(props) {
                             <button
                                 className="w-[110px] h-[30px] mx-[99px] rounded-full bg-white border-2 hover:bg-gray-200 font-regular font-poppins text-[#696969] my-[20px] ease-out duration-300"
                             >see more</button>
-                        </Link></Link>
+                        </Link>
+                    </Link>
                 </div>
 
             </div>
