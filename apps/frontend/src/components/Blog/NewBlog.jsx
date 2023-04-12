@@ -29,12 +29,14 @@ export default function Newblog() {
           }
         });
       });
-
+    
+    //element state
     const [topic, setTopic] = useState("");
     const [selectionBook, setSelectedBook] = useState([]);
     const [selectedTags , setSelectedTags] = useState([]);
     const [text, setText] = useState("");
 
+    //element handle on change
     const handleChange = (event) => {
         setTopic(event.target.value);
       };    
@@ -47,6 +49,7 @@ export default function Newblog() {
     const handleText = (event) => {
         setText(event.target.value)
     }
+    // submit new blog
     const submit = (event) => { 
         event.preventDefault();
         console.log({topic: topic,
@@ -63,7 +66,7 @@ export default function Newblog() {
                bgcolor = 'bg-white hover:drop-shadow-md' 
                textcolor = 'text-black'
             />
-            <div className="relative w-[90vw] min-h-[70vh] top-20 left-10 bg-white rounded-sm drop-shadow-md p-12">
+            <div id='top' className="relative w-[90vw] min-h-[70vh] top-20 left-10 bg-white rounded-sm drop-shadow-md p-12">
             <div className="flex flex-col">
                 <p className="font-poppins text-lg ml-4">Blog topic</p>
                     <Box

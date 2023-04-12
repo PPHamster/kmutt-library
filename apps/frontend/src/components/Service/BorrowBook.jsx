@@ -65,15 +65,16 @@ export default function Borrowbook() {
 
     // language 
     const Language = ["English", "Japanese", "Thai"]
-    //find unique category in bookdata
+    //find unique language in bookdata
     bookdata.forEach(book => {
           if (!Language.includes(book.language)) {
             language.push(book.language); 
           }
       });
-
+    //language state 
     const [ language, setLanguage] = useState([])
-
+    
+    //language on change update
     const handleLanguage = (event) => {
         var updatedLanguage = [...language];
         if (event.target.checked) {
@@ -118,6 +119,7 @@ export default function Borrowbook() {
     }
         setFilteredBook(matchingbook());
           }, [checked, searchTerm, startYear, endYear, publisher, language]);  
+          
     //reversation room
     const [ selectedRoom, setSelectedRoom] = useState(null);
 
@@ -127,7 +129,7 @@ export default function Borrowbook() {
       };
     return (
         <>  
-            <div className='relative flex flex-col min-h-[7vh] mb-64 top-[80px]'>
+            <div className='relative flex flex-col min-h-[7vh] mb-64 top-[120px]'>
                 <p className='font-kanit font-semibold text-3xl ml-[100px] mb-[22px] text-gray-800'>ยืมหนังสือ</p>
                 <div className='flex flex-row'>  
                     <div className='min-w-[310px] w-[310px] flex flex-col ml-[120px]'>

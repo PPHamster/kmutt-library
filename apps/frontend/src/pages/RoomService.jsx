@@ -12,6 +12,7 @@ import NavbarStatic from "@/components/NavbarStatic";
 import dayjs from 'dayjs';
 import 'dayjs/locale/en';
 
+
 export default function RoomService() {
   const { roomid } = useParams();
 
@@ -38,25 +39,28 @@ export default function RoomService() {
   const handleOnClick = () => {
     console.log(selectedDate.format("YYYY-MM-DD") ,selectedTime)
   }
-  if (room.status === 'maintenance') {
+  function ClosePage(props) {
+    
     return (
       <div className="w-screen h-screen bg-slate-200">
-      <div className="relative top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center">
-        <img src='https://media.tenor.com/D0mtfd-0dgEAAAAi/tohru.gif' className="mx-auto max-w-full h-auto w-60"/>
-        <p>This room is currently under maintenance. Please check back later.</p>
-      </div>
+        <div className="relative top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center">
+          <img src={props.image} className="mx-auto max-w-full h-auto w-60" alt="Maintenance"/>
+          <p>This room is currently {props.textstatus} Please check back later.</p>
+        </div>
       </div>
     );
   }
+
+
+  if (room.status === 'maintenance') {
+    return (
+    <ClosePage image='https://media.tenor.com/D0mtfd-0dgEAAAAi/tohru.gif' textstatus=" under maintenance. " />
+    )
+  }
   if (room.status === 'closed') {
-      return (
-        <div className="w-screen h-screen bg-slate-200">
-        <div className="relative top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center">
-          <img src='https://media.tenor.com/mhRUMt2EGbAAAAAC/shake-head-kokkoro.gif' className="mx-auto max-w-full h-auto w-60"/>
-          <p>This room is currently close. Please check back later.</p>
-        </div>
-        </div>
-  );
+    return (
+     <ClosePage image='https://media.tenor.com/IMIycxJ0LxUAAAAC/princess-connect.gif' textstatus=" not available. " />
+    )
   }
   return (
     <>
