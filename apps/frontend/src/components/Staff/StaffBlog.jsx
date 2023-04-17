@@ -191,16 +191,16 @@ export default function StaffBlog() {
                             renderOption={(props, option) => <li {...props}>{option.id} {option.name}</li>}
                             sx={{ width: 300 }}
                             freeSolo
-                            renderInput={(params) => <TextField {...params} label="ค้นหา Category" />}
+                            renderInput={(params) => <TextField {...params} label="ค้นหา Tag" />}
                         />
                         {/* add category */}
                         <Dialog open={open} onClose={handleClose}>
                             <form onSubmit={handleSubmit}>
-                                <DialogTitle className='text-center'>เพิ่ม Category หนังสือ</DialogTitle>
+                                <DialogTitle className='text-center'>เพิ่ม Tag</DialogTitle>
                                 <hr />
                                 <DialogContent>
                                     <DialogContentText className='px-5'>
-                                        คุณแน่ใจหรือไม่ว่าต้องการเพิ่ม '{dialogValue.name}' เป็น Category ใหม่
+                                        คุณแน่ใจหรือไม่ว่าต้องการเพิ่ม '{dialogValue.name}' เป็น Tag ใหม่
                                     </DialogContentText>
                                 </DialogContent>
                                 <DialogActions>
@@ -213,11 +213,11 @@ export default function StaffBlog() {
                         {/* del category */}
                         <Dialog open={openDel} onClose={handleCloseDel}>
                             <form onSubmit={handleSubmitDel}>
-                                <DialogTitle className='text-center'>ลบ Category หนังสือ</DialogTitle>
+                                <DialogTitle className='text-center'>ลบ Tag</DialogTitle>
                                 <hr />
                                 <DialogContent>
                                     <DialogContentText className='px-5'>
-                                        คุณแน่ใจหรือไม่ว่าต้องการลบ '{value !== null ? value.name : 'null'}' ออกจาก Category หนังสือ
+                                        คุณแน่ใจหรือไม่ว่าต้องการลบ '{value !== null ? value.name : 'null'}' ออกจาก Tag
                                     </DialogContentText>
                                 </DialogContent>
                                 <DialogActions>
@@ -230,11 +230,11 @@ export default function StaffBlog() {
                         {/* edit category */}
                         <Dialog open={openEdit} onClose={handleCloseEdit}>
                             <form onSubmit={handleSubmitEdit}>
-                                <DialogTitle className='text-center'>แก้ไข Category หนังสือ</DialogTitle>
+                                <DialogTitle className='text-center'>แก้ไข Tag</DialogTitle>
                                 <hr />
                                 <DialogContent>
                                     <DialogContentText className='px-5'>
-                                        ระบุชื่อ Category ใหม่ที่ต้องการใช้แทน {value !== null ? value.name : 'null'}
+                                        ระบุชื่อ Tag ใหม่ที่ต้องการใช้แทน {value !== null ? value.name : 'null'}
                                     </DialogContentText>
                                     <div className='flex justify-center'>
                                         <TextField

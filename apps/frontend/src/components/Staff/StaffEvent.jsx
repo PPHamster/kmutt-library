@@ -195,7 +195,7 @@ export default function StaffEvent() {
                         {/* add category */}
                         <Dialog open={open} onClose={handleClose}>
                             <form onSubmit={handleSubmit}>
-                                <DialogTitle className='text-center'>เพิ่ม Category หนังสือ</DialogTitle>
+                                <DialogTitle className='text-center'>เพิ่ม Category Event</DialogTitle>
                                 <hr />
                                 <DialogContent>
                                     <DialogContentText className='px-5'>
@@ -212,11 +212,11 @@ export default function StaffEvent() {
                         {/* del category */}
                         <Dialog open={openDel} onClose={handleCloseDel}>
                             <form onSubmit={handleSubmitDel}>
-                                <DialogTitle className='text-center'>ลบ Category หนังสือ</DialogTitle>
+                                <DialogTitle className='text-center'>ลบ Category Event</DialogTitle>
                                 <hr />
                                 <DialogContent>
                                     <DialogContentText className='px-5'>
-                                        คุณแน่ใจหรือไม่ว่าต้องการลบ '{value !== null ? value.name : 'null'}' ออกจาก Category หนังสือ
+                                        คุณแน่ใจหรือไม่ว่าต้องการลบ '{value !== null ? value.name : 'null'}' ออกจาก Category Event
                                     </DialogContentText>
                                 </DialogContent>
                                 <DialogActions>
@@ -229,7 +229,7 @@ export default function StaffEvent() {
                         {/* edit category */}
                         <Dialog open={openEdit} onClose={handleCloseEdit}>
                             <form onSubmit={handleSubmitEdit}>
-                                <DialogTitle className='text-center'>แก้ไข Category หนังสือ</DialogTitle>
+                                <DialogTitle className='text-center'>แก้ไข Category Event</DialogTitle>
                                 <hr />
                                 <DialogContent>
                                     <DialogContentText className='px-5'>
