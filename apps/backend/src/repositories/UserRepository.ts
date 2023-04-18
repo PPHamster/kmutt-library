@@ -9,7 +9,12 @@ export class UserRepository {
 
   public async createUser(data: UserCreateDto): Promise<void> {
     await this.connection.query(
-      'INSERT INTO User VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, (SELECT id FROM Role WHERE name = ?), (SELECT id FROM Branch WHERE name = ?))',
+      `
+      INSERT INTO User
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?,
+        (SELECT id FROM Role WHERE name = ?),
+        (SELECT id FROM Branch WHERE name = ?))
+      `,
       [
         data.id,
         data.email,
@@ -37,7 +42,13 @@ export class UserRepository {
 
   public async getAllUserWithRoleAndBranch() {
     const [rows] = await this.connection.query(
-      'SELECT u.id, u.email, u.tel, u.firstname, u.lastname, u.image, u.isBlacklist, u.registYear, r.name AS role, b.name AS branch FROM User AS u LEFT JOIN Role AS r ON u.roleId = r.id LEFT JOIN Branch AS b ON u.branchId = b.id WHERE r.name != ? GROUP BY u.id',
+      `
+      SELECT u.id, u.email, u.tel, u.firstname, u.lastname, u.image,
+      u.isBlacklist, u.registYear, r.name AS role, b.name AS branch FROM User AS u
+      LEFT JOIN Role AS r ON u.roleId = r.id
+      LEFT JOIN Branch AS b ON u.branchId = b.id
+      WHERE r.name != ? GROUP BY u.id
+      `,
       ['Admin'],
     );
 
@@ -46,7 +57,12 @@ export class UserRepository {
 
   public async getUserWithRoleAndBranchById(id: string) {
     const [rows] = await this.connection.query(
-      'SELECT u.id, u.email, u.tel, u.firstname, u.lastname, u.image, u.isBlacklist, u.registYear, r.name AS role, b.name AS branch FROM User AS u LEFT JOIN Role AS r ON u.roleId = r.id LEFT JOIN Branch AS b ON u.branchId = b.id WHERE u.id = ? GROUP BY u.id',
+      `
+      SELECT u.id, u.email, u.tel, u.firstname, u.lastname, u.image, u.isBlacklist,
+      u.registYear, r.name AS role, b.name AS branch FROM User AS u
+      LEFT JOIN Role AS r ON u.roleId = r.id
+      LEFT JOIN Branch AS b ON u.branchId = b.id
+      WHERE u.id = ? GROUP BY u.id`,
       [id],
     );
 

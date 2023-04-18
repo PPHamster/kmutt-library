@@ -11,6 +11,16 @@ export type User = {
   branch: string,
 }
 
+export type Role = {
+  id: number,
+  name: string,
+}
+
+export type Branch = {
+  id: number,
+  name: string,
+}
+
 export type Order = {
   id: number,
   createdAt: Date,
