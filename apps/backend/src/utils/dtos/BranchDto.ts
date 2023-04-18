@@ -1,18 +1,15 @@
-import {
-    IsNotEmpty,
-    IsString,
-    MaxLength,
-    IsEmail,
-    IsPhoneNumber,
-    IsBase64,
-    IsOptional,
-    IsInt,
-    Min,
-    Max,
-    MinLength,
-  } from 'class-validator';
+import { IsNotEmpty, IsString, MaxLength } from 'class-validator';
 
-export class Branch {
-    id: number
-    name: string
+export class BranchCreateDto {
+  @IsNotEmpty()
+  @IsString()
+  @MaxLength(150)
+  name: string;
+}
+
+export class BranchUpdateDto {
+  @IsNotEmpty()
+  @IsString()
+  @MaxLength(150)
+  name: string;
 }
