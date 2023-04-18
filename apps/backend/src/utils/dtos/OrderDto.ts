@@ -1,26 +1,39 @@
 import {
-    IsNotEmpty,
-    IsString,
-    MaxLength,
-    IsEmail,
-    IsPhoneNumber,
-    IsBase64,
-    IsOptional,
-    IsInt,
-    Min,
-    Max,
-    MinLength,
+  ArrayNotEmpty,
+  IsArray,
+  IsDateString,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+  MaxLength,
+  MinLength,
 } from 'class-validator';
 
 export class OrderCreateDto {
-    @IsOptional()
-    @IsNotEmpty()
-    public id?: number
+  @IsArray()
+  @ArrayNotEmpty()
+  @IsNumber({}, { each: true })
+  public bookIds: number[];
+}
+export class OrderUpdateDto {
+  @IsNotEmpty()
+  @IsString()
+  @MinLength(11)
+  @MaxLength(20)
+  public userId: string;
+}
 
-    @IsNotEmpty()
-    public userId: string
+export class OrderUpdateItemDto {
+  @IsOptional()
+  @IsDateString()
+  public latestNotify?: Date;
 
-    @IsOptional()
-    @IsNotEmpty()
-    public createAt?: Date
+  @IsOptional()
+  @IsDateString()
+  public receivedDate?: Date;
+
+  @IsOptional()
+  @IsDateString()
+  public returnedDate?: Date;
 }
