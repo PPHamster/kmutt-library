@@ -2,6 +2,7 @@ import { BranchService } from '@/services/BranchService';
 import { BranchCreateDto, BranchUpdateDto } from '@/utils/dtos/BranchDto';
 import { AdminGuard } from '@/utils/guards/AdminGuard';
 import { AuthGuard } from '@/utils/guards/AuthGuard';
+import { BranchGuard } from '@/utils/guards/BranchGuard';
 import {
   Body,
   Controller,
@@ -40,14 +41,14 @@ export class BranchController {
   }
 
   @Get(':id')
-  @UseGuards(AuthGuard, AdminGuard)
+  @UseGuards(AuthGuard, AdminGuard, BranchGuard)
   public async getBranchById(@Param('id') id: number, @Res() res: Response) {
     const branch = await this.branchService.getBranchById(id);
     return res.status(HttpStatus.OK).json(branch);
   }
 
   @Put(':id')
-  @UseGuards(AuthGuard, AdminGuard)
+  @UseGuards(AuthGuard, AdminGuard, BranchGuard)
   public async updateBranchById(
     @Param('id') id: number,
     @Body() body: BranchUpdateDto,
@@ -60,7 +61,7 @@ export class BranchController {
   }
 
   @Delete(':id')
-  @UseGuards(AuthGuard, AdminGuard)
+  @UseGuards(AuthGuard, AdminGuard, BranchGuard)
   public async deleteBranchById(@Param('id') id: number, @Res() res: Response) {
     await this.branchService.deleteBranchById(id);
     return res

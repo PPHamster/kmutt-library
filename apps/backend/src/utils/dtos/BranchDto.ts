@@ -4,12 +4,12 @@ export class BranchCreateDto {
   @IsNotEmpty()
   @IsString()
   @MaxLength(150)
-  name: string;
+  public name: string;
 }
 
 export class BranchUpdateDto {
   @IsNotEmpty()
   @IsString()
   @MaxLength(150)
-  name: string;
+  public name: string;
 }

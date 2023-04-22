@@ -42,6 +42,7 @@ export class UserCreateDto {
   public lastname: string;
 
   @IsOptional()
+  @IsNotEmpty()
   @IsBase64()
   public image?: string;
 
@@ -142,6 +143,7 @@ export class UserLoginDto {
 }
 
 export class UserUpdateImageDto {
+  @IsNotEmpty()
   @IsBase64()
   public image: string;
 }

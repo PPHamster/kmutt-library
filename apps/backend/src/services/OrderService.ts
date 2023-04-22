@@ -1,8 +1,8 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { OrderRepository } from '@/repositories/OrderRepository';
 import { OrderItemRepository } from '@/repositories/OrderItemRepository';
-import { OrderCreateDto } from '@/utils/dtos/OrderDto';
 import { MailService } from '@/services/MailService';
+import { CartItemRepository } from '@/repositories/CartItemRepository';
 
 @Injectable()
 export class OrderService {
@@ -10,6 +10,7 @@ export class OrderService {
     private readonly mailService: MailService,
     private readonly orderRepository: OrderRepository,
     private readonly orderItemRepository: OrderItemRepository,
+    private readonly cartItemRepository: CartItemRepository,
   ) {}
 
   private async manageBookQueueById(orderId: number, bookId: number) {
@@ -101,16 +102,24 @@ export class OrderService {
     }
   }
 
-  public async createNewOrder(data: OrderCreateDto, userId: string) {
+  public async createNewOrder(userId: string) {
     const itemCount = await this.orderItemRepository.getOrderItemCountByUserId(
       userId,
     );
 
-    const uniqueBookIdArray = data.bookIds.filter((value, index, array) => {
-      return array.indexOf(value) === index;
+    const allCartItem = await this.cartItemRepository.getAllCartItemByUserId(
+      userId,
+    );
+
+    if (allCartItem.length === 0) {
+      throw new BadRequestException("Don't have book in this order");
+    }
+
+    const bookIdArray = allCartItem.map((cartItem) => {
+      return cartItem.bookId;
     });
 
-    if (itemCount + uniqueBookIdArray.length > 5) {
+    if (itemCount + bookIdArray.length > 5) {
       throw new BadRequestException(
         'If implemented, the book will more than 5 books.',
       );
@@ -120,7 +129,7 @@ export class OrderService {
     const orderId = await this.orderRepository.getLatestOrderIdByUserId(userId);
     const value: number[] = [];
 
-    const query = uniqueBookIdArray
+    const query = bookIdArray
       .map((bookId) => {
         value.push(orderId, bookId);
         return `(?, ?)`;
@@ -129,9 +138,11 @@ export class OrderService {
 
     await this.orderItemRepository.createNewOrderItems(query, value);
 
-    uniqueBookIdArray.forEach((bookId) => {
+    bookIdArray.forEach((bookId) => {
       this.manageBookQueueById(orderId, bookId);
     });
+
+    await this.cartItemRepository.deleteCartItemByUserId(userId);
   }
 
   public async getAllOrderByUserId(id: string) {
@@ -159,7 +170,6 @@ export class OrderService {
 
   public async getOrderDetailById(id: number) {
     const order = await this.orderRepository.getOrderById(id);
-    if (!order) throw new BadRequestException('No Order From This Id');
     return order;
   }
 
@@ -168,12 +178,6 @@ export class OrderService {
       orderId,
       bookId,
     );
-
-    if (!bookInOrder) {
-      throw new BadRequestException(
-        `No book id ${bookId} in order id ${orderId}`,
-      );
-    }
 
     return bookInOrder;
   }

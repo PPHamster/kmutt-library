@@ -2,6 +2,7 @@ import { RoleService } from '@/services/RoleService';
 import { RoleCreateDto, RoleUpdateDto } from '@/utils/dtos/RoleDto';
 import { AdminGuard } from '@/utils/guards/AdminGuard';
 import { AuthGuard } from '@/utils/guards/AuthGuard';
+import { RoleGuard } from '@/utils/guards/RoleGuard';
 import {
   Body,
   Controller,
@@ -40,14 +41,14 @@ export class RoleController {
   }
 
   @Get(':id')
-  @UseGuards(AuthGuard, AdminGuard)
+  @UseGuards(AuthGuard, AdminGuard, RoleGuard)
   public async getRoleById(@Param('id') id: number, @Res() res: Response) {
     const role = await this.roleService.getRoleById(id);
     return res.status(HttpStatus.OK).json(role);
   }
 
   @Put(':id')
-  @UseGuards(AuthGuard, AdminGuard)
+  @UseGuards(AuthGuard, AdminGuard, RoleGuard)
   public async updateRoleById(
     @Param('id') id: number,
     @Body() body: RoleUpdateDto,
@@ -60,7 +61,7 @@ export class RoleController {
   }
 
   @Delete(':id')
-  @UseGuards(AuthGuard, AdminGuard)
+  @UseGuards(AuthGuard, AdminGuard, RoleGuard)
   public async deleteRoleById(@Param('id') id: number, @Res() res: Response) {
     await this.roleService.deleteRoleById(id);
     return res

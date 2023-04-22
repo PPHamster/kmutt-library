@@ -1,18 +1,15 @@
-import {
-    IsNotEmpty,
-    IsString,
-    MaxLength,
-    IsEmail,
-    IsPhoneNumber,
-    IsBase64,
-    IsOptional,
-    IsInt,
-    Min,
-    Max,
-    MinLength,
-  } from 'class-validator';
+import { IsNotEmpty, IsString, MaxLength } from 'class-validator';
 
-export class CategoryDto {
-    id: number
-    name: string
+export class CategoryCreateDto {
+  @IsNotEmpty()
+  @IsString()
+  @MaxLength(150)
+  public name: string;
+}
+
+export class CategoryUpdateDto {
+  @IsNotEmpty()
+  @IsString()
+  @MaxLength(150)
+  public name: string;
 }

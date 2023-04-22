@@ -78,7 +78,7 @@ export class OrderItemRepository {
       SELECT COUNT(*) AS count FROM \`Order\` AS o
       INNER JOIN OrderItem AS oi ON o.id = oi.orderId AND oi.returnedDate IS NULL
       LEFT JOIN User AS u ON o.userId = u.id
-      WHERE u.id = '64070501061';
+      WHERE u.id = ?;
       `,
       [userId],
     );

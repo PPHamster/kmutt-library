@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { RoleRepository } from '@/repositories/RoleRepository';
 import { RoleCreateDto, RoleUpdateDto } from '@/utils/dtos/RoleDto';
 
@@ -12,7 +12,6 @@ export class RoleService {
 
   public async getRoleById(id: number) {
     const role = await this.roleRepository.getRoleById(id);
-    if (!role) throw new BadRequestException(`No role id ${id}`);
     return role;
   }
 
@@ -21,16 +20,10 @@ export class RoleService {
   }
 
   public async updateRoleById(id: number, data: RoleUpdateDto) {
-    if (id === 1) {
-      throw new BadRequestException("Can't Change Role Admin");
-    }
     return this.roleRepository.updateRoleById(id, data);
   }
 
   public async deleteRoleById(id: number) {
-    if (id === 1) {
-      throw new BadRequestException("Can't Delete Role Admin");
-    }
     return this.roleRepository.deleteRoleById(id);
   }
 }

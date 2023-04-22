@@ -1,6 +1,6 @@
 import { OrderService } from '@/services/OrderService';
 import { RequestUser } from '@/utils/decorators/AuthDecorator';
-import { OrderCreateDto, OrderUpdateDto } from '@/utils/dtos/OrderDto';
+import { OrderUpdateDto } from '@/utils/dtos/OrderDto';
 import { AuthGuard } from '@/utils/guards/AuthGuard';
 import { OrderGuard } from '@/utils/guards/OrderGuard';
 import { StaffGuard } from '@/utils/guards/StaffGuard';
@@ -25,12 +25,8 @@ export class OrderController {
 
   @Post()
   @UseGuards(AuthGuard)
-  public async createNewOrder(
-    @RequestUser() user: User,
-    @Body() body: OrderCreateDto,
-    @Res() res: Response,
-  ) {
-    await this.orderService.createNewOrder(body, user.id);
+  public async createNewOrder(@RequestUser() user: User, @Res() res: Response) {
+    await this.orderService.createNewOrder(user.id);
     return res
       .status(HttpStatus.CREATED)
       .json({ msg: 'New Order Has Been Created' });

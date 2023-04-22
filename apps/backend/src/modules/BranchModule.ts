@@ -1,6 +1,6 @@
-import { AuthModule } from './AuthModule';
+import { AuthModule } from '@/modules/AuthModule';
 import { Module } from '@nestjs/common';
-import { DatabaseModule } from './DatabaseModule';
+import { DatabaseModule } from '@/modules/DatabaseModule';
 import { BranchController } from '@/controllers/BranchController';
 import { BranchService } from '@/services/BranchService';
 import { BranchRepository } from '@/repositories/BranchRepository';
