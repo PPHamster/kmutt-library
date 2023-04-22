@@ -83,6 +83,7 @@ CREATE TABLE `Category` (
   `name` VARCHAR(150) NOT NULL,
 
   UNIQUE INDEX `CategoryIdUnique`(`id`),
+  UNIQUE INDEX `CategoryNameUnique`(`name`),
   PRIMARY KEY (`id`)
 );
 
