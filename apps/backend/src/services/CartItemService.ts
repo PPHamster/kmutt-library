@@ -21,7 +21,13 @@ export class CartItemService {
       throw new BadRequestException("Can't add more item");
     }
 
-    await this.cartItemRepository.createCartItem(userId, bookId);
+    try {
+      await this.cartItemRepository.createCartItem(userId, bookId);
+    } catch (error) {
+      if (error instanceof Error) {
+        throw new BadRequestException('You have this book in cart');
+      }
+    }
   }
 
   public async getAllCartItemByUserId(userId: string) {

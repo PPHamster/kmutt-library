@@ -1,4 +1,4 @@
-import { BookCreateDto } from '@/utils/dtos/BookDto';
+import { BookCreateDto, BookUpdateImageDto } from '@/utils/dtos/BookDto';
 import { Inject, Injectable } from '@nestjs/common';
 import { Connection } from 'mysql2/promise';
 @Injectable()
@@ -64,6 +64,13 @@ export class BookRepository {
   public async updateBookById(option: string, value: any[], id: number) {
     await this.connection.query(`UPDATE Book SET ${option} WHERE id = ?`, [
       ...value,
+      id,
+    ]);
+  }
+
+  public async updateBookImageById(id: number, data: BookUpdateImageDto) {
+    await this.connection.query('UPDATE Book SET image = ? WHERE id = ?', [
+      data.image,
       id,
     ]);
   }

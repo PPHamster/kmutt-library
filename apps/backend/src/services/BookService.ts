@@ -1,8 +1,13 @@
 import { BookRepository } from '@/repositories/BookRepository';
 import { CategoryRepository } from '@/repositories/CategoryRepository';
-import { BookCreateDto } from '@/utils/dtos/BookDto';
-import { Injectable } from '@nestjs/common';
+import {
+  BookCreateDto,
+  BookUpdateDto,
+  BookUpdateImageDto,
+} from '@/utils/dtos/BookDto';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { ImageService } from '@/services/ImageService';
+import { OrderItemRepository } from '@/repositories/OrderItemRepository';
 
 @Injectable()
 export class BookService {
@@ -10,17 +15,13 @@ export class BookService {
     private readonly imageService: ImageService,
     private readonly bookRepository: BookRepository,
     private readonly categoryRepository: CategoryRepository,
+    private readonly orderItemRepository: OrderItemRepository,
   ) {}
 
   public async createBook(data: BookCreateDto) {
-    const latestId = await this.bookRepository.getAutoIncrement();
-    const imagePath = this.imageService.saveImageFromBase64(
-      data.image,
-      'books',
-      `${latestId + 1}.png`,
-    );
+    const imageDefault = this.imageService.defaultImagePath('books');
 
-    await this.bookRepository.createBook({ ...data, image: imagePath });
+    await this.bookRepository.createBook({ ...data, image: imageDefault });
 
     const bookValues: string[] = [];
     const bookQuery = data.categories
@@ -30,9 +31,20 @@ export class BookService {
       })
       .join(', ');
 
+    const latestBook = await this.bookRepository.getLatestBook();
+
+    const imagePath = this.imageService.saveImageFromBase64(
+      data.image,
+      'books',
+      `${latestBook.id}.png`,
+    );
+
+    await this.bookRepository.updateBookImageById(latestBook.id, {
+      image: imagePath,
+    });
+
     await this.categoryRepository.createManyCategories(bookQuery, bookValues);
 
-    const latestBook = await this.bookRepository.getLatestBook();
     const categoryValues: any[] = [];
     const categoryQuery = data.categories
       .map((cat) => {
@@ -84,5 +96,36 @@ export class BookService {
     };
 
     return bookWithCategories;
+  }
+
+  public async updateBookById(id: number, data: BookUpdateDto) {
+    if (Object.keys(data).length === 0)
+      throw new BadRequestException('No data that want to update');
+
+    const values = [];
+    const updateQuery = Object.keys(data)
+      .map((key) => {
+        values.push(data[key]);
+        return `${key} = ?`;
+      })
+      .join(', ');
+
+    await this.bookRepository.updateBookById(updateQuery, values, id);
+  }
+
+  public async updateBookImageById(id: number, data: BookUpdateImageDto) {
+    this.imageService.saveImageFromBase64(data.image, 'books', `${id}.png`);
+  }
+
+  public async deleteBookById(id: number) {
+    if (await this.orderItemRepository.getBorrowedItemByBookId(id)) {
+      throw new BadRequestException(
+        "Can't delete book that have been borrowed",
+      );
+    }
+
+    await this.bookRepository.deleteBookById(id);
+
+    this.imageService.deleteImageFromName('books', `${id}.png`);
   }
 }

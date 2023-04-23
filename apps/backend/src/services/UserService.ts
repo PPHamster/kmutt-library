@@ -31,7 +31,8 @@ export class UserService {
   }
 
   public async updateUserById(data: UserUpdateDto, id: string) {
-    if (Object.keys(data).length === 0) throw new BadRequestException();
+    if (Object.keys(data).length === 0)
+      throw new BadRequestException('No data that want to update');
 
     if (data.password) {
       data = { ...data, password: await bcrypt.hash(data.password, 12) };
@@ -85,13 +86,7 @@ export class UserService {
   }
 
   public async updateUserImageById(data: UserUpdateImageDto, id: string) {
-    const imagePath = this.imageService.saveImageFromBase64(
-      data.image,
-      'users',
-      `${id}.png`,
-    );
-
-    await this.userRepository.updateUserImageById({ image: imagePath }, id);
+    this.imageService.saveImageFromBase64(data.image, 'users', `${id}.png`);
   }
 
   public async deleteUserImageById(id: string) {

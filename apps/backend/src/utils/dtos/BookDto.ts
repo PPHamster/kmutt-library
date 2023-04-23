@@ -101,11 +101,13 @@ export class BookUpdateDto {
   @MaxLength(20)
   public language?: string;
 
+  @IsOptional()
   @IsNotEmpty()
   @IsString()
   @MaxLength(10)
   public location?: string;
 
+  @IsOptional()
   @IsArray()
   @ArrayNotEmpty()
   @IsString({ each: true })
