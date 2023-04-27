@@ -1,6 +1,7 @@
 import { BookRepository } from '@/repositories/BookRepository';
 import { CategoryRepository } from '@/repositories/CategoryRepository';
 import {
+  BookAddCategoryDto,
   BookCreateDto,
   BookUpdateDto,
   BookUpdateImageDto,
@@ -59,6 +60,15 @@ export class BookService {
     );
   }
 
+  public async addCategoryById(bookId: number, data: BookAddCategoryDto) {
+    await this.categoryRepository.createCategory(data);
+
+    await this.categoryRepository.createBookCategory(
+      '(?, (SELECT id FROM Category WHERE name = ?))',
+      [bookId, data.name],
+    );
+  }
+
   public async getAllBook() {
     const books = await this.bookRepository.getAllBook();
     const booksWithCategory = [];
@@ -69,9 +79,7 @@ export class BookService {
 
       booksWithCategory.push({
         ...book,
-        categories: categories.map((category) => {
-          return category.name;
-        }),
+        categories,
       });
     }
 
@@ -90,12 +98,22 @@ export class BookService {
 
     const bookWithCategories = {
       ...book,
-      categories: categories.map((category) => {
-        return category.name;
-      }),
+      categories,
     };
 
     return bookWithCategories;
+  }
+
+  public async getBookWithCategoryById(bookId: number, categoryId: number) {
+    return this.bookRepository.getBookWithCategoryById(bookId, categoryId);
+  }
+
+  public async getAllBookEverBorrowedByUserId(userId: string) {
+    return this.bookRepository.getAllBookEverBorrowedByUserId(userId);
+  }
+
+  public async getAllBookNotCreatedBlogByUserId(userId: string) {
+    return this.bookRepository.getAllBookNotCreatedBlogByUserId(userId);
   }
 
   public async updateBookById(id: number, data: BookUpdateDto) {
@@ -127,5 +145,9 @@ export class BookService {
     await this.bookRepository.deleteBookById(id);
 
     this.imageService.deleteImageFromName('books', `${id}.png`);
+  }
+
+  public async deleteCategoryFromBookById(bookId: number, categoryId: number) {
+    return this.bookRepository.deleteCategoryFromBookById(bookId, categoryId);
   }
 }

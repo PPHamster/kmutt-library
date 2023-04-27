@@ -19,6 +19,14 @@ export class CategoryService {
     return this.categoryRepository.getAllCategory();
   }
 
+  public async getAllCategoryByBookId(id: number) {
+    return this.categoryRepository.getAllCategoryByBookId(id);
+  }
+
+  public async getAllCategoryNotInBookById(id: number) {
+    return this.categoryRepository.getAllCategoryNotInBookById(id);
+  }
+
   public async updateCategoryById(id: number, data: CategoryUpdateDto) {
     return this.categoryRepository.updateCategoryById(id, data);
   }

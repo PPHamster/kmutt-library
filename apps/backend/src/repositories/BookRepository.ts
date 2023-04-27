@@ -61,6 +61,49 @@ export class BookRepository {
     return rows[0].AUTO_INCREMENT;
   }
 
+  public async getBookWithCategoryById(bookId: number, categoryId: number) {
+    const [rows] = await this.connection.query(
+      `
+      SELECT * FROM Book AS b
+      INNER JOIN BookCategory AS bc ON b.id = bc.bookId
+      INNER JOIN Category AS c ON c.id = bc.categoryId AND c.id = ?
+      WHERE b.id = ?
+      `,
+      [categoryId, bookId],
+    );
+
+    return rows[0];
+  }
+
+  public async getAllBookEverBorrowedByUserId(userId: string) {
+    const [rows] = await this.connection.query(
+      `
+      SELECT b.* FROM Book AS b
+      INNER JOIN OrderItem AS oi ON b.id = oi.bookId AND oi.returnedDate IS NOT NULL
+      INNER JOIN \`Order\` AS o ON o.id = oi.orderId AND o.userId = ?
+      GROUP BY b.id
+      `,
+      [userId],
+    );
+
+    return rows as any[];
+  }
+
+  public async getAllBookNotCreatedBlogByUserId(userId: string) {
+    const [rows] = await this.connection.query(
+      `
+      SELECT b.* FROM Book AS b
+      INNER JOIN OrderItem AS oi ON b.id = oi.bookId AND oi.returnedDate IS NOT NULL
+      INNER JOIN \`Order\` AS o ON o.id = oi.orderId AND o.userId = ?
+      INNER JOIN Blog AS bl ON bl.userId = ? AND bl.bookId != b.id
+      GROUP BY b.id
+      `,
+      [userId, userId],
+    );
+
+    return rows as any[];
+  }
+
   public async updateBookById(option: string, value: any[], id: number) {
     await this.connection.query(`UPDATE Book SET ${option} WHERE id = ?`, [
       ...value,
@@ -77,5 +120,12 @@ export class BookRepository {
 
   public async deleteBookById(id: number) {
     await this.connection.query('DELETE FROM Book WHERE id = ?', [id]);
+  }
+
+  public async deleteCategoryFromBookById(bookId: number, categoryId: number) {
+    await this.connection.query(
+      'DELETE FROM BookCategory WHERE bookId = ? AND categoryId = ?',
+      [bookId, categoryId],
+    );
   }
 }

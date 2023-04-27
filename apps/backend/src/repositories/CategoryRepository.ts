@@ -45,9 +45,23 @@ export class CategoryRepository {
   public async getAllCategoryByBookId(bookId: number) {
     const [rows] = await this.connection.query(
       `
-      SELECT c.name FROM Book AS b
+      SELECT c.* FROM Book AS b
       LEFT JOIN BookCategory AS bc ON b.id = bc.bookId
       LEFT JOIN Category AS c ON bc.categoryId = c.id
+      WHERE b.id = ?
+      `,
+      [bookId],
+    );
+
+    return rows as any[];
+  }
+
+  public async getAllCategoryNotInBookById(bookId: number) {
+    const [rows] = await this.connection.query(
+      `
+      SELECT c.* FROM Book AS b
+      LEFT JOIN BookCategory AS bc ON b.id = bc.bookId
+      LEFT JOIN Category AS c ON bc.categoryId != c.id
       WHERE b.id = ?
       `,
       [bookId],

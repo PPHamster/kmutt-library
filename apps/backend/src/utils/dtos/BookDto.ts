@@ -106,16 +106,17 @@ export class BookUpdateDto {
   @IsString()
   @MaxLength(10)
   public location?: string;
-
-  @IsOptional()
-  @IsArray()
-  @ArrayNotEmpty()
-  @IsString({ each: true })
-  public categories?: string[];
 }
 
 export class BookUpdateImageDto {
   @IsNotEmpty()
   @IsBase64()
   public image: string;
+}
+
+export class BookAddCategoryDto {
+  @IsNotEmpty()
+  @IsString()
+  @MaxLength(150)
+  public name: string;
 }

@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { BranchRepository } from '@/repositories/BranchRepository';
 import { BranchCreateDto, BranchUpdateDto } from '@/utils/dtos/BranchDto';
 

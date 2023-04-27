@@ -2,6 +2,7 @@ import { BookService } from '@/services/BookService';
 import { CartItemService } from '@/services/CartItemService';
 import { RequestUser } from '@/utils/decorators/AuthDecorator';
 import {
+  BookAddCategoryDto,
   BookCreateDto,
   BookUpdateDto,
   BookUpdateImageDto,
@@ -56,10 +57,36 @@ export class BookController {
     return res.status(HttpStatus.OK).json(cartItem);
   }
 
+  @Get('borrowed')
+  @UseGuards(AuthGuard)
+  public async getAllBookEverBorrowed(
+    @RequestUser() user: User,
+    @Res() res: Response,
+  ) {
+    const books = await this.bookService.getAllBookEverBorrowedByUserId(
+      user.id,
+    );
+
+    return res.status(HttpStatus.OK).json(books);
+  }
+
+  @Get('no-blog')
+  @UseGuards(AuthGuard)
+  public async getAllBookNotCreatedBlog(
+    @RequestUser() user: User,
+    @Res() res: Response,
+  ) {
+    const books = await this.bookService.getAllBookNotCreatedBlogByUserId(
+      user.id,
+    );
+
+    return res.status(HttpStatus.OK).json(books);
+  }
+
   @Get(':id')
   @UseGuards(BookGuard)
   public async getBookById(@Param('id') id: number, @Res() res: Response) {
-    const book = await this.bookService.getBookById(id);
+    const book = await this.bookService.getBookWithCategoriesById(id);
     return res.status(HttpStatus.OK).json(book);
   }
 
@@ -76,6 +103,19 @@ export class BookController {
       .json({ msg: `Update book id ${id} successfully` });
   }
 
+  @Put(':id/category')
+  @UseGuards(AuthGuard, StaffGuard, BookGuard)
+  public async addCategoryById(
+    @Param('id') id: number,
+    @Body() body: BookAddCategoryDto,
+    @Res() res: Response,
+  ) {
+    await this.bookService.addCategoryById(id, body);
+    return res
+      .status(HttpStatus.OK)
+      .json({ msg: `Add ${body.name} to book id ${id} successfully` });
+  }
+
   @Put(':id/image')
   @UseGuards(AuthGuard, StaffGuard, BookGuard)
   public async updateBookImageById(
@@ -89,7 +129,7 @@ export class BookController {
       .json({ msg: `Update book image id ${id} successfully` });
   }
 
-  @Put(':id/select')
+  @Get(':id/select')
   @UseGuards(AuthGuard, BookGuard)
   public async selectBookToCart(
     @RequestUser() user: User,
@@ -122,5 +162,18 @@ export class BookController {
     return res
       .status(HttpStatus.OK)
       .json({ msg: `Delete book id ${bookId} in cart successfully` });
+  }
+
+  @Delete(':id/category/:categoryId')
+  @UseGuards(AuthGuard, StaffGuard, BookGuard)
+  public async deleteCategoryFromBookById(
+    @Param('id') bookId: number,
+    @Param('categoryId') categoryId: number,
+    @Res() res: Response,
+  ) {
+    await this.bookService.deleteCategoryFromBookById(bookId, categoryId);
+    return res.status(HttpStatus.OK).json({
+      msg: `Delete category id ${categoryId} from book id ${bookId} successfully`,
+    });
   }
 }
