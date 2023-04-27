@@ -6,6 +6,8 @@ import { RoleModule } from '@/modules/RoleModule';
 import { BranchModule } from '@/modules/BranchModule';
 import { BookModule } from '@/modules/BookModule';
 import { CategoryModule } from '@/modules/CategoryModule';
+import { BlogModule } from '@/modules/BlogModule';
+import { TagModule } from '@/modules/TagModule';
 
 @Module({
   imports: [
@@ -16,6 +18,8 @@ import { CategoryModule } from '@/modules/CategoryModule';
     BookModule,
     CategoryModule,
     OrderModule,
+    BlogModule,
+    TagModule,
   ],
 })
 export class AppModule {}
