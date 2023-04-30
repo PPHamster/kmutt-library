@@ -34,7 +34,6 @@ export class CategoryController {
   }
 
   @Get()
-  @UseGuards(AuthGuard, StaffGuard)
   public async getAllCategory(@Res() res: Response) {
     const categories = await this.categoryService.getAllCategory();
     return res.status(HttpStatus.OK).json(categories);

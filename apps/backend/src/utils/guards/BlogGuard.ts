@@ -18,7 +18,10 @@ export class BlogGuard implements CanActivate {
   public constructor(private readonly blogService: BlogService) {}
 
   public async canActivate(context: ExecutionContext): Promise<boolean> {
-    const { params, user } = context.switchToHttp().getRequest<Request>();
+    const { params, user, method } = context
+      .switchToHttp()
+      .getRequest<Request>();
+
     const { id, tagId } = params as unknown as Params;
     const currentUser = user as User;
 
@@ -27,6 +30,8 @@ export class BlogGuard implements CanActivate {
     if (!blog) {
       throw new BadRequestException(`No blog id ${id}`);
     }
+
+    if (method === 'GET') return true;
 
     if (tagId) {
       const bookWithCategory = await this.blogService.getBlogWithTagById(

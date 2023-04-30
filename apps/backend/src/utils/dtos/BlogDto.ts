@@ -13,6 +13,7 @@ export class BlogCreateDto {
 
   @IsArray()
   @ArrayNotEmpty()
+  @IsNotEmpty({ each: true })
   @IsString({ each: true })
   public tags: string[];
 }

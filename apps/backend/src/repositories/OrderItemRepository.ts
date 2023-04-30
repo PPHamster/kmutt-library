@@ -1,4 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
+import { OrderItem, OrderItemJoinBook, SendEmailInfo } from 'api-schema';
 import { Connection } from 'mysql2/promise';
 
 @Injectable()
@@ -14,7 +15,9 @@ export class OrderItemRepository {
     );
   }
 
-  public async getOrderItemsByOrderId(orderId: number) {
+  public async getOrderItemsByOrderId(
+    orderId: number,
+  ): Promise<OrderItemJoinBook[]> {
     const [rows] = await this.connection.query(
       `
       SELECT b.*, oi.latestNotify, oi.receivedDate, oi.returnedDate
@@ -24,10 +27,13 @@ export class OrderItemRepository {
       `,
       [orderId],
     );
-    return rows;
+    return rows as any[] as OrderItemJoinBook[];
   }
 
-  public async getOrderItemById(orderId: number, bookId: number) {
+  public async getOrderItemById(
+    orderId: number,
+    bookId: number,
+  ): Promise<OrderItem> {
     const [rows] = await this.connection.query(
       'SELECT * FROM OrderItem WHERE orderId = ? AND bookId = ?',
       [orderId, bookId],
@@ -36,7 +42,7 @@ export class OrderItemRepository {
     return rows[0];
   }
 
-  public async getBorrowedItemByBookId(bookId: number) {
+  public async getBorrowedItemByBookId(bookId: number): Promise<OrderItem> {
     const [rows] = await this.connection.query(
       'SELECT * FROM OrderItem WHERE bookId = ? AND receivedDate IS NOT NULL AND returnedDate IS NULL',
       [bookId],
@@ -45,19 +51,19 @@ export class OrderItemRepository {
     return rows[0];
   }
 
-  public async getAllItemInQueueByBookId(bookId: number) {
+  public async getAllItemInQueueByBookId(bookId: number): Promise<OrderItem[]> {
     const [rows] = await this.connection.query(
       'SELECT * FROM OrderItem WHERE bookId = ? AND receivedDate IS NULL',
       [bookId],
     );
 
-    return rows as any[];
+    return rows as any[] as OrderItem[];
   }
 
   public async getBookDetailAndEmailFromOrderItemId(
     orderId: number,
     bookId: number,
-  ) {
+  ): Promise<SendEmailInfo> {
     const [rows] = await this.connection.query(
       `
       SELECT b.id, b.title, b.image, u.email FROM \`OrderItem\` AS oi
@@ -72,7 +78,7 @@ export class OrderItemRepository {
     return rows[0];
   }
 
-  public async getOrderItemCountByUserId(userId: string) {
+  public async getOrderItemCountByUserId(userId: string): Promise<number> {
     const [rows] = await this.connection.query(
       `
       SELECT COUNT(*) AS count FROM \`Order\` AS o

@@ -1,5 +1,6 @@
 import { BookCreateDto, BookUpdateImageDto } from '@/utils/dtos/BookDto';
 import { Inject, Injectable } from '@nestjs/common';
+import { Book } from 'api-schema';
 import { Connection } from 'mysql2/promise';
 @Injectable()
 export class BookRepository {
@@ -28,12 +29,12 @@ export class BookRepository {
     );
   }
 
-  public async getAllBook() {
+  public async getAllBook(): Promise<Book[]> {
     const [rows] = await this.connection.query('SELECT * FROM Book');
-    return rows as any[];
+    return rows as any[] as Book[];
   }
 
-  public async getBookById(id: number) {
+  public async getBookById(id: number): Promise<Book> {
     const [rows] = await this.connection.query(
       'SELECT * FROM Book WHERE id = ?',
       [id],
@@ -41,7 +42,7 @@ export class BookRepository {
     return rows[0];
   }
 
-  public async getLatestBook() {
+  public async getLatestBook(): Promise<Book> {
     const [rows] = await this.connection.query(
       'SELECT * FROM Book ORDER BY id DESC',
     );
@@ -49,7 +50,7 @@ export class BookRepository {
     return rows[0];
   }
 
-  public async getAutoIncrement() {
+  public async getAutoIncrement(): Promise<number> {
     const [rows] = await this.connection.query(
       `
       SELECT \`AUTO_INCREMENT\`
@@ -75,7 +76,7 @@ export class BookRepository {
     return rows[0];
   }
 
-  public async getAllBookEverBorrowedByUserId(userId: string) {
+  public async getAllBookEverBorrowedByUserId(userId: string): Promise<Book[]> {
     const [rows] = await this.connection.query(
       `
       SELECT b.* FROM Book AS b
@@ -86,10 +87,12 @@ export class BookRepository {
       [userId],
     );
 
-    return rows as any[];
+    return rows as any[] as Book[];
   }
 
-  public async getAllBookNotCreatedBlogByUserId(userId: string) {
+  public async getAllBookNotCreatedBlogByUserId(
+    userId: string,
+  ): Promise<Book[]> {
     const [rows] = await this.connection.query(
       `
       SELECT b.* FROM Book AS b
@@ -101,7 +104,7 @@ export class BookRepository {
       [userId, userId],
     );
 
-    return rows as any[];
+    return rows as any[] as Book[];
   }
 
   public async updateBookById(option: string, value: any[], id: number) {

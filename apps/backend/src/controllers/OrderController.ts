@@ -15,6 +15,7 @@ import {
   HttpStatus,
   UseGuards,
   Body,
+  Query,
 } from '@nestjs/common';
 import { User } from 'api-schema';
 import { Response } from 'express';
@@ -36,28 +37,24 @@ export class OrderController {
   @UseGuards(AuthGuard)
   public async getAllOrderByRequestUser(
     @RequestUser() user: User,
+    @Query('userId') userId: string,
     @Res() res: Response,
   ) {
-    const orders = await this.orderService.getAllOrderByUserId(user.id);
-    return res.status(HttpStatus.OK).json(orders);
-  }
-
-  @Get('user/:userId')
-  public async getAllOrderByUserId(
-    @Param('userId') userId: string,
-    @Res() res: Response,
-  ) {
-    const orders = await this.orderService.getAllOrderByUserId(userId);
+    const orders = userId
+      ? await this.orderService.getAllOrderByUserId(userId)
+      : await this.orderService.getAllOrderByUserId(user.id);
     return res.status(HttpStatus.OK).json(orders);
   }
 
   @Get(':id')
+  @UseGuards(AuthGuard, OrderGuard)
   public async getOrderById(@Param('id') id: number, @Res() res: Response) {
-    const order = await this.orderService.getOrderById(id);
+    const order = await this.orderService.getOrderWithItemsById(id);
     return res.status(HttpStatus.OK).json(order);
   }
 
   @Get(':id/:bookId/charge')
+  @UseGuards(AuthGuard, OrderGuard)
   public async getChargeById(
     @Param('id') orderId: number,
     @Param('bookId') bookId: number,
@@ -68,7 +65,7 @@ export class OrderController {
   }
 
   @Put(':id')
-  @UseGuards(AuthGuard, StaffGuard)
+  @UseGuards(AuthGuard, StaffGuard, OrderGuard)
   public async updateOrderById(
     @Param('id') id: number,
     @Body() body: OrderUpdateDto,

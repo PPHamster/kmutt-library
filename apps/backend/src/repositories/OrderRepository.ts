@@ -1,4 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
+import { Order } from 'api-schema';
 import { Connection } from 'mysql2/promise';
 
 @Injectable()
@@ -13,16 +14,16 @@ export class OrderRepository {
     ]);
   }
 
-  public async getAllOrderByUserId(userId: string) {
+  public async getAllOrderByUserId(userId: string): Promise<Order[]> {
     const [rows] = await this.connection.query(
       'SELECT * FROM `Order` WHERE userId = (?)',
       [userId],
     );
 
-    return rows as any[];
+    return rows as any[] as Order[];
   }
 
-  public async getOrderById(id: number) {
+  public async getOrderById(id: number): Promise<Order> {
     const [rows] = await this.connection.query(
       'SELECT * FROM `Order` WHERE id = (?)',
       [id],

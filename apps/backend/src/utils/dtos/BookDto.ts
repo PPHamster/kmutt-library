@@ -56,6 +56,7 @@ export class BookCreateDto {
 
   @IsArray()
   @ArrayNotEmpty()
+  @IsNotEmpty({ each: true })
   @IsString({ each: true })
   public categories: string[];
 }

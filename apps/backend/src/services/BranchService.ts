@@ -11,8 +11,7 @@ export class BranchService {
   }
 
   public async getBranchById(id: number) {
-    const branch = await this.branchRepository.getBranchById(id);
-    return branch;
+    return this.branchRepository.getBranchById(id);
   }
 
   public async getAllBranch() {

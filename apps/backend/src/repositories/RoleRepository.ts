@@ -1,5 +1,6 @@
 import { RoleCreateDto, RoleUpdateDto } from '@/utils/dtos/RoleDto';
 import { Inject, Injectable } from '@nestjs/common';
+import { Role } from 'api-schema';
 import { Connection } from 'mysql2/promise';
 @Injectable()
 export class RoleRepository {
@@ -14,7 +15,7 @@ export class RoleRepository {
     );
   }
 
-  public async getRoleById(id: number) {
+  public async getRoleById(id: number): Promise<Role> {
     const [rows] = await this.connection.query(
       'SELECT * FROM Role WHERE id = ?',
       [id],
@@ -22,9 +23,9 @@ export class RoleRepository {
     return rows[0];
   }
 
-  public async getAllRole() {
+  public async getAllRole(): Promise<Role[]> {
     const [rows] = await this.connection.query('SELECT * FROM Role');
-    return rows;
+    return rows as any[] as Role[];
   }
 
   public async updateRoleById(id: number, data: RoleUpdateDto) {

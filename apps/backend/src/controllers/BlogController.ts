@@ -42,19 +42,21 @@ export class BlogController {
   }
 
   @Get()
-  @UseGuards(AuthGuard)
   public async getAllBlog(
     @Query('tag') tag: string | undefined,
+    @Query('userId') userId: string | undefined,
     @Res() res: Response,
   ) {
     const blogs = tag
       ? await this.blogService.getAllBlogByTag(tag)
+      : userId
+      ? await this.blogService.getAllBlogByUserId(userId)
       : await this.blogService.getAllBlog();
     return res.status(HttpStatus.OK).json(blogs);
   }
 
   @Get(':id')
-  @UseGuards(AuthGuard, BlogGuard)
+  @UseGuards(BlogGuard)
   public async getBlogById(@Param('id') id: number, @Res() res: Response) {
     const blog = await this.blogService.getBlogWithTagsById(id);
     return res.status(HttpStatus.OK).json(blog);

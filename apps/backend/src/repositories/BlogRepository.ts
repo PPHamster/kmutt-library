@@ -1,5 +1,6 @@
 import { BlogCreateDto, BlogUpdateDto } from '@/utils/dtos/BlogDto';
 import { Inject, Injectable } from '@nestjs/common';
+import { Blog } from 'api-schema';
 import { Connection } from 'mysql2/promise';
 @Injectable()
 export class BlogRepository {
@@ -14,7 +15,7 @@ export class BlogRepository {
     );
   }
 
-  public async getBlogById(id: number) {
+  public async getBlogById(id: number): Promise<Blog> {
     const [rows] = await this.connection.query(
       'SELECT * FROM Blog WHERE id = ?',
       [id],
@@ -22,7 +23,7 @@ export class BlogRepository {
     return rows[0];
   }
 
-  public async getLatestBlogByUserId(userId: string) {
+  public async getLatestBlogByUserId(userId: string): Promise<Blog> {
     const [rows] = await this.connection.query(
       'SELECT * FROM Blog WHERE userId = ? ORDER BY id DESC',
       [userId],
@@ -31,7 +32,10 @@ export class BlogRepository {
     return rows[0];
   }
 
-  public async getBlogByUserIdAndBookId(userId: string, bookId: number) {
+  public async getBlogByUserIdAndBookId(
+    userId: string,
+    bookId: number,
+  ): Promise<Blog> {
     const [rows] = await this.connection.query(
       'SELECT * FROM Blog WHERE userId = ? AND bookId = ?',
       [userId, bookId],
@@ -39,7 +43,7 @@ export class BlogRepository {
     return rows[0];
   }
 
-  public async getAllBlogByTag(tag: string) {
+  public async getAllBlogByTag(tag: string): Promise<Blog[]> {
     const [rows] = await this.connection.query(
       `
       SELECT b.* FROM Blog AS b
@@ -49,20 +53,20 @@ export class BlogRepository {
       [tag],
     );
 
-    return rows as any[];
+    return rows as any[] as Blog[];
   }
 
-  public async getAllBlog() {
+  public async getAllBlog(): Promise<Blog[]> {
     const [rows] = await this.connection.query('SELECT * FROM Blog');
-    return rows as any[];
+    return rows as any[] as Blog[];
   }
 
-  public async getAllBlogByUserId(userId: string) {
+  public async getAllBlogByUserId(userId: string): Promise<Blog[]> {
     const [rows] = await this.connection.query(
       'SELECT * FROM Blog WHERE userId = ?',
       [userId],
     );
-    return rows as any[];
+    return rows as any[] as Blog[];
   }
 
   public async getBlogWithTagById(blogId: number, tagId: number) {

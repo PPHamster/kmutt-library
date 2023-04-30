@@ -6,26 +6,42 @@ import {
 } from '@/utils/dtos/BlogDto';
 import { BlogRepository } from '@/repositories/BlogRepository';
 import { TagRepository } from '@/repositories/TagRepository';
+import { BookRepository } from '@/repositories/BookRepository';
+import { BlogWithTags } from 'api-schema';
 
 @Injectable()
 export class BlogService {
   public constructor(
     private readonly blogRepository: BlogRepository,
     private readonly tagRepository: TagRepository,
+    private readonly bookRepository: BookRepository,
   ) {}
 
   public async createBlog(data: BlogCreateDto, userId: string, bookId: number) {
-    if (await this.blogRepository.getBlogByUserIdAndBookId(userId, bookId)) {
-      throw new BadRequestException(
-        'You have already written a blog for this book.',
-      );
+    const booksCanCreteBlog =
+      await this.bookRepository.getAllBookNotCreatedBlogByUserId(userId);
+
+    const canCreate = booksCanCreteBlog
+      .map((book) => book.id)
+      .some((id) => id === bookId);
+
+    if (!canCreate) {
+      throw new BadRequestException("Can't create blog from this book");
     }
+
     await this.blogRepository.createBlog(data, userId, bookId);
 
     const latestBlog = await this.blogRepository.getLatestBlogByUserId(userId);
 
+    const tags = await this.tagRepository.getAllTag();
+
+    const tagsName = tags.map((tag) => tag.name);
+
     const blogValues: string[] = [];
     const blogQuery = data.tags
+      .filter((tag) => {
+        return !tagsName.includes(tag);
+      })
       .map((tag) => {
         blogValues.push(tag);
         return '(?)';
@@ -62,60 +78,77 @@ export class BlogService {
     return this.blogRepository.getBlogWithTagById(blogId, tagId);
   }
 
-  public async getBlogWithTagsById(id: number) {
+  public async getBlogWithTagsById(id: number): Promise<BlogWithTags> {
     const blog = await this.blogRepository.getBlogById(id);
     const tags = await this.tagRepository.getAllTagByBlogId(id);
+
+    const book = await this.bookRepository.getBookById(blog.bookId);
+
+    delete blog.bookId;
 
     const blogWithTags = {
       ...blog,
       tags,
+      book,
     };
 
     return blogWithTags;
   }
 
-  public async getAllBlogByTag(tag: string) {
+  public async getAllBlogByTag(tag: string): Promise<BlogWithTags[]> {
     const blogs = await this.blogRepository.getAllBlogByTag(tag);
-    const blogsWithTags = [];
+    const blogsWithTags: BlogWithTags[] = [];
 
     for (const blog of blogs) {
       const tags = await this.tagRepository.getAllTagByBlogId(blog.id);
+      const book = await this.bookRepository.getBookById(blog.bookId);
+
+      delete blog.bookId;
 
       blogsWithTags.push({
         ...blog,
         tags,
+        book,
       });
     }
 
     return blogsWithTags;
   }
 
-  public async getAllBlog() {
+  public async getAllBlog(): Promise<BlogWithTags[]> {
     const blogs = await this.blogRepository.getAllBlog();
-    const blogsWithTags = [];
+    const blogsWithTags: BlogWithTags[] = [];
 
     for (const blog of blogs) {
       const tags = await this.tagRepository.getAllTagByBlogId(blog.id);
+      const book = await this.bookRepository.getBookById(blog.bookId);
+
+      delete blog.bookId;
 
       blogsWithTags.push({
         ...blog,
         tags,
+        book,
       });
     }
 
     return blogsWithTags;
   }
 
-  public async getAllBlogByUserId(userId: string) {
+  public async getAllBlogByUserId(userId: string): Promise<BlogWithTags[]> {
     const blogs = await this.blogRepository.getAllBlogByUserId(userId);
-    const blogsWithTags = [];
+    const blogsWithTags: BlogWithTags[] = [];
 
     for (const blog of blogs) {
       const tags = await this.tagRepository.getAllTagByBlogId(blog.id);
+      const book = await this.bookRepository.getBookById(blog.bookId);
+
+      delete blog.bookId;
 
       blogsWithTags.push({
         ...blog,
         tags,
+        book,
       });
     }
 

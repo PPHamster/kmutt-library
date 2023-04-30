@@ -6,7 +6,7 @@ import {
   ForbiddenException,
   BadRequestException,
 } from '@nestjs/common';
-import { Order, User } from 'api-schema';
+import { User } from 'api-schema';
 import { Request } from 'express';
 
 type Params = {
@@ -23,7 +23,7 @@ export class OrderGuard implements CanActivate {
     const { id, bookId } = params as unknown as Params;
     const currentUser = user as User;
 
-    const order: Order = await this.orderService.getOrderDetailById(id);
+    const order = await this.orderService.getOrderById(id);
 
     if (!order) {
       throw new BadRequestException(`No order id ${id}`);

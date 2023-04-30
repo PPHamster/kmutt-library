@@ -9,6 +9,7 @@ import {
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { ImageService } from '@/services/ImageService';
 import { OrderItemRepository } from '@/repositories/OrderItemRepository';
+import { BookWithCategories } from 'api-schema';
 
 @Injectable()
 export class BookService {
@@ -24,10 +25,17 @@ export class BookService {
 
     await this.bookRepository.createBook({ ...data, image: imageDefault });
 
+    const categories = await this.categoryRepository.getAllCategory();
+
+    const categoriesName = categories.map((category) => category.name);
+
     const bookValues: string[] = [];
     const bookQuery = data.categories
-      .map((cat) => {
-        bookValues.push(cat);
+      .filter((category) => {
+        return !categoriesName.includes(category);
+      })
+      .map((category) => {
+        bookValues.push(category);
         return '(?)';
       })
       .join(', ');
@@ -69,9 +77,9 @@ export class BookService {
     );
   }
 
-  public async getAllBook() {
+  public async getAllBook(): Promise<BookWithCategories[]> {
     const books = await this.bookRepository.getAllBook();
-    const booksWithCategory = [];
+    const booksWithCategory: BookWithCategories[] = [];
     for (const book of books) {
       const categories = await this.categoryRepository.getAllCategoryByBookId(
         book.id,
@@ -87,11 +95,12 @@ export class BookService {
   }
 
   public async getBookById(id: number) {
-    const book = await this.bookRepository.getBookById(id);
-    return book;
+    return this.bookRepository.getBookById(id);
   }
 
-  public async getBookWithCategoriesById(id: number) {
+  public async getBookWithCategoriesById(
+    id: number,
+  ): Promise<BookWithCategories> {
     const book = await this.bookRepository.getBookById(id);
 
     const categories = await this.categoryRepository.getAllCategoryByBookId(id);
@@ -132,7 +141,13 @@ export class BookService {
   }
 
   public async updateBookImageById(id: number, data: BookUpdateImageDto) {
-    this.imageService.saveImageFromBase64(data.image, 'books', `${id}.png`);
+    const imagePath = this.imageService.saveImageFromBase64(
+      data.image,
+      'books',
+      `${id}.png`,
+    );
+
+    await this.bookRepository.updateBookImageById(id, { image: imagePath });
   }
 
   public async deleteBookById(id: number) {

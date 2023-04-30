@@ -116,6 +116,7 @@ CREATE TABLE `TimePeriod` (
   `endTime` TIME NOT NULL,
 
   UNIQUE INDEX `TimePeriodIdUnique`(`id`),
+  UNIQUE INDEX `TimePeriodValueUnique`(`beginTime`, `endTime`),
   PRIMARY KEY (`id`)
 );
 
@@ -158,6 +159,7 @@ CREATE TABLE `EventCategory` (
   `name` VARCHAR(150) NOT NULL,
 
   UNIQUE INDEX `EventCategoryIdUnique`(`id`),
+  UNIQUE INDEX `EventCategoryNameUnique`(`name`),
   PRIMARY KEY(`id`)
 );
 
@@ -180,6 +182,7 @@ CREATE TABLE `Tag` (
   `name` VARCHAR(150) NOT NULL,
 
   UNIQUE INDEX `TagIdUnique`(`id`),
+  UNIQUE INDEX `TagNameUnique`(`name`),
   PRIMARY KEY (`id`)
 );
 

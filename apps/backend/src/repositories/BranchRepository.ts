@@ -1,5 +1,6 @@
 import { BranchCreateDto, BranchUpdateDto } from '@/utils/dtos/BranchDto';
 import { Inject, Injectable } from '@nestjs/common';
+import { Branch } from 'api-schema';
 import { Connection } from 'mysql2/promise';
 @Injectable()
 export class BranchRepository {
@@ -14,7 +15,7 @@ export class BranchRepository {
     );
   }
 
-  public async getBranchById(id: number) {
+  public async getBranchById(id: number): Promise<Branch> {
     const [rows] = await this.connection.query(
       'SELECT * FROM Branch WHERE id = ?',
       [id],
@@ -22,9 +23,9 @@ export class BranchRepository {
     return rows[0];
   }
 
-  public async getAllBranch() {
+  public async getAllBranch(): Promise<Branch[]> {
     const [rows] = await this.connection.query('SELECT * FROM Branch');
-    return rows;
+    return rows as any[] as Branch[];
   }
 
   public async updateBranchById(id: number, data: BranchUpdateDto) {

@@ -11,8 +11,7 @@ export class TagService {
   }
 
   public async getTagById(id: number) {
-    const tag = await this.tagRepository.getTagById(id);
-    return tag;
+    return this.tagRepository.getTagById(id);
   }
 
   public async getAllTag() {

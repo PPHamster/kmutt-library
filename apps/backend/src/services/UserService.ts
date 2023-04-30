@@ -21,13 +21,12 @@ export class UserService {
 
   public async getUserById(id: string) {
     const user = await this.userRepository.getUserWithRoleAndBranchById(id);
-    if (!user) throw new BadRequestException();
+    if (!user) throw new BadRequestException(`No user id ${id}`);
     return user;
   }
 
   public async getAllUserWithRoleAndBranch() {
-    const users = await this.userRepository.getAllUserWithRoleAndBranch();
-    return users;
+    return this.userRepository.getAllUserWithRoleAndBranch();
   }
 
   public async updateUserById(data: UserUpdateDto, id: string) {
@@ -86,7 +85,13 @@ export class UserService {
   }
 
   public async updateUserImageById(data: UserUpdateImageDto, id: string) {
-    this.imageService.saveImageFromBase64(data.image, 'users', `${id}.png`);
+    const imagePath = this.imageService.saveImageFromBase64(
+      data.image,
+      'users',
+      `${id}.png`,
+    );
+
+    await this.userRepository.updateUserImageById({ image: imagePath }, id);
   }
 
   public async deleteUserImageById(id: string) {

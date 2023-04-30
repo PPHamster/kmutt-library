@@ -1,5 +1,6 @@
 import { UserCreateDto, UserUpdateImageDto } from '@/utils/dtos/UserDto';
 import { Inject, Injectable } from '@nestjs/common';
+import { RawUser, User } from 'api-schema';
 import { Connection } from 'mysql2/promise';
 @Injectable()
 export class UserRepository {
@@ -31,7 +32,7 @@ export class UserRepository {
     );
   }
 
-  public async getUserByEmail(email: string) {
+  public async getUserByEmail(email: string): Promise<RawUser> {
     const [rows] = await this.connection.query(
       'SELECT * FROM User WHERE email = ?',
       [email],
@@ -40,7 +41,7 @@ export class UserRepository {
     return rows[0];
   }
 
-  public async getAllUserWithRoleAndBranch() {
+  public async getAllUserWithRoleAndBranch(): Promise<User[]> {
     const [rows] = await this.connection.query(
       `
       SELECT u.id, u.email, u.tel, u.firstname, u.lastname, u.image,
@@ -52,10 +53,10 @@ export class UserRepository {
       ['Admin'],
     );
 
-    return rows;
+    return rows as any[] as User[];
   }
 
-  public async getUserWithRoleAndBranchById(id: string) {
+  public async getUserWithRoleAndBranchById(id: string): Promise<User> {
     const [rows] = await this.connection.query(
       `
       SELECT u.id, u.email, u.tel, u.firstname, u.lastname, u.image, u.isBlacklist,

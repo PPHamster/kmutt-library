@@ -1,4 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
+import { Book, CartItem } from 'api-schema';
 import { Connection } from 'mysql2/promise';
 @Injectable()
 export class CartItemRepository {
@@ -13,16 +14,16 @@ export class CartItemRepository {
     ]);
   }
 
-  public async getAllCartItemByUserId(userId: string) {
+  public async getAllCartItemByUserId(userId: string): Promise<CartItem[]> {
     const [rows] = await this.connection.query(
       'SELECT * FROM CartItem WHERE userId = ?',
       [userId],
     );
 
-    return rows as any[];
+    return rows as any[] as CartItem[];
   }
 
-  public async getAllCartItemWithInfoByUserId(userId: string) {
+  public async getAllCartItemWithInfoByUserId(userId: string): Promise<Book[]> {
     const [rows] = await this.connection.query(
       `
       SELECT b.* FROM CartItem AS ci
@@ -32,7 +33,7 @@ export class CartItemRepository {
       [userId],
     );
 
-    return rows;
+    return rows as any[] as Book[];
   }
 
   public async deleteCartItemById(userId: string, bookId: number) {

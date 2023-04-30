@@ -11,8 +11,7 @@ export class RoleService {
   }
 
   public async getRoleById(id: number) {
-    const role = await this.roleRepository.getRoleById(id);
-    return role;
+    return this.roleRepository.getRoleById(id);
   }
 
   public async getAllRole() {

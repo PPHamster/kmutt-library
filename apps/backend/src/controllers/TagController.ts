@@ -31,7 +31,6 @@ export class TagController {
   }
 
   @Get()
-  @UseGuards(AuthGuard, StaffGuard)
   public async getAllTag(@Res() res: Response) {
     const tags = await this.tagService.getAllTag();
     return res.status(HttpStatus.OK).json(tags);

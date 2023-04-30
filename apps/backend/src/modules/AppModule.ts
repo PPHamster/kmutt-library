@@ -8,9 +8,11 @@ import { BookModule } from '@/modules/BookModule';
 import { CategoryModule } from '@/modules/CategoryModule';
 import { BlogModule } from '@/modules/BlogModule';
 import { TagModule } from '@/modules/TagModule';
+import { ImageModule } from '@/modules/ImageModule';
 
 @Module({
   imports: [
+    ImageModule,
     AuthModule,
     UserModule,
     RoleModule,

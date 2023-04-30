@@ -1,5 +1,6 @@
 import { TagCreateDto, TagUpdateDto } from '@/utils/dtos/TagDto';
 import { Inject, Injectable } from '@nestjs/common';
+import { Tag } from 'api-schema';
 import { Connection } from 'mysql2/promise';
 @Injectable()
 export class TagRepository {
@@ -8,9 +9,10 @@ export class TagRepository {
   ) {}
 
   public async createTag(data: TagCreateDto) {
-    await this.connection.query('INSERT IGNORE INTO Tag (name) VALUES (?)', [
-      data.name,
-    ]);
+    await this.connection.query(
+      'INSERT INTO Tag (name) SELECT ? WHERE NOT EXISTS (SELECT * FROM Tag WHERE name = ?)',
+      [data.name],
+    );
   }
 
   public async createManyTags(query: string, values: string[]) {
@@ -27,7 +29,7 @@ export class TagRepository {
     );
   }
 
-  public async getTagById(id: number) {
+  public async getTagById(id: number): Promise<Tag> {
     const [rows] = await this.connection.query(
       'SELECT * FROM Tag WHERE id = ?',
       [id],
@@ -35,12 +37,12 @@ export class TagRepository {
     return rows[0];
   }
 
-  public async getAllTag() {
+  public async getAllTag(): Promise<Tag[]> {
     const [rows] = await this.connection.query('SELECT * FROM Tag');
-    return rows;
+    return rows as any[] as Tag[];
   }
 
-  public async getAllTagByBlogId(blogId: number) {
+  public async getAllTagByBlogId(blogId: number): Promise<Tag[]> {
     const [rows] = await this.connection.query(
       `
       SELECT t.* FROM Tag AS t
@@ -51,7 +53,7 @@ export class TagRepository {
       [blogId],
     );
 
-    return rows as any[];
+    return rows as any[] as Tag[];
   }
 
   public async updateTagById(id: number, data: TagUpdateDto) {

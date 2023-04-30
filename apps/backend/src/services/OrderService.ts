@@ -3,6 +3,7 @@ import { OrderRepository } from '@/repositories/OrderRepository';
 import { OrderItemRepository } from '@/repositories/OrderItemRepository';
 import { MailService } from '@/services/MailService';
 import { CartItemRepository } from '@/repositories/CartItemRepository';
+import { OrderWithItems } from 'api-schema';
 
 @Injectable()
 export class OrderService {
@@ -145,13 +146,12 @@ export class OrderService {
     await this.cartItemRepository.deleteCartItemByUserId(userId);
   }
 
-  public async getAllOrderByUserId(id: string) {
+  public async getAllOrderByUserId(id: string): Promise<OrderWithItems[]> {
     const orders = await this.orderRepository.getAllOrderByUserId(id);
-    const ordersWithItems = [];
+    const ordersWithItems: OrderWithItems[] = [];
     for (const order of orders) {
       ordersWithItems.push({
-        id: order.id,
-        createdAt: order.createdAt,
+        ...order,
         items: await this.orderItemRepository.getOrderItemsByOrderId(order.id),
       });
     }
@@ -159,27 +159,19 @@ export class OrderService {
   }
 
   public async getOrderById(id: number) {
+    return this.orderRepository.getOrderById(id);
+  }
+
+  public async getOrderWithItemsById(id: number): Promise<OrderWithItems> {
     const order = await this.orderRepository.getOrderById(id);
-    if (!order) throw new BadRequestException('No Order From This Id');
     return {
-      id: order.id,
-      createdAt: order.createdAt,
+      ...order,
       items: await this.orderItemRepository.getOrderItemsByOrderId(order.id),
     };
   }
 
-  public async getOrderDetailById(id: number) {
-    const order = await this.orderRepository.getOrderById(id);
-    return order;
-  }
-
   public async getOrderItemById(orderId: number, bookId: number) {
-    const bookInOrder = await this.orderItemRepository.getOrderItemById(
-      orderId,
-      bookId,
-    );
-
-    return bookInOrder;
+    return this.orderItemRepository.getOrderItemById(orderId, bookId);
   }
 
   public async getChargeById(orderId: number, bookId: number) {

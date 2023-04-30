@@ -11,8 +11,7 @@ export class CategoryService {
   }
 
   public async getCategoryById(id: number) {
-    const category = await this.categoryRepository.getCategoryById(id);
-    return category;
+    return this.categoryRepository.getCategoryById(id);
   }
 
   public async getAllCategory() {
