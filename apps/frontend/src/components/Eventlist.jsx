@@ -18,6 +18,19 @@ export default function Event(props) {
         hour12: false,
     });
 
+    const meetingEndTime = new Date(props.endtime);
+
+    // format the date using the toLocaleString() method
+    const formattedMeetingEndTime = meetingEndTime.toLocaleString("th-TH", {
+        weekday: "short",
+        day: "numeric",
+        month: "short",
+        year: "numeric",
+        hour: "numeric",
+        minute: "numeric",
+        hour12: false,
+    });
+
     return (
         // row
         <div className='mx-[50px] -my-[16px] after:content-[""] after:table'>
@@ -31,7 +44,7 @@ export default function Event(props) {
 
                             <img src={props.eventimage} className={infoEvent} />
                         </div>
-                        <p className='font-semibold font-kanit text-orange-600 text-sm text-left mt-6'>{formattedMeetingTime}</p>
+                        <p className='font-semibold font-kanit text-orange-600 text-sm text-left mt-6'>{formattedMeetingTime} - {formattedMeetingEndTime}</p>
 
                         <p className='font-semibold font-kanit text-[#454545] text-lg text-left mt-0 cursor-pointer'>{props.eventname}</p>
 

@@ -23,6 +23,7 @@ export default function EventComponent() {
                             category={eventdata[0].category}
                             location={eventdata[0].location}
                             meetingtime={eventdata[0].meetingtime}
+                            endtime={eventdata[0].endtime}
                         />
                     </div>
                     <div className="ml-[4vw]">

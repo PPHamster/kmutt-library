@@ -25,6 +25,19 @@ export default function EventbyId() {
     hour12: false,
   });
 
+  const meetingEndTime = new Date(event.endtime);
+
+    // format the date using the toLocaleString() method
+    const formattedMeetingEndTime = meetingEndTime.toLocaleString("th-TH", {
+        weekday: "short",
+        day: "numeric",
+        month: "short",
+        year: "numeric",
+        hour: "numeric",
+        minute: "numeric",
+        hour12: false,
+    });
+
   const [participants, setParticipants] = useState(event.participant);
 
   // Split the participant string into an array of names
@@ -54,7 +67,7 @@ export default function EventbyId() {
       </div>
       
       <div className="mx-[10%] pr-[20%]">
-        <p className='font-semibold font-kanit text-orange-600 text-lg text-left mt-6 ml-4'>{formattedMeetingTime}</p>
+        <p className='font-semibold font-kanit text-orange-600 text-lg text-left mt-6 ml-4'>{formattedMeetingTime} - {formattedMeetingEndTime}</p>
         <p className='font-semibold font-kanit text-[#454545] text-3xl text-left mt-2 ml-4'>{event.eventname}</p>
         <p className='font-normal font-kanit text-[#454545] text-lg text-left mt-1 ml-4'>{event.category}</p>
         <Link to={`*`}>

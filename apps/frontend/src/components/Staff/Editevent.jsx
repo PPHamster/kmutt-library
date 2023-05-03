@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import NavbarStaff from "../NavbarStaff";
+import { useParams } from "react-router-dom";
+import NavbarStaff from '@/components/NavbarStaff'
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
@@ -7,21 +8,38 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogActions from '@mui/material/DialogActions';
+import Button from '@mui/material/Button';
 import Autocomplete from '@mui/material/Autocomplete';
 import { eventcategory } from "@/utils/Eventcategory";
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
-import Button from '@mui/material/Button';
+import dayjs from 'dayjs';
+import { eventdata } from "@/utils/eventdata";
 import { Link } from "react-router-dom";
 
-export default function NewEvent() {
+export default function Editevent() {
+
+  const { eventid } = useParams();
+
+  // Find the event data
+  const events = eventdata.find((events) => events.eventid === eventid);
 
   const [name, setName] = useState("");
   const [location, setLocation] = useState("");
   const [selectedCategory, setSelectedCategory] = useState([]);
   const [textdes, setText] = useState("");
+
+  useEffect(() => {
+    setName(events.eventname);
+    setLocation(events.location);
+    setSelectedCategory(events.category);
+    setText(events.eventdes);
+    setImageData(events.image);
+    setSelectedDate(dayjs(events.meetingtime));
+    setSelectedDateEnd(dayjs(events.endtime));
+  }, [events]);
 
   const handleNameChange = (event) => {
     setName(event.target.value);
@@ -86,7 +104,7 @@ export default function NewEvent() {
     setImages([...e.target.files]);
   }
 
-  const [selectedDate, setSelectedDate] = useState(null);
+  const [selectedDate, setSelectedDate] = useState(dayjs(events.meetingtime));
   const [selectedDateEnd, setSelectedDateEnd] = useState(null);
 
   const handleDateChange = (date) => {
@@ -100,7 +118,7 @@ export default function NewEvent() {
   const submit = (event) => {
     event.preventDefault();
     console.log({
-      title: name,
+      name: name,
       category: selectedCategory,
       description: textdes,
       image: imageData,
@@ -110,16 +128,15 @@ export default function NewEvent() {
     })
 
   }
-
   return (
     <>
       <div className='w-full h-full bg-gray-50'>
-        <div className='fixed pt-12 ml-[3%] z-50'>
-          <Link to={'/staff'}>
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="absolute left-[3%] w-6 h-6 -translate-y-4 text-center">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
-            </svg></Link>
-        </div>
+      <div className='fixed pt-12 ml-[3%] z-50'>
+            <Link to={'/staff'}>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="absolute left-[3%] w-6 h-6 -translate-y-4 text-center">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+                    </svg></Link>
+            </div>
         <NavbarStaff
           bgcolor='bg-white hover:drop-shadow-md'
           textcolor='text-black'
@@ -127,7 +144,7 @@ export default function NewEvent() {
         <div className="w-[80%] mx-[10%] mb-[12.8%] pt-[20vh]">
           <div className="py-[10vh] px-[5vh] min-h-[70vh] bg-white rounded-sm drop-shadow-md">
             <div className="flex flex-col">
-              <p className="font-poppins text-lg ml-4">Create new event</p>
+              <p className="font-poppins text-lg ml-4">Edit event</p>
               <Box
                 component="form"
                 sx={{ '& .MuiTextField-root': { m: 1, width: '50ch' }, }}
@@ -138,16 +155,25 @@ export default function NewEvent() {
                   <TextField
                     required
                     label="ชื่อกิจกรรม"
+                    defaultValue={events.eventname}
+                    inputlabelprops={{
+                      shrink: true,
+                    }}
                     onChange={handleNameChange}
                     multiline
                     maxRows={2}
                   />
                   <TextField
                     label="สถานที่จัดกิจกรรม"
+                    defaultValue={events.location}
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
                     onChange={handleLocationChange}
                     multiline
                     maxRows={1}
                   />
+                  
                   <div className="absolute mt-[1.5%] ml-[44%]">
                     <Button onClick={() => toggleOpen(true)}>
                       เพิ่ม Category
@@ -195,11 +221,28 @@ export default function NewEvent() {
                         placeholder="โปรดระบุ Category หรือกด เพิ่ม Category"
                       />
                     )}
+                    defaultValue={eventcategory.filter(cat => events.category.includes(cat.name))}
                   />
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <DemoContainer components={['DateTimePicker']}>
-                      <DateTimePicker label="วัน-เวลาเริ่มกิจกรรม" ampm={false} value={selectedDate} onChange={handleDateChange} />
-                      <DateTimePicker label="วัน-เวลาสิ้นสุดกิจกรรม" ampm={false} value={selectedDateEnd} onChange={handleDateEndChange} />
+                    <DemoContainer components={['DateTimePicker', 'DateTimePicker']}>
+                      <DateTimePicker
+                        label="วัน-เวลาเริ่มกิจกรรม"
+                        defaultValue={dayjs(events.meetingtime)}
+                        InputLabelProps={{
+                          shrink: true,
+                        }}
+                        ampm={false}
+                        value={selectedDate}
+                        onChange={handleDateChange} />
+                        <DateTimePicker
+                          label="วัน-เวลาสิ้นสุดกิจกรรม"
+                          defaultValue={dayjs(events.meetingtime)}
+                          InputLabelProps={{
+                            shrink: true,
+                          }}
+                          ampm={false}
+                          value={selectedDateEnd}
+                          onChange={handleDateEndChange} />
                     </DemoContainer>
                   </LocalizationProvider>
                   <TextField
@@ -215,10 +258,15 @@ export default function NewEvent() {
                     rows={10}
                     onChange={handleText}
                     label="รายละเอียด"
-                    placeholder="เรื่องย่อหรือรายละเอียดหนังสือ .."
+                    placeholder="เรื่องย่อหรือรายละเอียดกิจกรรม .."
+                    defaultValue={events.eventdes}
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
                   />
                 </div>
                 <div className="my-[3vh] ml-[11.5vh]">
+                  <h2 className=' font-normal font-kanit text-orange-600 text-sm text-left mb-2'>หากไม่ต้องการเปลี่ยนรูป ไม่ต้อง Upload รูปใด ๆ</h2>
                   <input type="file"
                     className=" file:rounded-full file:bg-white
                               file:hover:bg-gray-200 file:font-normal 
@@ -228,7 +276,7 @@ export default function NewEvent() {
                     multiple
                     accept="image/*"
                     onChange={onImageChange} />
-                  {imageData.map((dataURL, idx) => (
+                  {Array.isArray(imageData) && imageData.map((dataURL, idx) => (
                     <img key={idx} className="w-3/12" src={dataURL} />
                   ))}
                 </div>
@@ -236,7 +284,7 @@ export default function NewEvent() {
                   className="ml-[11.5vh] text-center bg-[#0092BF] text-white hover:bg-[#007396] border-black border-2 rounded-full"
                   onClick={submit}
                 >
-                  <p className="font-poppins text-md p-[8px] px-[20px]">Create</p>
+                  <p className="font-poppins text-md p-[8px] px-[20px]">Save Change</p>
                 </button>
               </Box>
             </div>

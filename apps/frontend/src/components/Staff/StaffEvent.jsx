@@ -12,16 +12,13 @@ import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete';
 import { eventcategory } from '@/utils/Eventcategory';
 import { Link } from 'react-router-dom';
 
+
 const filter = createFilterOptions();
 
 export default function StaffEvent() {
 
     const [filteredEvent, setFilteredEvent] = useState(eventdata);
     const [searchTerm, setSearchTerm] = useState('');
-
-    const handleEventClick = (event1) => {
-        setSelectedEvent(event1);
-    };
 
     const handleKeyDown = (event) => {
         const keyword = event.target.value;
@@ -293,7 +290,7 @@ export default function StaffEvent() {
                                 onChange={handleKeyDown}
                             />
                         </div>
-                        <Link to={'/event/create'}>
+                        <Link to={'/staff/event/create'}>
                         <button className="absolute right-[34%] -translate-y-[94px] w-auto p-[8px] h-auto border-2 rounded-full bg-[#3AAF3C]  hover:bg-[#2e9330] font-semibold font-poppins text-white my-[20px] ease-out duration-300">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-6 h-6">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />

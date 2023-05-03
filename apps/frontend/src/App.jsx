@@ -8,11 +8,15 @@ import RoomService from '@/pages/RoomService';
 import { BookPage } from '@/pages/BookPage';
 import Newbook from './components/Staff/Newbook';
 import NewRoom from './components/Staff/NewRoom';
+import CreateEvent from './components/Event/CreateEvent';
 import NewEvent from './components/Staff/NewEvent';
 import { StaffPage } from '@/pages/StaffPage';
 import Newblog from '@/components/Blog/NewBlog';
 import SignIn from '@/pages/SigninPage';
 import { AuthProvider } from '@/contexts/AuthContext';
+import Editbook from './components/Staff/Editbook';
+import Editevent from './components/Staff/Editevent';
+import Editroom from './components/Staff/Editroom';
 
 export const App = () => {
   return (
@@ -26,10 +30,14 @@ export const App = () => {
           <Route path="/blog" element={ <BlogPage/> }/>
           <Route path="/blog/create" element={ <Newblog/> }/>
           <Route path="/book/:bookid" element={ <BookPage/> } /> 
-          <Route path='/book/create' element={ <Newbook/>} /> 
-          <Route path='/room/create' element={ <NewRoom/>} /> 
-          <Route path='/event/create' element={ <NewEvent/>} /> 
+          <Route path='/staff/book/create' element={ <Newbook/>} /> 
+          <Route path='/staff/book/:bookid/edit' element={ <Editbook/> }/>
+          <Route path='/staff/room/create' element={ <NewRoom/>} />
+          <Route path='/staff/room/:roomid/edit' element={ <Editroom/> }/> 
+          <Route path='/event/create' element={ <CreateEvent/>} /> 
           <Route path='/event/:eventid' element={ <EventbyId/>} />
+          <Route path='/staff/event/create' element={ <NewEvent/>}/>
+          <Route path='/staff/event/:eventid/edit' element={ <Editevent/> }/>
           <Route path='/staff' element={ <StaffPage /> } />
           <Route path='/signin' element= { < SignIn />} />
         </Routes>

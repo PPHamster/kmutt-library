@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import NavbarStaff from "../NavbarStaff";
+import { useParams } from "react-router-dom";
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
@@ -14,14 +15,28 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import { timeperiod } from "@/utils/timeperiod";
+import dayjs from 'dayjs';
+import { roomdata } from "@/utils/roomdata";
 import { Link } from "react-router-dom";
 
 const filter = createFilterOptions();
 
-export default function NewRoom() {
+export default function Editroom() {
+
+  const { roomid } = useParams();
+
+  // Find the event data
+  const room = roomdata.find((room) => room.roomid === roomid);
 
   const [name, setName] = useState("");
   const [location, setLocation] = useState("");
+
+  useEffect(() => {
+    setName(room.roomname);
+    setImageData(room.image);
+    setLocation(room.location)
+    setValue(room.periodtime)
+  }, [room]);
 
   const handleNameChange = (event) => {
     setName(event.target.value);
@@ -63,7 +78,7 @@ export default function NewRoom() {
   }, [searchTerm]);
 
   const [value, setValue] = useState(null);
-  
+
   const [open, toggleOpen] = useState(false);
 
   const handleClose = () => {
@@ -136,7 +151,7 @@ export default function NewRoom() {
       timeperiod: value,
     })
   }
-
+  console.log(room.periodtime)
   return (
     <>
       <div className='w-full h-full bg-gray-50'>
@@ -153,7 +168,7 @@ export default function NewRoom() {
         <div className="w-[80%] mx-[10%] mb-[12.8%] pt-[20vh]">
           <div className="py-[10vh] px-[5vh] min-h-[70vh] bg-white rounded-sm drop-shadow-md">
             <div className="flex flex-col">
-              <p className="font-poppins font-semibold text-lg ml-4">Create new room</p>
+              <p className="font-poppins font-semibold text-lg ml-4">Edit room</p>
               <Box
                 component="form"
                 sx={{ '& .MuiTextField-root': { m: 1, width: '50ch' }, }}
@@ -164,68 +179,52 @@ export default function NewRoom() {
                   <TextField
                     required
                     label="ชื่อห้อง"
+                    defaultValue={room.roomname}
+                    inputlabelprops={{
+                      shrink: true,
+                    }}
                     onChange={handleNameChange}
                     multiline
                     maxRows={2}
                   />
                   <TextField
                     label="สถานที่"
+                    defaultValue={room.location}
+                    inputlabelprops={{
+                      shrink: true,
+                    }}
                     onChange={handleLocationChange}
                     multiline
                     maxRows={1}
                   />
-                 <div className="absolute mt-[1.5%] ml-[44%]">
+                  <div className="absolute mt-[1.5%] ml-[44%]">
                     <Button onClick={() => toggleOpen(true)}>
-                    เพิ่มช่วงเวลา
-                  </Button>
-                  </div> 
-                  <div className="flex items-center">
-                  <Autocomplete
-                    value={value || []}
-                    onChange={(event, newValue) => {
-                      if (typeof newValue === 'string') {
-                        // timeout to avoid instant validation of the dialog's form.
-                        setTimeout(() => {
-                          toggleOpen(true);
-                          setDialogValue({
-                            id: '',
-                            begin: newValue,
-                            end: '',
-                          });
-                        });
-                      } else {
-                        setValue(newValue);
-                      }
-                    }}
-
-                    filterOptions={(options, params) => {
-                      const filtered = filter(options, params);
-                      return filtered;
-                    }}
-
-
-                    options={timeperiod}
-                    getOptionLabel={(option) => {
-                      // e.g value selected with enter, right from the input
-                      if (typeof option === 'string') {
-                        return option;
-                      }
-                      if (option.inputValue) {
-                        return option.inputValue;
-                      }
-                      return `${option.id} ${option.begin} - ${option.end}`;
-                    }}
-                    selectOnFocus
-                    clearOnBlur
-                    handleHomeEndKeys
-                    renderOption={(props, option) => <li {...props}>{option.id} {option.begin} - {option.end} </li>}
-                    sx={{ width: 300 }}
-                    multiple
-                    filterSelectedOptions
-                    renderInput={(params) => <TextField {...params} label='ช่วงเวลาที่เปิดบริการ' placeholder="ถ้าไม่มีช่วงเวลาที่ต้องการกด เพิ่มช่วงเวลา" />}
-                  />
+                      เพิ่มช่วงเวลา
+                    </Button>
                   </div>
-                  
+                  <div className="flex items-center">
+                    <Autocomplete
+                      onChange={(event, newValue) => {
+                          setValue(newValue);
+                      }}
+                      options={timeperiod}
+                      getOptionLabel={(option) => {
+                        // e.g value selected with enter, right from the input
+                        if (typeof option === 'string') {
+                          return option;
+                        }
+                        if (option.inputValue) {
+                          return option.inputValue;
+                        }
+                        return `${option.id} ${option.begin} - ${option.end}`;
+                      }}
+                      defaultValue={timeperiod.filter(time => room.periodtime.includes(time.begin && time.end))}
+                      multiple
+                      filterSelectedOptions
+                      renderInput={(params) => <TextField {...params} label='ช่วงเวลาที่เปิดบริการ' placeholder="ถ้าไม่มีช่วงเวลาที่ต้องการกด เพิ่มช่วงเวลา" />}
+                    />
+                  </div>
+
                   {/* add time */}
                   <Dialog open={open} onClose={handleClose}>
                     <form onSubmit={handleSubmit}>
@@ -265,6 +264,7 @@ export default function NewRoom() {
                   </Dialog>
                 </div>
                 <div className="my-[3vh] ml-[11.5vh]">
+                <h2 className=' font-normal font-kanit text-orange-600 text-sm text-left mb-2'>หากไม่ต้องการเปลี่ยนรูป ไม่ต้อง Upload รูปใด ๆ</h2>
                   <input type="file"
                     className=" file:rounded-full file:bg-white
                               file:hover:bg-gray-200 file:font-normal 
@@ -274,7 +274,7 @@ export default function NewRoom() {
                     multiple
                     accept="image/*"
                     onChange={onImageChange} />
-                  {imageData.map((dataURL, idx) => (
+                  {Array.isArray(imageData) && imageData.map((dataURL, idx) => (
                     <img key={idx} className="w-3/12" src={dataURL} />
                   ))}
                 </div>
@@ -282,7 +282,7 @@ export default function NewRoom() {
                   className="ml-[11.5vh] text-center bg-[#0092BF] text-white hover:bg-[#007396] border-black border-2 rounded-full"
                   onClick={submit}
                 >
-                  <p className="font-poppins text-md p-[8px] px-[20px]">Create</p>
+                  <p className="font-poppins text-md p-[8px] px-[20px]">Save Change</p>
                 </button>
               </Box>
             </div>

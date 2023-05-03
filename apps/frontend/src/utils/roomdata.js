@@ -5,7 +5,7 @@ export const roomdata = [
             roomname: 'co-working space 1',
             size: '4-6',
             status: 'open',
-            periodtime: '3hr',
+            periodtime: '08:00 - 08:15',
         },
         {   
             roomid: 'co02lglbr',
