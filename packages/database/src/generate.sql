@@ -124,9 +124,10 @@ CREATE TABLE `TimePeriod` (
 CREATE TABLE `RoomTimePeriod` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `roomId` INT NOT NULL,
-  `TimePeriodId` INT NOT NULL,
+  `timePeriodId` INT NOT NULL,
 
   UNIQUE INDEX `RoomTimePeriodIdUnique`(`id`),
+  UNIQUE INDEX `RoomTimePeriodValueUnique`(`roomId`, `timePeriodId`),
   PRIMARY KEY (`id`)
 );
 
@@ -137,6 +138,7 @@ CREATE TABLE `BookingRoom` (
   `roomTimePeriodId` INT NOT NULL,
 
   UNIQUE INDEX `BookingRoomIdUnique`(`id`),
+  UNIQUE INDEX `BookingRoomValueUnique`(`date`, `roomTimePeriodId`),
   PRIMARY KEY (`id`)
 );
 
@@ -146,6 +148,7 @@ CREATE TABLE `Event` (
   `name` VARCHAR(150) NOT NULL,
   `location` TEXT NOT NULL,
   `meetingTime` DATETIME NOT NULL,
+  `endTime` DATETIME NOT NULL,
   `image` VARCHAR(150) NOT NULL,
   `description` TEXT NOT NULL,
 
