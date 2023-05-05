@@ -41,6 +41,32 @@ export class BookController {
       .json({ msg: `Create book name ${body.title} successfully` });
   }
 
+  @Post(':id/select')
+  @UseGuards(AuthGuard, BookGuard)
+  public async selectBookToCart(
+    @RequestUser() user: User,
+    @Param('id') bookId: number,
+    @Res() res: Response,
+  ) {
+    await this.cartItemService.createCartItem(user.id, bookId);
+    return res
+      .status(HttpStatus.OK)
+      .json({ msg: `Select book id ${bookId} successfully` });
+  }
+
+  @Post(':id/category')
+  @UseGuards(AuthGuard, StaffGuard, BookGuard)
+  public async addCategoryById(
+    @Param('id') id: number,
+    @Body() body: BookAddCategoryDto,
+    @Res() res: Response,
+  ) {
+    await this.bookService.addCategoryById(id, body);
+    return res
+      .status(HttpStatus.OK)
+      .json({ msg: `Add ${body.name} to book id ${id} successfully` });
+  }
+
   @Get()
   public async getAllBook(@Res() res: Response) {
     const books = await this.bookService.getAllBook();
@@ -103,19 +129,6 @@ export class BookController {
       .json({ msg: `Update book id ${id} successfully` });
   }
 
-  @Put(':id/category')
-  @UseGuards(AuthGuard, StaffGuard, BookGuard)
-  public async addCategoryById(
-    @Param('id') id: number,
-    @Body() body: BookAddCategoryDto,
-    @Res() res: Response,
-  ) {
-    await this.bookService.addCategoryById(id, body);
-    return res
-      .status(HttpStatus.OK)
-      .json({ msg: `Add ${body.name} to book id ${id} successfully` });
-  }
-
   @Put(':id/image')
   @UseGuards(AuthGuard, StaffGuard, BookGuard)
   public async updateBookImageById(
@@ -127,19 +140,6 @@ export class BookController {
     return res
       .status(HttpStatus.OK)
       .json({ msg: `Update book image id ${id} successfully` });
-  }
-
-  @Get(':id/select')
-  @UseGuards(AuthGuard, BookGuard)
-  public async selectBookToCart(
-    @RequestUser() user: User,
-    @Param('id') bookId: number,
-    @Res() res: Response,
-  ) {
-    await this.cartItemService.createCartItem(user.id, bookId);
-    return res
-      .status(HttpStatus.OK)
-      .json({ msg: `Select book id ${bookId} successfully` });
   }
 
   @Delete(':id')

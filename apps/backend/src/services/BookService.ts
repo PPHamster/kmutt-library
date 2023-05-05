@@ -52,7 +52,9 @@ export class BookService {
       image: imagePath,
     });
 
-    await this.categoryRepository.createManyCategories(bookQuery, bookValues);
+    if (bookValues.length > 0) {
+      await this.categoryRepository.createManyCategories(bookQuery, bookValues);
+    }
 
     const categoryValues: any[] = [];
     const categoryQuery = data.categories

@@ -41,6 +41,19 @@ export class BlogController {
       .json({ msg: `Create blog for book id ${bookId} successfully` });
   }
 
+  @Post(':id/tag')
+  @UseGuards(AuthGuard, BlogGuard)
+  public async addTagById(
+    @Param('id') id: number,
+    @Body() body: BlogAddTagDto,
+    @Res() res: Response,
+  ) {
+    await this.blogService.addTagById(id, body);
+    return res
+      .status(HttpStatus.OK)
+      .json({ msg: `Add ${body.name} to blog id ${id} successfully` });
+  }
+
   @Get()
   public async getAllBlog(
     @Query('tag') tag: string | undefined,
@@ -60,19 +73,6 @@ export class BlogController {
   public async getBlogById(@Param('id') id: number, @Res() res: Response) {
     const blog = await this.blogService.getBlogWithTagsById(id);
     return res.status(HttpStatus.OK).json(blog);
-  }
-
-  @Put(':id/tag')
-  @UseGuards(AuthGuard, BlogGuard)
-  public async addTagById(
-    @Param('id') id: number,
-    @Body() body: BlogAddTagDto,
-    @Res() res: Response,
-  ) {
-    await this.blogService.addTagById(id, body);
-    return res
-      .status(HttpStatus.OK)
-      .json({ msg: `Add ${body.name} to blog id ${id} successfully` });
   }
 
   @Put(':id')

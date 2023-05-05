@@ -48,7 +48,9 @@ export class BlogService {
       })
       .join(', ');
 
-    await this.tagRepository.createManyTags(blogQuery, blogValues);
+    if (blogValues.length > 0) {
+      await this.tagRepository.createManyTags(blogQuery, blogValues);
+    }
 
     const tagValues: any[] = [];
     const tagQuery = data.tags
