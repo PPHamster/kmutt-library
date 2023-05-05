@@ -9,6 +9,8 @@ import { CategoryModule } from '@/modules/CategoryModule';
 import { BlogModule } from '@/modules/BlogModule';
 import { TagModule } from '@/modules/TagModule';
 import { ImageModule } from '@/modules/ImageModule';
+import { EventModule } from '@/modules/EventModule';
+import { EventCategoryModule } from '@/modules/EventCategoryModule';
 
 @Module({
   imports: [
@@ -22,6 +24,8 @@ import { ImageModule } from '@/modules/ImageModule';
     OrderModule,
     BlogModule,
     TagModule,
+    EventModule,
+    EventCategoryModule,
   ],
 })
 export class AppModule {}
