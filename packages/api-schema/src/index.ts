@@ -32,7 +32,7 @@ export type Book = {
   description: string,
   isbn: string,
   publisher: string,
-  publishDate: string,
+  publishDate: Date,
   language: string,
   image: string,
   location: string,
@@ -45,7 +45,7 @@ export type BookWithCategories = {
   description: string,
   isbn: string,
   publisher: string,
-  publishDate: string,
+  publishDate: Date,
   language: string,
   image: string,
   location: string,
@@ -127,6 +127,21 @@ export type OrderItemJoinBook = {
   returnedDate: Date,
 }
 
+export type Room = {
+  id: number,
+  name: string,
+  location: string,
+  image: string,
+}
+
+export type RoomWithTimePeriods = {
+  id: number,
+  name: string,
+  location: string,
+  image: string,
+  timePeriods: TimePeriod[],
+}
+
 export type Role = {
   id: number,
   name: string,
@@ -155,6 +170,23 @@ export type Tag = {
 export type EventCategory = {
   id: number,
   name: string,
+}
+
+export type TimePeriod = {
+  id: number,
+  beginTime: string,
+  endTime: string,
+}
+
+export type EventMember = {
+  eventId: number,
+  userId: string,
+}
+
+export type BookingRoom = {
+  id: number,
+  date: Date,
+  roomTimePeriodId: number,
 }
 
 export type SendEmailInfo = {
