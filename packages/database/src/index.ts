@@ -21,6 +21,16 @@ const main = async () => {
       await db.query(ddl);
     }
   }
+
+  const templateFile = readFileSync(`${__dirname}/template.sql`).toString();
+
+  const dmlArray = templateFile.split(';');
+
+  for (const dml of dmlArray) {
+    if (dml.trim() !== '') {
+      await db.query(dml);
+    }
+  }
 }
 
 main()
