@@ -1,11 +1,24 @@
-import React from 'react';
+import React , { useState } from 'react';
 import Book from '@/components/Book';
+import Bookpopup from '@/components/Bookoverlay';
+import { bookdata } from '@/utils/bookdata';
 import AliceCarousel from 'react-alice-carousel';
 import 'react-alice-carousel/lib/alice-carousel.css';
 
 export default function Recommend() {
 
-    const imageStyle = "bg-auto bg-fixed h-500";
+    const [selectedBook, setSelectedBook] = useState(null)
+    const handleBookClick = (book) => {
+        setSelectedBook(book);
+      };
+      const renderPrevButton = ({ isDisabled }) => {
+        return <span style={{ opacity: isDisabled ? '0.5' : 1 }}>&lt;</span>;
+    };
+    
+    const renderNextButton = ({ isDisabled }) => {
+        return <span style={{ opacity: isDisabled ? '0.5' : 1 }}>&gt;</span>;
+    };
+
     const responsive = {
         0: { items: 1 },
         568: { items: 2 },
@@ -14,71 +27,6 @@ export default function Recommend() {
         1440: { items: 5,
              itemsFit: 'contain',},
     };
-    const bookdata = [
-        {   
-            bookid: 'MILF01',
-            image: "./image/kmutt_library.jpg",
-            bookname: "example book1",
-            category: ['anime','action','horror'],
-            type: 'manga',
-            author: 'kobayashi tohru',
-            story: 'keep it simple',
-        },
-        {   
-            bookid: 'MILF02',
-            image: "./image/kmutt_library.jpg",
-            bookname: "example book2",
-            category: ['anime','action','horror'],
-            type: 'manga',
-            author: 'kobayashi tohru',
-            story: 'keep it simple',
-        },
-        {   
-            bookid: 'MILF03',
-            image: "./image/kmutt_library.jpg",
-            bookname: "example book3",
-            category: ['anime','action','horror'],
-            type: 'manga',
-            author: 'kobayashi tohru',
-            story: 'keep it simple',
-        },
-        {   
-            bookid: 'MILF04',
-            image: "./image/kmutt_library.jpg",
-            bookname: "example book4",
-            category: ['anime','action','horror'],
-            type: 'manga',
-            author: 'kobayashi tohru',
-            story: 'keep it simple',
-        },
-        {   
-            bookid: 'MILF05',
-            image: "./image/kmutt_library.jpg",
-            bookname: "example book5",
-            category: ['anime','action','horror'],
-            type: 'manga',
-            author: 'kobayashi tohru',
-            story: 'keep it simple',
-        },
-        {   
-            bookid: 'MILF06',
-            image: "./image/kmutt_library.jpg",
-            bookname: "example book6",
-            category: ['anime','action','horror'],
-            type: 'manga',
-            author: 'kobayashi tohru',
-            story: 'keep it simple',
-        },
-        {   
-            bookid: 'MILF07',
-            image: "./image/kmutt_library.jpg",
-            bookname: "example book7",
-            category: ['anime','action','horror'],
-            type: 'manga',
-            author: 'kobayashi tohru',
-            story: 'keep it simple',
-        },
-    ]
 
     return (
         <>
@@ -86,29 +34,40 @@ export default function Recommend() {
                 <div className="bg-fixed bg-library bg-cover top-0 left-0 h-full w-full"></div>
             </div>
             <div className='top-[60vh] w-full min-h-[7vh] bg-white'>
-                <h1 className='font-bold font-poppins text-[#454545] text-3xl mt-[4rem] ml-36'>Recommendation</h1>
-                <div className="w-full h-[800px] bg-whitebrown m-auto mt-[2.5rem] drop-shadow-brown pt-16 pl-32 pr-32">
+                <div className='flex flex-row'>
+                    <h1 className='font-bold font-poppins text-[#454545] text-3xl mt-[4rem] ml-36'>Recommendation</h1>
+                    <h1 className='font-regular font-kanit text-[#797979] text-2xl mt-[4.2rem] ml-4'>หนังสือยอดนิยม</h1>                   
+                </div>
+                <div className="w-full h-[800px] bg-whitebrown m-auto mt-[2.5rem] drop-shadow-brown pt-16 pl-24 pr-24">
                 <AliceCarousel 
                     mouseTracking
                     disableButtonsControls
                     autoWidth
                     disableDotsControls
                     responsive={responsive}
+                    renderPrevButton={renderPrevButton}
+                    renderNextButton={renderNextButton}
                     items={
                    bookdata.map((data) => (
                             <Book 
                             key={data.bookid}
                             image={data.image} 
-                            bookname={data.bookname}
-                            category={data.category}
-                            type={data.type}
-                            author={data.author}
-                            story={data.story}
+                            title={data.title}
+                            onClick={() => handleBookClick(data)}
                             />
                         ))} 
                 />
                 </div>
-            </div>
+            </div>                
+            {selectedBook && (
+                    <div className="fixed top-0 left-0 right-0 bottom-0 z-40">
+                        <Bookpopup 
+                            book={selectedBook} 
+                            onClose={() => handleBookClick(null)}
+                            open={selectedBook !== null}
+                        />
+                    </div>
+                    )}
         </>
     )
     
