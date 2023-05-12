@@ -41,6 +41,15 @@ export class UserRepository {
     return rows[0];
   }
 
+  public async getUserById(id: string): Promise<RawUser> {
+    const [rows] = await this.connection.query(
+      'SELECT * FROM User WHERE id = ?',
+      [id],
+    );
+
+    return rows[0];
+  }
+
   public async getAllUserWithRoleAndBranch(): Promise<User[]> {
     const [rows] = await this.connection.query(
       `

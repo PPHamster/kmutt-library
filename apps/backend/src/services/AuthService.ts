@@ -23,6 +23,12 @@ export class AuthService {
   ) {}
 
   public async register(data: UserCreateDto) {
+    const user = await this.userRepository.getUserById(data.id);
+
+    if (user) {
+      throw new BadRequestException(`User id ${data.id} has been registered`);
+    }
+
     await this.branchRepository.createBranchIfNotExist({ name: data.branch });
 
     await this.roleRepository.createRoleIfNotExist({ name: data.role });
