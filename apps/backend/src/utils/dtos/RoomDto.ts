@@ -43,6 +43,12 @@ export class RoomUpdateDto {
   @IsNotEmpty()
   @IsString()
   public location?: string;
+
+  @IsOptional()
+  @IsNotEmpty()
+  @IsString()
+  @MaxLength(150)
+  public status?: string;
 }
 
 export class RoomUpdateImageDto {

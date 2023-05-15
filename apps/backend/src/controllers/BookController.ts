@@ -19,6 +19,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
   Res,
   UseGuards,
 } from '@nestjs/common';
@@ -70,6 +71,17 @@ export class BookController {
   @Get()
   public async getAllBook(@Res() res: Response) {
     const books = await this.bookService.getAllBook();
+    return res.status(HttpStatus.OK).json(books);
+  }
+
+  @Get('recommend')
+  public async getRecommendBooks(
+    @Query('count') count: number,
+    @Res() res: Response,
+  ) {
+    const books = count
+      ? await this.bookService.getRecommendBooksWithCategories(count)
+      : await this.bookService.getRecommendBooksWithCategories(20);
     return res.status(HttpStatus.OK).json(books);
   }
 

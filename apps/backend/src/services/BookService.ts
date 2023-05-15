@@ -115,6 +115,27 @@ export class BookService {
     return bookWithCategories;
   }
 
+  public async getRecommendBooksWithCategories(
+    count: number,
+  ): Promise<BookWithCategories[]> {
+    const books = await this.bookRepository.getRecommendBooks(count);
+
+    const booksWithCategory: BookWithCategories[] = [];
+
+    for (const book of books) {
+      const categories = await this.categoryRepository.getAllCategoryByBookId(
+        book.id,
+      );
+
+      booksWithCategory.push({
+        ...book,
+        categories,
+      });
+    }
+
+    return booksWithCategory;
+  }
+
   public async getBookWithCategoryById(bookId: number, categoryId: number) {
     return this.bookRepository.getBookWithCategoryById(bookId, categoryId);
   }

@@ -107,6 +107,21 @@ export class BookRepository {
     return rows as any[] as Book[];
   }
 
+  public async getRecommendBooks(count: number): Promise<Book[]> {
+    const [rows] = await this.connection.query(
+      `
+      SELECT b.* FROM Book AS b
+      INNER JOIN OrderItem AS oi ON b.id = oi.bookId
+      GROUP BY b.id
+      ORDER BY COUNT(*) DESC
+      LIMIT ?
+      `,
+      [count],
+    );
+
+    return rows as any[] as Book[];
+  }
+
   public async updateBookById(option: string, value: any[], id: number) {
     await this.connection.query(`UPDATE Book SET ${option} WHERE id = ?`, [
       ...value,

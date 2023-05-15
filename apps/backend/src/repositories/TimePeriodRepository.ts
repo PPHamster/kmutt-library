@@ -81,6 +81,7 @@ export class TimePeriodRepository {
       INNER JOIN RoomTimePeriod AS rtp ON r.id = rtp.roomId
       INNER JOIN TimePeriod AS tp ON rtp.timePeriodId = tp.id
       WHERE r.id = ?
+      ORDER BY tp.beginTime
       `,
       [roomId],
     );

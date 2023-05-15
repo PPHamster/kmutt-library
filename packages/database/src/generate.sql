@@ -102,6 +102,7 @@ CREATE TABLE `Room` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(150) NOT NULL,
   `location` TEXT NOT NULL,
+  `status` VARCHAR(150) DEFAULT 'Open' NOT NULL,
   `image` VARCHAR(150) NOT NULL,
 
   UNIQUE INDEX `RoomIdUnique`(`id`),
