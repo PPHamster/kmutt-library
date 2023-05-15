@@ -158,7 +158,18 @@ export class BlogService {
   }
 
   public async updateBlogById(id: number, data: BlogUpdateDto) {
-    return this.blogRepository.updateBlogById(id, data);
+    if (Object.keys(data).length === 0)
+      throw new BadRequestException('No data that want to update');
+
+    const values = [];
+    const updateQuery = Object.keys(data)
+      .map((key) => {
+        values.push(data[key]);
+        return `${key} = ?`;
+      })
+      .join(', ');
+
+    await this.blogRepository.updateBlogById(updateQuery, values, id);
   }
 
   public async deleteBlogById(id: number) {

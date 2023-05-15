@@ -30,13 +30,22 @@ export class BookRepository {
   }
 
   public async getAllBook(): Promise<Book[]> {
-    const [rows] = await this.connection.query('SELECT * FROM Book');
+    const [rows] = await this.connection.query(
+      `
+      SELECT b.*, IF(oi.receivedDate IS NOT NULL, 0, 1) AS isReady FROM Book AS b
+      LEFT JOIN OrderItem AS oi ON b.id = oi.bookId AND oi.returnedDate IS NULL
+      `,
+    );
     return rows as any[] as Book[];
   }
 
   public async getBookById(id: number): Promise<Book> {
     const [rows] = await this.connection.query(
-      'SELECT * FROM Book WHERE id = ?',
+      `
+      SELECT b.*, IF(oi.receivedDate IS NOT NULL, 0, 1) AS isReady FROM Book AS b
+      LEFT JOIN OrderItem AS oi ON b.id = oi.bookId AND oi.returnedDate IS NULL
+      WHERE id = ?
+      `,
       [id],
     );
     return rows[0];
@@ -96,12 +105,17 @@ export class BookRepository {
     const [rows] = await this.connection.query(
       `
       SELECT b.* FROM Book AS b
-      INNER JOIN OrderItem AS oi ON b.id = oi.bookId AND oi.returnedDate IS NOT NULL
-      INNER JOIN \`Order\` AS o ON o.id = oi.orderId AND o.userId = ?
-      INNER JOIN Blog AS bl ON bl.userId = ? AND bl.bookId != b.id
+      INNER JOIN OrderItem AS oi ON oi.bookId = b.id
+      INNER JOIN \`Order\` AS o ON o.userId = '64070501061'
+      WHERE b.id NOT IN
+      (SELECT bl.bookId FROM OrderItem AS oi
+      INNER JOIN \`Order\` AS o ON o.id = oi.orderId AND o.userId = '64070501061'
+      INNER JOIN Blog AS bl ON bl.userId = '64070501061' AND bl.bookId = oi.bookId
+      WHERE oi.returnedDate IS NOT NULL)
       GROUP BY b.id
+      ORDER BY b.id
       `,
-      [userId, userId],
+      [userId, userId, userId],
     );
 
     return rows as any[] as Book[];
@@ -110,11 +124,14 @@ export class BookRepository {
   public async getRecommendBooks(count: number): Promise<Book[]> {
     const [rows] = await this.connection.query(
       `
+      SELECT b.*, IF(oi.receivedDate IS NOT NULL, 0, 1) AS isReady FROM (
       SELECT b.* FROM Book AS b
       INNER JOIN OrderItem AS oi ON b.id = oi.bookId
       GROUP BY b.id
       ORDER BY COUNT(*) DESC
       LIMIT ?
+      ) AS b
+      LEFT JOIN OrderItem AS oi ON b.id = oi.bookId AND oi.returnedDate IS NULL
       `,
       [count],
     );

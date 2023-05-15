@@ -4,9 +4,15 @@ import {
   IsArray,
   ArrayNotEmpty,
   MaxLength,
+  IsOptional,
 } from 'class-validator';
 
 export class BlogCreateDto {
+  @IsNotEmpty()
+  @IsString()
+  @MaxLength(150)
+  public topic: string;
+
   @IsNotEmpty()
   @IsString()
   public article: string;
@@ -19,9 +25,16 @@ export class BlogCreateDto {
 }
 
 export class BlogUpdateDto {
+  @IsOptional()
   @IsNotEmpty()
   @IsString()
-  public article: string;
+  @MaxLength(150)
+  public topic?: string;
+
+  @IsOptional()
+  @IsNotEmpty()
+  @IsString()
+  public article?: string;
 }
 
 export class BlogAddTagDto {

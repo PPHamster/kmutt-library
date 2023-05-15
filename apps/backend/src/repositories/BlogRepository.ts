@@ -1,4 +1,4 @@
-import { BlogCreateDto, BlogUpdateDto } from '@/utils/dtos/BlogDto';
+import { BlogCreateDto } from '@/utils/dtos/BlogDto';
 import { Inject, Injectable } from '@nestjs/common';
 import { Blog } from 'api-schema';
 import { Connection } from 'mysql2/promise';
@@ -83,9 +83,9 @@ export class BlogRepository {
     return rows[0];
   }
 
-  public async updateBlogById(id: number, data: BlogUpdateDto) {
-    await this.connection.query('UPDATE Blog SET article = ? WHERE id = ?', [
-      data.article,
+  public async updateBlogById(option: string, values: any[], id: number) {
+    await this.connection.query(`UPDATE Blog SET ${option} WHERE id = ?`, [
+      ...values,
       id,
     ]);
   }
