@@ -17,28 +17,13 @@ export class BlogService {
     private readonly bookRepository: BookRepository,
   ) {}
 
-  public async createBlog(data: BlogCreateDto, userId: string, bookId: number) {
-    const booksCanCreteBlog =
-      await this.bookRepository.getAllBookNotCreatedBlogByUserId(userId);
+  private async createAndAddTags(blogId: number, tags: string[]) {
+    const allTags = await this.tagRepository.getAllTag();
 
-    const canCreate = booksCanCreteBlog
-      .map((book) => book.id)
-      .some((id) => id === bookId);
-
-    if (!canCreate) {
-      throw new BadRequestException("Can't create blog from this book");
-    }
-
-    await this.blogRepository.createBlog(data, userId, bookId);
-
-    const latestBlog = await this.blogRepository.getLatestBlogByUserId(userId);
-
-    const tags = await this.tagRepository.getAllTag();
-
-    const tagsName = tags.map((tag) => tag.name);
+    const tagsName = allTags.map((tag) => tag.name);
 
     const blogValues: string[] = [];
-    const blogQuery = data.tags
+    const blogQuery = tags
       .filter((tag) => {
         return !tagsName.includes(tag);
       })
@@ -53,14 +38,37 @@ export class BlogService {
     }
 
     const tagValues: any[] = [];
-    const tagQuery = data.tags
+    const tagQuery = tags
       .map((tag) => {
-        tagValues.push(latestBlog.id, tag);
+        tagValues.push(blogId, tag);
         return `(?, (SELECT id FROM Tag WHERE name = ?))`;
       })
       .join(', ');
 
     await this.tagRepository.createBlogTag(tagQuery, tagValues);
+  }
+
+  public async createBlog(data: BlogCreateDto, userId: string, bookId: number) {
+    const booksEverBorrowed =
+      await this.bookRepository.getAllBookEverBorrowedByUserId(userId);
+    const booksCreatedBlog =
+      await this.bookRepository.getAllBookCreatedBlogByUserId(userId);
+
+    const booksCanCreteBlog = booksEverBorrowed.filter((book) =>
+      booksCreatedBlog.every((b) => b.id !== book.id),
+    );
+
+    const canCreate = booksCanCreteBlog.some((book) => book.id === bookId);
+
+    if (!canCreate) {
+      throw new BadRequestException("Can't create blog from this book");
+    }
+
+    await this.blogRepository.createBlog(data, userId, bookId);
+
+    const latestBlog = await this.blogRepository.getLatestBlogByUserId(userId);
+
+    await this.createAndAddTags(latestBlog.id, data.tags);
   }
 
   public async addTagById(blogId: number, data: BlogAddTagDto) {
@@ -163,6 +171,9 @@ export class BlogService {
 
     const values = [];
     const updateQuery = Object.keys(data)
+      .filter((key) => {
+        return key !== 'tags';
+      })
       .map((key) => {
         values.push(data[key]);
         return `${key} = ?`;
@@ -170,6 +181,11 @@ export class BlogService {
       .join(', ');
 
     await this.blogRepository.updateBlogById(updateQuery, values, id);
+
+    if (data.tags) {
+      await this.tagRepository.deleteAllTagFromBlogById(id);
+      await this.createAndAddTags(id, data.tags);
+    }
   }
 
   public async deleteBlogById(id: number) {

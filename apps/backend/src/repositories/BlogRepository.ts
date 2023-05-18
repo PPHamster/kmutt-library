@@ -10,8 +10,8 @@ export class BlogRepository {
 
   public async createBlog(data: BlogCreateDto, userId: string, bookId: number) {
     await this.connection.query(
-      'INSERT INTO Blog (article, userId, bookId) VALUES (?, ?, ?)',
-      [data.article, userId, bookId],
+      'INSERT INTO Blog (topic, article, userId, bookId) VALUES (?, ?, ?, ?)',
+      [data.topic, data.article, userId, bookId],
     );
   }
 

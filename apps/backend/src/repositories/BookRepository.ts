@@ -99,23 +99,13 @@ export class BookRepository {
     return rows as any[] as Book[];
   }
 
-  public async getAllBookNotCreatedBlogByUserId(
-    userId: string,
-  ): Promise<Book[]> {
+  public async getAllBookCreatedBlogByUserId(userId: string): Promise<Book[]> {
     const [rows] = await this.connection.query(
       `
       SELECT b.* FROM Book AS b
-      INNER JOIN OrderItem AS oi ON oi.bookId = b.id
-      INNER JOIN \`Order\` AS o ON o.userId = '64070501061'
-      WHERE b.id NOT IN
-      (SELECT bl.bookId FROM OrderItem AS oi
-      INNER JOIN \`Order\` AS o ON o.id = oi.orderId AND o.userId = '64070501061'
-      INNER JOIN Blog AS bl ON bl.userId = '64070501061' AND bl.bookId = oi.bookId
-      WHERE oi.returnedDate IS NOT NULL)
-      GROUP BY b.id
-      ORDER BY b.id
+      INNER JOIN Blog AS bl ON bl.bookId = b.id AND bl.userId = ?
       `,
-      [userId, userId, userId],
+      [userId],
     );
 
     return rows as any[] as Book[];

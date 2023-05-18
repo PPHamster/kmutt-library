@@ -11,7 +11,7 @@ export class TagRepository {
   public async createTag(data: TagCreateDto) {
     await this.connection.query(
       'INSERT INTO Tag (name) SELECT ? WHERE NOT EXISTS (SELECT * FROM Tag WHERE name = ?)',
-      [data.name],
+      [data.name, data.name],
     );
   }
 
@@ -60,6 +60,12 @@ export class TagRepository {
     await this.connection.query('UPDATE Tag SET name = ? WHERE id = ?', [
       data.name,
       id,
+    ]);
+  }
+
+  public async deleteAllTagFromBlogById(blogId: number) {
+    await this.connection.query('DELETE FROM BlogTag WHERE blogId = ?', [
+      blogId,
     ]);
   }
 

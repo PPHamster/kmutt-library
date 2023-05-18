@@ -107,6 +107,13 @@ export class BookUpdateDto {
   @IsString()
   @MaxLength(10)
   public location?: string;
+
+  @IsOptional()
+  @IsArray()
+  @ArrayNotEmpty()
+  @IsNotEmpty({ each: true })
+  @IsString({ each: true })
+  public categories?: string[];
 }
 
 export class BookUpdateImageDto {

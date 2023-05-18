@@ -35,6 +35,13 @@ export class BlogUpdateDto {
   @IsNotEmpty()
   @IsString()
   public article?: string;
+
+  @IsOptional()
+  @IsArray()
+  @ArrayNotEmpty()
+  @IsNotEmpty({ each: true })
+  @IsString({ each: true })
+  public tags?: string[];
 }
 
 export class BlogAddTagDto {

@@ -69,6 +69,13 @@ export class EventUpdateDto {
   @IsNotEmpty()
   @IsString()
   public description?: string;
+
+  @IsOptional()
+  @IsArray()
+  @ArrayNotEmpty()
+  @IsNotEmpty({ each: true })
+  @IsString({ each: true })
+  public categories?: string[];
 }
 
 export class EventUpdateImageDto {

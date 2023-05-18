@@ -36,17 +36,16 @@ export class RoomService {
     return new Date(date).toLocaleDateString('sv').split(' ')[0];
   }
 
-  public async createRoom(data: RoomCreateDto) {
-    const imageDefault = this.imageService.defaultImagePath('rooms');
-
-    await this.roomRepository.createRoom({ ...data, image: imageDefault });
-
-    const timePeriods = await this.timePeriodRepository.getAllTimePeriod();
+  private async createAndAddTimePeriod(
+    roomId: number,
+    timePeriods: TimePeriodCreateDto[],
+  ) {
+    const allTimePeriods = await this.timePeriodRepository.getAllTimePeriod();
 
     const timePeriodValues: string[] = [];
-    const timePeriodQuery = data.timePeriods
+    const timePeriodQuery = timePeriods
       .filter((timePeriod) => {
-        return !timePeriods.some(
+        return !allTimePeriods.some(
           (tp) =>
             tp.beginTime === timePeriod.beginTime &&
             tp.endTime === timePeriod.endTime,
@@ -57,6 +56,36 @@ export class RoomService {
         return '(?, ?)';
       })
       .join(', ');
+
+    if (timePeriodValues.length > 0) {
+      await this.timePeriodRepository.createManyTimePeriod(
+        timePeriodQuery,
+        timePeriodValues,
+      );
+    }
+
+    const roomTimePeriodValues: (string | number)[] = [];
+    const roomTimePeriodQuery = timePeriods
+      .map((timePeriod) => {
+        roomTimePeriodValues.push(
+          roomId,
+          timePeriod.beginTime,
+          timePeriod.endTime,
+        );
+        return `(?, (SELECT id FROM TimePeriod WHERE beginTime = ? AND endTime = ?))`;
+      })
+      .join(', ');
+
+    await this.timePeriodRepository.createManyRoomTimePeriod(
+      roomTimePeriodQuery,
+      roomTimePeriodValues,
+    );
+  }
+
+  public async createRoom(data: RoomCreateDto) {
+    const imageDefault = this.imageService.defaultImagePath('rooms');
+
+    await this.roomRepository.createRoom({ ...data, image: imageDefault });
 
     const latestRoom = await this.roomRepository.getLatestRoom();
 
@@ -70,29 +99,7 @@ export class RoomService {
       image: imagePath,
     });
 
-    if (timePeriodValues.length > 0) {
-      await this.timePeriodRepository.createManyTimePeriod(
-        timePeriodQuery,
-        timePeriodValues,
-      );
-    }
-
-    const roomTimePeriodValues: (string | number)[] = [];
-    const roomTimePeriodQuery = data.timePeriods
-      .map((timePeriod) => {
-        roomTimePeriodValues.push(
-          latestRoom.id,
-          timePeriod.beginTime,
-          timePeriod.endTime,
-        );
-        return `(?, (SELECT id FROM TimePeriod WHERE beginTime = ? AND endTime = ?))`;
-      })
-      .join(', ');
-
-    await this.timePeriodRepository.createManyRoomTimePeriod(
-      roomTimePeriodQuery,
-      roomTimePeriodValues,
-    );
+    await this.createAndAddTimePeriod(latestRoom.id, data.timePeriods);
   }
 
   public async createBookingRoom(
@@ -204,6 +211,9 @@ export class RoomService {
 
     const values = [];
     const updateQuery = Object.keys(data)
+      .filter((key) => {
+        return key !== 'timePeriods';
+      })
       .map((key) => {
         values.push(data[key]);
         return `${key} = ?`;
@@ -211,6 +221,11 @@ export class RoomService {
       .join(', ');
 
     await this.roomRepository.updateRoomById(updateQuery, values, id);
+
+    if (data.timePeriods) {
+      await this.timePeriodRepository.deleteAllTimePeriodFromRoomById(id);
+      await this.createAndAddTimePeriod(id, data.timePeriods);
+    }
   }
 
   public async updateRoomImageById(id: number, data: RoomUpdateImageDto) {

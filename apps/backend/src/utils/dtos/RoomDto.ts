@@ -49,6 +49,12 @@ export class RoomUpdateDto {
   @IsString()
   @MaxLength(150)
   public status?: string;
+
+  @IsOptional()
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => TimePeriodCreateDto)
+  public timePeriods?: TimePeriodCreateDto[];
 }
 
 export class RoomUpdateImageDto {

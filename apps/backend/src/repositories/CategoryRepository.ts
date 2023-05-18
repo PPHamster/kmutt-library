@@ -81,6 +81,12 @@ export class CategoryRepository {
     ]);
   }
 
+  public async deleteAllCategoryFromBookById(bookId: number) {
+    await this.connection.query('DELETE FROM BookCategory WHERE bookId = ?', [
+      bookId,
+    ]);
+  }
+
   public async deleteCategoryById(id: number) {
     await this.connection.query('DELETE FROM Category WHERE id = ?', [id]);
   }

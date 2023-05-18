@@ -77,7 +77,7 @@ export class OrderService {
         } else {
           clearInterval(timeOutInterval);
         }
-      }, 30 * 1000);
+      }, 2 * 60 * 1000);
     } else {
       await this.orderItemRepository.updateOrderItemById(
         orderId,

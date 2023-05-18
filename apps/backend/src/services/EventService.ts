@@ -20,17 +20,14 @@ export class EventService {
     private readonly eventMemberRepository: EventMemberRepository,
   ) {}
 
-  public async createEvent(data: EventCreateDto) {
-    const imageDefault = this.imageService.defaultImagePath('events');
+  private async createAndAddCategories(eventId: number, categories: string[]) {
+    const allCategories =
+      await this.eventCategoryRepository.getAllEventCategory();
 
-    await this.eventRepository.createEvent({ ...data, image: imageDefault });
-
-    const categories = await this.eventCategoryRepository.getAllEventCategory();
-
-    const categoriesName = categories.map((category) => category.name);
+    const categoriesName = allCategories.map((category) => category.name);
 
     const eventValues: string[] = [];
-    const eventQuery = data.categories
+    const eventQuery = categories
       .filter((category) => {
         return !categoriesName.includes(category);
       })
@@ -39,6 +36,32 @@ export class EventService {
         return '(?)';
       })
       .join(', ');
+
+    if (eventValues.length > 0) {
+      await this.eventCategoryRepository.createManyEventCategories(
+        eventQuery,
+        eventValues,
+      );
+    }
+
+    const categoryValues: any[] = [];
+    const categoryQuery = categories
+      .map((cat) => {
+        categoryValues.push(eventId, cat);
+        return `(?, (SELECT id FROM EventCategory WHERE name = ?))`;
+      })
+      .join(', ');
+
+    await this.eventCategoryRepository.createEventEventCategory(
+      categoryQuery,
+      categoryValues,
+    );
+  }
+
+  public async createEvent(data: EventCreateDto) {
+    const imageDefault = this.imageService.defaultImagePath('events');
+
+    await this.eventRepository.createEvent({ ...data, image: imageDefault });
 
     const latestEvent = await this.eventRepository.getLatestEvent();
 
@@ -52,25 +75,7 @@ export class EventService {
       image: imagePath,
     });
 
-    if (eventValues.length > 0) {
-      await this.eventCategoryRepository.createManyEventCategories(
-        eventQuery,
-        eventValues,
-      );
-    }
-
-    const categoryValues: any[] = [];
-    const categoryQuery = data.categories
-      .map((cat) => {
-        categoryValues.push(latestEvent.id, cat);
-        return `(?, (SELECT id FROM EventCategory WHERE name = ?))`;
-      })
-      .join(', ');
-
-    await this.eventCategoryRepository.createEventEventCategory(
-      categoryQuery,
-      categoryValues,
-    );
+    await this.createAndAddCategories(latestEvent.id, data.categories);
   }
 
   public async addCategoryById(bookId: number, data: EventAddCategoryDto) {
@@ -147,6 +152,9 @@ export class EventService {
 
     const values: any[] = [];
     const updateQuery = Object.keys(data)
+      .filter((key) => {
+        return key !== 'categories';
+      })
       .map((key) => {
         values.push(data[key]);
         return `${key} = ?`;
@@ -154,6 +162,11 @@ export class EventService {
       .join(', ');
 
     await this.eventRepository.updateEventById(updateQuery, values, id);
+
+    if (data.categories) {
+      await this.eventCategoryRepository.deleteAllCategoryFromEventById(id);
+      await this.createAndAddCategories(id, data.categories);
+    }
   }
 
   public async updateEventImageById(id: number, data: EventUpdateImageDto) {

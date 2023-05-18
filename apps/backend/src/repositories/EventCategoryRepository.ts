@@ -93,6 +93,13 @@ export class EventCategoryRepository {
     );
   }
 
+  public async deleteAllCategoryFromEventById(eventId: number) {
+    await this.connection.query(
+      'DELETE FROM EventEventCategory WHERE eventId = ?',
+      [eventId],
+    );
+  }
+
   public async deleteEventCategoryById(id: number) {
     await this.connection.query('DELETE FROM EventCategory WHERE id = ?', [id]);
   }

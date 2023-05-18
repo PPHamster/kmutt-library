@@ -101,6 +101,12 @@ export class TimePeriodRepository {
     return rows;
   }
 
+  public async deleteAllTimePeriodFromRoomById(roomId: number) {
+    await this.connection.query('DELETE FROM RoomTimePeriod WHERE roomId = ?', [
+      roomId,
+    ]);
+  }
+
   public async deleteTimePeriodById(id: number) {
     await this.connection.query('DELETE FROM TimePeriod WHERE id = ?', [id]);
   }

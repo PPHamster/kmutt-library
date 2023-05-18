@@ -20,17 +20,13 @@ export class BookService {
     private readonly orderItemRepository: OrderItemRepository,
   ) {}
 
-  public async createBook(data: BookCreateDto) {
-    const imageDefault = this.imageService.defaultImagePath('books');
+  private async createAndAddCategories(bookId: number, categories: string[]) {
+    const allCategories = await this.categoryRepository.getAllCategory();
 
-    await this.bookRepository.createBook({ ...data, image: imageDefault });
-
-    const categories = await this.categoryRepository.getAllCategory();
-
-    const categoriesName = categories.map((category) => category.name);
+    const categoriesName = allCategories.map((category) => category.name);
 
     const bookValues: string[] = [];
-    const bookQuery = data.categories
+    const bookQuery = categories
       .filter((category) => {
         return !categoriesName.includes(category);
       })
@@ -39,6 +35,29 @@ export class BookService {
         return '(?)';
       })
       .join(', ');
+
+    if (bookValues.length > 0) {
+      await this.categoryRepository.createManyCategories(bookQuery, bookValues);
+    }
+
+    const categoryValues: any[] = [];
+    const categoryQuery = categories
+      .map((cat) => {
+        categoryValues.push(bookId, cat);
+        return `(?, (SELECT id FROM Category WHERE name = ?))`;
+      })
+      .join(', ');
+
+    await this.categoryRepository.createBookCategory(
+      categoryQuery,
+      categoryValues,
+    );
+  }
+
+  public async createBook(data: BookCreateDto) {
+    const imageDefault = this.imageService.defaultImagePath('books');
+
+    await this.bookRepository.createBook({ ...data, image: imageDefault });
 
     const latestBook = await this.bookRepository.getLatestBook();
 
@@ -52,22 +71,7 @@ export class BookService {
       image: imagePath,
     });
 
-    if (bookValues.length > 0) {
-      await this.categoryRepository.createManyCategories(bookQuery, bookValues);
-    }
-
-    const categoryValues: any[] = [];
-    const categoryQuery = data.categories
-      .map((cat) => {
-        categoryValues.push(latestBook.id, cat);
-        return `(?, (SELECT id FROM Category WHERE name = ?))`;
-      })
-      .join(', ');
-
-    await this.categoryRepository.createBookCategory(
-      categoryQuery,
-      categoryValues,
-    );
+    await this.createAndAddCategories(latestBook.id, data.categories);
   }
 
   public async addCategoryById(bookId: number, data: BookAddCategoryDto) {
@@ -145,7 +149,14 @@ export class BookService {
   }
 
   public async getAllBookNotCreatedBlogByUserId(userId: string) {
-    return this.bookRepository.getAllBookNotCreatedBlogByUserId(userId);
+    const booksEverBorrowed =
+      await this.bookRepository.getAllBookEverBorrowedByUserId(userId);
+    const booksCreatedBlog =
+      await this.bookRepository.getAllBookCreatedBlogByUserId(userId);
+
+    return booksEverBorrowed.filter((book) =>
+      booksCreatedBlog.every((b) => b.id !== book.id),
+    );
   }
 
   public async updateBookById(id: number, data: BookUpdateDto) {
@@ -154,6 +165,9 @@ export class BookService {
 
     const values = [];
     const updateQuery = Object.keys(data)
+      .filter((key) => {
+        return key !== 'categories';
+      })
       .map((key) => {
         values.push(data[key]);
         return `${key} = ?`;
@@ -161,6 +175,11 @@ export class BookService {
       .join(', ');
 
     await this.bookRepository.updateBookById(updateQuery, values, id);
+
+    if (data.categories) {
+      await this.categoryRepository.deleteAllCategoryFromBookById(id);
+      await this.createAndAddCategories(id, data.categories);
+    }
   }
 
   public async updateBookImageById(id: number, data: BookUpdateImageDto) {
