@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import RoomforSt from '@/components/Staff/RoomforSt'
-import { roomdata } from '@/utils/roomdata';
 import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
@@ -15,15 +14,22 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import { timeperiod } from '@/utils/timeperiod';
 import { Link } from 'react-router-dom';
+import { fetch } from '@/utils/Fetch';
+import { popup } from '@/utils/Popup';
 
 const filter = createFilterOptions();
 
 export default function StaffRoom() {
 
-  const [filteredRoom, setFilteredRoom] = useState(roomdata);
+  const [filteredRoom, setFilteredRoom] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [beginTime, setBeginTime] = useState(null);
   const [endTime, setEndTime] = useState(null);
+
+  const [rooms, setRooms] = useState(null);
+  const [timePeriods, setTimePeriods] = useState(null);
+  const [downloadRooms, setDownloadRooms] = useState(true);
+  const [downloadTimePeriods, setDownloadTimePeriods] = useState(true);
 
   const handleBeginTimeChange = (newTime) => {
     setBeginTime(newTime);
@@ -42,13 +48,38 @@ export default function StaffRoom() {
 
     function matchingroom() {
 
-      return roomdata.filter((room) =>
-        room.roomname.toLowerCase().includes(searchTerm.toLowerCase())
+      if (!rooms) return [];
+
+      return rooms.filter((room) =>
+        room.name.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
 
     setFilteredRoom(matchingroom());
-  }, [searchTerm]);
+  }, [searchTerm, rooms]);
+
+  useEffect(() => {
+    const fetchRooms = async () => {
+      const response = await fetch.get('/rooms');
+      setRooms(response.data);
+    }
+
+    const fetchTimePeriods = async () => {
+      const response = await fetch.get('/time-periods')
+      setTimePeriods(response.data);
+    }
+
+    if (downloadRooms) {
+      fetchRooms();
+      setDownloadRooms(false);
+    }
+
+    if (downloadTimePeriods) {
+      fetchTimePeriods();
+      setDownloadTimePeriods(false);
+    }
+
+  }, [downloadRooms, downloadTimePeriods]);
 
   const [value, setValue] = useState(null);
   const [open, toggleOpen] = useState(false);
@@ -61,9 +92,9 @@ export default function StaffRoom() {
 
   const [dialogValue, setDialogValue] = useState({
     id: '',
-    begin: '',
-    end: '',
-});
+    beginTime: '',
+    endTime: '',
+  });
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -77,19 +108,30 @@ export default function StaffRoom() {
     }
   };
 
-  function addTime(beginTime, endTime) {
-    // Generate a unique id for the new TimePeriod
-    const newId = NaN;
+  async function addTime(beginTime, endTime) {
 
-    // Create a new TimePeriod object with the generated id and the new begin and end times
-    const newTimePeriod = {
-      id: newId,
-      begin: beginTime.format('HH:mm'),
-      end: endTime.format('HH:mm'),
-    };
+    try {
+      const response = await fetch.post('/time-periods', {
+        beginTime: `${beginTime.format('HH:mm')}:00`,
+        endTime: `${endTime.format('HH:mm')}:00`
+      });
 
-    // Add the new TimePeriod to the timeperiod array
-    timeperiod.push(newTimePeriod);
+      setValue(null);
+      setDownloadTimePeriods(true);
+
+      await popup.fire({
+        icon: 'success',
+        title: 'Create successful!',
+        text: `${response.data.msg}`,
+      })
+
+    } catch (error) {
+      await popup.fire({
+        icon: 'error',
+        title: 'Create Failed!',
+        text: error.message,
+      })
+    }
   }
 
   const [openEdit, toggleOpenEdit] = useState(false);
@@ -105,18 +147,35 @@ export default function StaffRoom() {
     handleCloseEdit();
   };
 
-  function editTime(Id) {
-    // Find the category object with the specified id
-    const Index = timeperiod.findIndex(c => c.id === Id);
+  async function editTime(Id) {
 
     if (!beginTime || !endTime) {
       alert('โปรดระบุเวลาเริ่มต้นและเวลาสิ้นสุด');
       return toggleOpenEdit(true);
     }
 
-    // Update the name property of the category object
-    timeperiod[Index].begin = beginTime.format('HH:mm');
-    timeperiod[Index].end = endTime.format('HH:mm');
+    try {
+      const response = await fetch.put(`/time-periods/${Id}`, {
+        beginTime: `${beginTime.format('HH:mm')}:00`,
+        endTime: `${endTime.format('HH:mm')}:00`
+      });
+
+      setDownloadTimePeriods(true);
+      setValue(null);
+
+      await popup.fire({
+        icon: 'success',
+        title: 'Update successful!',
+        text: `${response.data.msg}`,
+      })
+
+    } catch (error) {
+      await popup.fire({
+        icon: 'error',
+        title: 'Update Failed!',
+        text: error.message,
+      })
+    }
   };
 
   const [openDel, toggleOpenDel] = useState(false);
@@ -132,12 +191,32 @@ export default function StaffRoom() {
   };
 
 
-  function delTime(Id) {
-    const index = timeperiod.findIndex((c) => c.id === Id);
+  async function delTime(Id) {
+    try {
+      const response = await fetch.delete(`/time-periods/${Id}`);
 
-    if (index !== -1) {
-      timeperiod.splice(index, 1);
+      setValue(null);
+      setDownloadTimePeriods(true);
+
+      await popup.fire({
+        icon: 'success',
+        title: 'Delete successful!',
+        text: `${response.data.msg}`,
+      })
+
+    } catch (error) {
+      await popup.fire({
+        icon: 'error',
+        title: 'Delete Failed!',
+        text: error.message,
+      })
     }
+  }
+
+  if (!rooms || !timePeriods) {
+    return (
+      <div className="w-full h-[700px] pt-[2rem] px-[8rem] max-sm:px-[20px] max-lg:px-[4rem]"></div>
+    );
   }
 
   return (
@@ -156,16 +235,16 @@ export default function StaffRoom() {
                     toggleOpen(true);
                     setDialogValue({
                       id: '',
-                      begin: newValue,
-                      end: '',
+                      beginTime: newValue,
+                      endTime: '',
                     });
                   });
                 } else if (newValue && newValue.inputValue) {
                   toggleOpen(true);
                   setDialogValue({
                     id: '',
-                    begin: newValue.inputValue,
-                    end: '',
+                    beginTime: newValue.inputValue,
+                    endTime: '',
                   });
                 } else {
                   setValue(newValue);
@@ -178,13 +257,13 @@ export default function StaffRoom() {
                 if (params.inputValue == 'New') {
                   filtered.push({
                     inputValue: params.inputValue,
-                    begin: `Add TimePeriod`,
+                    beginTime: `Add TimePeriod`,
                     end: '',
                   });
                 }
                 return filtered;
               }}
-              options={timeperiod}
+              options={timePeriods}
               getOptionLabel={(option) => {
                 // e.g value selected with enter, right from the input
                 if (typeof option === 'string') {
@@ -193,12 +272,12 @@ export default function StaffRoom() {
                 if (option.inputValue) {
                   return option.inputValue;
                 }
-                return `${option.id} ${option.begin} - ${option.end}`;
+                return `${option.beginTime} - ${option.endTime}`;
               }}
               selectOnFocus
               clearOnBlur
               handleHomeEndKeys
-              renderOption={(props, option) => <li {...props}>{option.id} {option.begin} - {option.end} </li>}
+              renderOption={(props, option) => <li {...props}>{option.beginTime} - {option.endTime} </li>}
               sx={{ width: 300 }}
               freeSolo
               renderInput={(params) => <TextField {...params} label="ค้นหา TimePeriod หรือ New เพื่อเพิ่มใหม่" />}
@@ -268,7 +347,7 @@ export default function StaffRoom() {
                     ระบุ TimePeriod ใหม่ที่ต้องการใช้แทน
                   </DialogContentText>
                   <div className='flex justify-center'>
-                  <div className='mx-[10px]'>
+                    <div className='mx-[10px]'>
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <DemoContainer components={['TimePicker']}>
                           <TimePicker label="Begin" ampm={false} value={beginTime} onChange={handleBeginTimeChange} />
@@ -282,7 +361,7 @@ export default function StaffRoom() {
                         </DemoContainer>
                       </LocalizationProvider>
                     </div>
-                    </div>
+                  </div>
                 </DialogContent>
                 <DialogActions>
                   <Button onClick={handleCloseEdit}>ยกเลิก</Button>
@@ -337,14 +416,14 @@ export default function StaffRoom() {
               </button>
             </Link>
             <div className='max-w-[80vw] min-w-[40vw] h-[77vh] grid gap-5 gap-y-36 grid-auto-fit-[241px] overflow-y-scroll overflow-x-hidden pt-3 px-4'>
-              {filteredRoom.map((data, index) => (
+              {filteredRoom.map((data) => (
                 <RoomforSt
-                  key={index}
-                  roomid={data.roomid}
+                  key={data.id}
+                  id={data.id}
                   image={data.image}
-                  roomname={data.roomname}
-                  size={data.size}
+                  name={data.name}
                   status={data.status}
+                  onDelete={setDownloadRooms}
                   onClick={() => handleRoomClick(data)}
                 />))}
             </div>

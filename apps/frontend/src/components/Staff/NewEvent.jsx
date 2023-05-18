@@ -8,20 +8,25 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogActions from '@mui/material/DialogActions';
 import Autocomplete from '@mui/material/Autocomplete';
-import { eventcategory } from "@/utils/Eventcategory";
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import { fetch } from '@/utils/Fetch';
+import { popup } from '@/utils/Popup';
 import Button from '@mui/material/Button';
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function NewEvent() {
+  
+  const navigate = useNavigate();
+
 
   const [name, setName] = useState("");
   const [location, setLocation] = useState("");
   const [selectedCategory, setSelectedCategory] = useState([]);
   const [textdes, setText] = useState("");
+  const [categories, setCategories] = useState(null);
 
   const handleNameChange = (event) => {
     setName(event.target.value);
@@ -61,7 +66,9 @@ export default function NewEvent() {
     };
 
     // Add the new category to the categories array
-    eventcategory.push(newCategory);
+    setCategories((prev) => {
+      return [...prev, newCategory];
+    });
   }
 
   //upload image
@@ -82,6 +89,15 @@ export default function NewEvent() {
     });
   }, [images]);
 
+  useEffect(() => {
+    const fetchCategories = async () => {
+      const response = await fetch.get('/event-categories');
+      setCategories(response.data);
+    }
+
+    fetchCategories();
+  }, []);
+
   function onImageChange(e) {
     setImages([...e.target.files]);
   }
@@ -97,18 +113,54 @@ export default function NewEvent() {
     setSelectedDateEnd(dateend);
   };
 
-  const submit = (event) => {
+  const submit = async (event) => {
     event.preventDefault();
-    console.log({
-      title: name,
-      category: selectedCategory,
-      description: textdes,
-      image: imageData,
-      location: location,
-      meetingtime: selectedDate,
-      endtime: selectedDateEnd,
-    })
 
+    const data = {
+      name: name,
+      categories: selectedCategory.map(cat => cat.name),
+      description: textdes,
+      image: imageData[0].split(',')[1],
+      location: location,
+      meetingTime: selectedDate,
+      endTime: selectedDateEnd,
+    };
+
+    try {
+      const response = await fetch.post('/events', data);
+
+      await popup.fire({
+        icon: 'success',
+        title: 'Create successful!',
+        text: `${response.data.msg}`,
+      })
+      
+      navigate('/staff');
+    } catch (error) {
+      await popup.fire({
+        icon: 'error',
+        title: 'Create Failed!',
+        text: error.message,
+      })
+    }
+
+  }
+
+  if (!categories) {
+    return (
+      <div className="w-full h-full bg-gray-50">
+        <div className='fixed pt-12 ml-[3%] z-50'>
+          <Link to={'/staff'}>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="absolute left-[3%] w-6 h-6 -translate-y-4 text-center">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+            </svg></Link>
+        </div>
+        <NavbarStaff
+          bgcolor='bg-white hover:drop-shadow-md'
+          textcolor='text-black'
+        />
+      </div>
+    );
   }
 
   return (
@@ -181,11 +233,12 @@ export default function NewEvent() {
                     </form>
                   </Dialog>
                   <Autocomplete
+                    isOptionEqualToValue={(option, value) => option.id === value.id}
                     multiple
                     onChange={(event, value) => {
                       setSelectedCategory(value)
                     }}
-                    options={eventcategory}
+                    options={categories}
                     getOptionLabel={(option) => option.name}
                     filterSelectedOptions
                     renderInput={(params) => (

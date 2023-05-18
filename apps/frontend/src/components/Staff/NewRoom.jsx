@@ -13,15 +13,19 @@ import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
-import { timeperiod } from "@/utils/timeperiod";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { fetch } from '@/utils/Fetch';
+import { popup } from '@/utils/Popup';
 
 const filter = createFilterOptions();
 
 export default function NewRoom() {
 
+  const navigate = useNavigate();
+
   const [name, setName] = useState("");
   const [location, setLocation] = useState("");
+  const [timePeriods, setTimePeriods] = useState(null);
 
   const handleNameChange = (event) => {
     setName(event.target.value);
@@ -32,7 +36,7 @@ export default function NewRoom() {
   };
 
   //for search timeperiod
-  const [filteredtime, setFilteredTime] = useState(timeperiod);
+  const [filteredtime, setFilteredTime] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [beginTime, setBeginTime] = useState(null);
   const [endTime, setEndTime] = useState(null);
@@ -54,8 +58,10 @@ export default function NewRoom() {
 
     function matchingtime() {
 
-      return timeperiod.filter((time) =>
-        time.begin.toLowerCase().includes(searchTerm.toLowerCase())
+      if (!timePeriods) return [];
+
+      return timePeriods.filter((time) =>
+        time.beginTime.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
 
@@ -63,7 +69,7 @@ export default function NewRoom() {
   }, [searchTerm]);
 
   const [value, setValue] = useState(null);
-  
+
   const [open, toggleOpen] = useState(false);
 
   const handleClose = () => {
@@ -74,8 +80,8 @@ export default function NewRoom() {
 
   const [dialogValue, setDialogValue] = useState({
     id: '',
-    begin: '',
-    end: '',
+    beginTime: '',
+    endTime: '',
   });
 
   const handleSubmit = (event) => {
@@ -97,12 +103,14 @@ export default function NewRoom() {
     // Create a new TimePeriod object with the generated id and the new begin and end times
     const newTimePeriod = {
       id: newId,
-      begin: beginTime.format('HH:mm'),
-      end: endTime.format('HH:mm'),
+      beginTime: `${beginTime.format('HH:mm')}:00`,
+      endTime: `${endTime.format('HH:mm')}:00`,
     };
 
     // Add the new TimePeriod to the timeperiod array
-    timeperiod.push(newTimePeriod);
+    setTimePeriods((prev) => {
+      return [...prev, newTimePeriod];
+    });
   }
 
   //upload image
@@ -123,29 +131,75 @@ export default function NewRoom() {
     });
   }, [images]);
 
+  useEffect(() => {
+    const fetchTimePeriods = async () => {
+      const response = await fetch.get('/time-periods');
+      setTimePeriods(response.data);
+    }
+
+    fetchTimePeriods();
+  }, []);
+
   function onImageChange(e) {
     setImages([...e.target.files]);
   }
 
-  const submit = (event) => {
+  const submit = async (event) => {
     event.preventDefault();
-    console.log({
-      title: name,
-      image: imageData,
+    const data = {
+      name: name,
+      image: imageData[0].split(',')[1],
       location: location,
-      timeperiod: value,
-    })
+      timePeriods: value.map((tp) => {
+        return { beginTime: tp.beginTime, endTime: tp.endTime }
+      }),
+    }
+
+    try {
+      const response = await fetch.post('/rooms', data);
+
+      await popup.fire({
+        icon: 'success',
+        title: 'Create successful!',
+        text: `${response.data.msg}`,
+      })
+      
+      navigate('/staff');
+    } catch (error) {
+      await popup.fire({
+        icon: 'error',
+        title: 'Create Failed!',
+        text: error.message,
+      })
+    }
+  }
+
+  if (!timePeriods) {
+    return (
+      <div className="w-full h-full bg-gray-50">
+        <div className='fixed pt-12 ml-[3%] z-50'>
+          <Link to={'/staff'}>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="absolute left-[3%] w-6 h-6 -translate-y-4 text-center">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+            </svg></Link>
+        </div>
+        <NavbarStaff
+          bgcolor='bg-white hover:drop-shadow-md'
+          textcolor='text-black'
+        />
+      </div>
+    );
   }
 
   return (
     <>
       <div className='w-full h-full bg-gray-50'>
-      <div className='fixed pt-12 ml-[3%] z-50'>
-            <Link to={'/staff'}>
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="absolute left-[3%] w-6 h-6 -translate-y-4 text-center">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
-                    </svg></Link>
-            </div>
+        <div className='fixed pt-12 ml-[3%] z-50'>
+          <Link to={'/staff'}>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="absolute left-[3%] w-6 h-6 -translate-y-4 text-center">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+            </svg></Link>
+        </div>
         <NavbarStaff
           bgcolor='bg-white hover:drop-shadow-md'
           textcolor='text-black'
@@ -174,58 +228,59 @@ export default function NewRoom() {
                     multiline
                     maxRows={1}
                   />
-                 <div className="absolute mt-[1.5%] ml-[44%]">
+                  <div className="absolute mt-[1.5%] ml-[44%]">
                     <Button onClick={() => toggleOpen(true)}>
-                    เพิ่มช่วงเวลา
-                  </Button>
-                  </div> 
-                  <div className="flex items-center">
-                  <Autocomplete
-                    value={value || []}
-                    onChange={(event, newValue) => {
-                      if (typeof newValue === 'string') {
-                        // timeout to avoid instant validation of the dialog's form.
-                        setTimeout(() => {
-                          toggleOpen(true);
-                          setDialogValue({
-                            id: '',
-                            begin: newValue,
-                            end: '',
-                          });
-                        });
-                      } else {
-                        setValue(newValue);
-                      }
-                    }}
-
-                    filterOptions={(options, params) => {
-                      const filtered = filter(options, params);
-                      return filtered;
-                    }}
-
-
-                    options={timeperiod}
-                    getOptionLabel={(option) => {
-                      // e.g value selected with enter, right from the input
-                      if (typeof option === 'string') {
-                        return option;
-                      }
-                      if (option.inputValue) {
-                        return option.inputValue;
-                      }
-                      return `${option.id} ${option.begin} - ${option.end}`;
-                    }}
-                    selectOnFocus
-                    clearOnBlur
-                    handleHomeEndKeys
-                    renderOption={(props, option) => <li {...props}>{option.id} {option.begin} - {option.end} </li>}
-                    sx={{ width: 300 }}
-                    multiple
-                    filterSelectedOptions
-                    renderInput={(params) => <TextField {...params} label='ช่วงเวลาที่เปิดบริการ' placeholder="ถ้าไม่มีช่วงเวลาที่ต้องการกด เพิ่มช่วงเวลา" />}
-                  />
+                      เพิ่มช่วงเวลา
+                    </Button>
                   </div>
-                  
+                  <div className="flex items-center">
+                    <Autocomplete
+                      isOptionEqualToValue={(option, value) => option.id === value.id}
+                      value={value || []}
+                      onChange={(event, newValue) => {
+                        if (typeof newValue === 'string') {
+                          // timeout to avoid instant validation of the dialog's form.
+                          setTimeout(() => {
+                            toggleOpen(true);
+                            setDialogValue({
+                              id: '',
+                              beginTime: newValue,
+                              endTime: '',
+                            });
+                          });
+                        } else {
+                          setValue(newValue);
+                        }
+                      }}
+
+                      filterOptions={(options, params) => {
+                        const filtered = filter(options, params);
+                        return filtered;
+                      }}
+
+
+                      options={timePeriods}
+                      getOptionLabel={(option) => {
+                        // e.g value selected with enter, right from the input
+                        if (typeof option === 'string') {
+                          return option;
+                        }
+                        if (option.inputValue) {
+                          return option.inputValue;
+                        }
+                        return `${option.beginTime} - ${option.endTime}`;
+                      }}
+                      selectOnFocus
+                      clearOnBlur
+                      handleHomeEndKeys
+                      renderOption={(props, option) => <li {...props}>{option.beginTime} - {option.endTime} </li>}
+                      sx={{ width: 300 }}
+                      multiple
+                      filterSelectedOptions
+                      renderInput={(params) => <TextField {...params} label='ช่วงเวลาที่เปิดบริการ' placeholder="ถ้าไม่มีช่วงเวลาที่ต้องการกด เพิ่มช่วงเวลา" />}
+                    />
+                  </div>
+
                   {/* add time */}
                   <Dialog open={open} onClose={handleClose}>
                     <form onSubmit={handleSubmit}>

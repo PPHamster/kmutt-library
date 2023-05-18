@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import NavbarStaff from "../NavbarStaff";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
@@ -14,10 +14,9 @@ import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
-import { timeperiod } from "@/utils/timeperiod";
-import dayjs from 'dayjs';
-import { roomdata } from "@/utils/roomdata";
 import { Link } from "react-router-dom";
+import { fetch } from '@/utils/Fetch';
+import { popup } from '@/utils/Popup';
 
 const filter = createFilterOptions();
 
@@ -25,18 +24,36 @@ export default function Editroom() {
 
   const { roomid } = useParams();
 
-  // Find the event data
-  const room = roomdata.find((room) => room.roomid === roomid);
+  const navigate = useNavigate();
+
+  const [room, setRoom] = useState(null);
+  const [timePeriods, setTimePeriods] = useState(null);
 
   const [name, setName] = useState("");
   const [location, setLocation] = useState("");
+  const [status, setStatus] = useState("");
 
   useEffect(() => {
-    setName(room.roomname);
-    setImageData(room.image);
-    setLocation(room.location)
-    setValue(room.periodtime)
-  }, [room]);
+    const fetchRoom = async () => {
+      const response = await fetch.get(`/rooms/${roomid}`);
+      const roomRes = response.data;
+
+      setRoom(roomRes);
+      setName(roomRes.name);
+      setImageData(roomRes.image);
+      setLocation(roomRes.location)
+      setStatus(roomRes.status);
+      setValue(roomRes.timePeriods)
+    }
+
+    const fetchTimePeriods = async () => {
+      const response = await fetch.get('/time-periods');
+      setTimePeriods(response.data);
+    }
+
+    fetchRoom();
+    fetchTimePeriods();
+  }, []);
 
   const handleNameChange = (event) => {
     setName(event.target.value);
@@ -46,8 +63,12 @@ export default function Editroom() {
     setLocation(event.target.value);
   };
 
+  const handleStatusChange = (event) => {
+    setStatus(event.target.value);
+  }
+
   //for search timeperiod
-  const [filteredtime, setFilteredTime] = useState(timeperiod);
+  const [filteredtime, setFilteredTime] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [beginTime, setBeginTime] = useState(null);
   const [endTime, setEndTime] = useState(null);
@@ -69,8 +90,10 @@ export default function Editroom() {
 
     function matchingtime() {
 
-      return timeperiod.filter((time) =>
-        time.begin.toLowerCase().includes(searchTerm.toLowerCase())
+      if (!timePeriods) return [];
+
+      return timePeriods.filter((time) =>
+        time.beginTime.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
 
@@ -89,8 +112,8 @@ export default function Editroom() {
 
   const [dialogValue, setDialogValue] = useState({
     id: '',
-    begin: '',
-    end: '',
+    beginTime: '',
+    endTime: '',
   });
 
   const handleSubmit = (event) => {
@@ -112,12 +135,13 @@ export default function Editroom() {
     // Create a new TimePeriod object with the generated id and the new begin and end times
     const newTimePeriod = {
       id: newId,
-      begin: beginTime.format('HH:mm'),
-      end: endTime.format('HH:mm'),
+      beginTime: `${beginTime.format('HH:mm')}:00`,
+      endTime: `${endTime.format('HH:mm')}:00`,
     };
 
-    // Add the new TimePeriod to the timeperiod array
-    timeperiod.push(newTimePeriod);
+    setTimePeriods((prev) => {
+      return [...prev, newTimePeriod];
+    });
   }
 
   //upload image
@@ -142,25 +166,65 @@ export default function Editroom() {
     setImages([...e.target.files]);
   }
 
-  const submit = (event) => {
+  const submit = async (event) => {
     event.preventDefault();
-    console.log({
-      title: name,
-      image: imageData,
+
+    const data = {
+      name: name,
+      status: status,
       location: location,
-      timeperiod: value,
-    })
+      timePeriods: value,
+    };
+
+    try {
+      const response = await fetch.put(`/rooms/${roomid}`, data);
+
+      if (typeof imageData !== 'string') {
+        await fetch.put(`/rooms/${roomid}/image`, { image: imageData[0].split(',')[1] });
+      }
+
+      await popup.fire({
+        icon: 'success',
+        title: 'Update successful!',
+        text: `${response.data.msg}`,
+      })
+
+      navigate('/staff');
+    } catch (error) {
+      await popup.fire({
+        icon: 'error',
+        title: 'Update Failed!',
+        text: error.message,
+      })
+    }
   }
-  console.log(room.periodtime)
+
+  if (!room || !timePeriods) {
+    return (
+      <div className='w-full h-full bg-gray-50'>
+        <div className='fixed pt-12 ml-[3%] z-50'>
+          <Link to={'/staff'}>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="absolute left-[3%] w-6 h-6 -translate-y-4 text-center">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+            </svg></Link>
+        </div>
+        <NavbarStaff
+          bgcolor='bg-white hover:drop-shadow-md'
+          textcolor='text-black'
+        />
+      </div>
+    );
+  }
+
   return (
     <>
       <div className='w-full h-full bg-gray-50'>
-      <div className='fixed pt-12 ml-[3%] z-50'>
-            <Link to={'/staff'}>
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="absolute left-[3%] w-6 h-6 -translate-y-4 text-center">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
-                    </svg></Link>
-            </div>
+        <div className='fixed pt-12 ml-[3%] z-50'>
+          <Link to={'/staff'}>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="absolute left-[3%] w-6 h-6 -translate-y-4 text-center">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+            </svg></Link>
+        </div>
         <NavbarStaff
           bgcolor='bg-white hover:drop-shadow-md'
           textcolor='text-black'
@@ -179,7 +243,7 @@ export default function Editroom() {
                   <TextField
                     required
                     label="ชื่อห้อง"
-                    defaultValue={room.roomname}
+                    defaultValue={room.name}
                     inputlabelprops={{
                       shrink: true,
                     }}
@@ -197,6 +261,16 @@ export default function Editroom() {
                     multiline
                     maxRows={1}
                   />
+                  <TextField
+                    label="สถานะ"
+                    defaultValue={room.status}
+                    inputlabelprops={{
+                      shrink: true,
+                    }}
+                    onChange={handleStatusChange}
+                    multiline
+                    maxRows={1}
+                  />
                   <div className="absolute mt-[1.5%] ml-[44%]">
                     <Button onClick={() => toggleOpen(true)}>
                       เพิ่มช่วงเวลา
@@ -205,9 +279,9 @@ export default function Editroom() {
                   <div className="flex items-center">
                     <Autocomplete
                       onChange={(event, newValue) => {
-                          setValue(newValue);
+                        setValue(newValue);
                       }}
-                      options={timeperiod}
+                      options={timePeriods}
                       getOptionLabel={(option) => {
                         // e.g value selected with enter, right from the input
                         if (typeof option === 'string') {
@@ -216,9 +290,11 @@ export default function Editroom() {
                         if (option.inputValue) {
                           return option.inputValue;
                         }
-                        return `${option.id} ${option.begin} - ${option.end}`;
+                        return `${option.beginTime} - ${option.endTime}`;
                       }}
-                      defaultValue={timeperiod.filter(time => room.periodtime.includes(time.begin && time.end))}
+                      defaultValue={timePeriods.filter(time => room.timePeriods.some((tp) => {
+                        return time.beginTime === tp.beginTime && time.endTime === tp.endTime;
+                      }))}
                       multiple
                       filterSelectedOptions
                       renderInput={(params) => <TextField {...params} label='ช่วงเวลาที่เปิดบริการ' placeholder="ถ้าไม่มีช่วงเวลาที่ต้องการกด เพิ่มช่วงเวลา" />}
@@ -264,7 +340,7 @@ export default function Editroom() {
                   </Dialog>
                 </div>
                 <div className="my-[3vh] ml-[11.5vh]">
-                <h2 className=' font-normal font-kanit text-orange-600 text-sm text-left mb-2'>หากไม่ต้องการเปลี่ยนรูป ไม่ต้อง Upload รูปใด ๆ</h2>
+                  <h2 className=' font-normal font-kanit text-orange-600 text-sm text-left mb-2'>หากไม่ต้องการเปลี่ยนรูป ไม่ต้อง Upload รูปใด ๆ</h2>
                   <input type="file"
                     className=" file:rounded-full file:bg-white
                               file:hover:bg-gray-200 file:font-normal 

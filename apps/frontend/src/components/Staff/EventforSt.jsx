@@ -7,6 +7,8 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogActions from '@mui/material/DialogActions';
 import Button from '@mui/material/Button';
 import { Link } from 'react-router-dom';
+import { fetch } from '@/utils/Fetch';
+import { popup } from '@/utils/Popup';
 
 export default function EventforSt(props) {
 
@@ -25,13 +27,24 @@ export default function EventforSt(props) {
     handleCloseDel();
   };
 
-  function delevent(Id) {
-    // Find the index of the category with the matching id
-    const index = eventdata.findIndex((c) => c.id === Id);
+  async function delevent(Id) {
+    try {
+      const response = await fetch.delete(`/events/${Id}`);
 
-    // If the category was found, remove it from the categories array
-    if (index !== -1) {
-      eventdata.splice(index, 1);
+      props.onDelete(true);
+
+      await popup.fire({
+        icon: 'success',
+        title: 'Delete successful!',
+        text: `${response.data.msg}`,
+      })
+
+    } catch (error) {
+      await popup.fire({
+        icon: 'error',
+        title: 'Delete Failed!',
+        text: error.message,
+      })
     }
   }
 
@@ -44,15 +57,15 @@ export default function EventforSt(props) {
         <div className='bg-white border-2 rounded-lg  w-[300px] min-h-[320px] my-8 max-sm:my-2 max-lg:my-4 cursor-pointer  hover:drop-shadow-lg'>
           <div className='w-[220px] h-[250px] flex justify-center items-center mx-7'>
 
-            <img src={props.eventimage} className={infoEvent} />
+            <img src={props.image} className={infoEvent} />
           </div>
-          <p className='font-semibold font-kanit text-[#454545] text-base text-center'>{props.eventname}</p>
-          <Link to={`/staff/event/${props.eventid}/edit`}>
-          <button
-            className=" translate-x-5 -translate-y-[6px] w-[80px] h-[35px] ml-[44px] rounded-full border-2 bg-[#0092BF]  hover:bg-[#007396] font-regular font-poppins text-white text-md mt-[16px] ease-out duration-300"
-            onClick={props.onClick}
-          >edit
-          </button>
+          <p className='font-semibold font-kanit text-[#454545] text-base text-center'>{props.name}</p>
+          <Link to={`/staff/event/${props.id}/edit`}>
+            <button
+              className=" translate-x-5 -translate-y-[6px] w-[80px] h-[35px] ml-[44px] rounded-full border-2 bg-[#0092BF]  hover:bg-[#007396] font-regular font-poppins text-white text-md mt-[16px] ease-out duration-300"
+              onClick={props.onClick}
+            >edit
+            </button>
           </Link>
           <button
             className="-translate-y-1 w-auto p-[10px] ml-[44px] rounded-full bg-[#F44336] border-2 hover:bg-[#c5342a] font-regular font-poppins text-white text-md mt-[16px] ease-out duration-300"
@@ -69,12 +82,12 @@ export default function EventforSt(props) {
               <hr />
               <DialogContent>
                 <DialogContentText className='px-5 text-center'>
-                  คุณแน่ใจหรือไม่ว่าต้องการลบ <br /> {props.eventname} ออก
+                  คุณแน่ใจหรือไม่ว่าต้องการลบ <br /> {props.name} ออก
                 </DialogContentText>
               </DialogContent>
               <DialogActions>
                 <Button onClick={handleCloseDel}>ยกเลิก</Button>
-                <Button type="submit" onClick={() => delevent(props.eventid)}>ยืนยัน</Button>
+                <Button type="submit" onClick={() => delevent(props.id)}>ยืนยัน</Button>
               </DialogActions>
             </form>
           </Dialog>

@@ -1,11 +1,14 @@
 import React , { useState } from 'react';
 import Book from '@/components/Book';
 import Bookpopup from '@/components/Bookoverlay';
-import { bookdata } from '@/utils/bookdata';
 import AliceCarousel from 'react-alice-carousel';
 import 'react-alice-carousel/lib/alice-carousel.css';
+import { useEffect } from 'react';
+import { fetch } from '@/utils/Fetch';
 
 export default function Recommend() {
+
+    const [books, setBooks] = useState([]);
 
     const [selectedBook, setSelectedBook] = useState(null)
     const handleBookClick = (book) => {
@@ -28,6 +31,15 @@ export default function Recommend() {
              itemsFit: 'contain',},
     };
 
+    useEffect(() => {
+      const fetchData = async () => {
+        const response = await fetch.get('/books/recommend?count=20');
+        setBooks(response.data);
+      }
+
+      fetchData();
+    }, []);
+
     return (
         <>
             <div className="flex h-[60vh] w-full left-0 top-0">
@@ -48,9 +60,9 @@ export default function Recommend() {
                     renderPrevButton={renderPrevButton}
                     renderNextButton={renderNextButton}
                     items={
-                   bookdata.map((data) => (
+                   books.map((data) => (
                             <Book 
-                            key={data.bookid}
+                            key={data.id}
                             image={data.image} 
                             title={data.title}
                             onClick={() => handleBookClick(data)}

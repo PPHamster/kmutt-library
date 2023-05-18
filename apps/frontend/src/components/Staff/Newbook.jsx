@@ -9,14 +9,17 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogActions from '@mui/material/DialogActions';
 import Button from '@mui/material/Button';
 import Autocomplete from '@mui/material/Autocomplete';
-import { category } from "@/utils/Category";
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { fetch } from '@/utils/Fetch';
+import { popup } from '@/utils/Popup';
 
 export default function Newbook() {
+
+  const navigate = useNavigate();
 
   const [name, setName] = useState("");
   const [author, setAuthor] = useState("");
@@ -27,6 +30,8 @@ export default function Newbook() {
   const [publisher, setPublisher] = useState("");
   const [textdes, setText] = useState("");
   const [selectedDate, setSelectedDate] = useState(null);
+
+  const [categories, setCategories] = useState(null);
 
   const handleNameChange = (event) => {
     setName(event.target.value);
@@ -87,7 +92,10 @@ export default function Newbook() {
     };
 
     // Add the new category to the categories array
-    category.push(newCategory);
+    // category.push(newCategory);
+    setCategories((prev) => {
+      return [...prev, newCategory]
+    });
   }
 
   //upload image
@@ -108,35 +116,80 @@ export default function Newbook() {
     });
   }, [images]);
 
+  useEffect(() => {
+    const fetchCategories = async () => {
+      const response = await fetch.get('/categories');
+      setCategories(response.data);
+    }
+
+    fetchCategories();
+  }, []);
+
   function onImageChange(e) {
     setImages([...e.target.files]);
   }
 
-  const submit = (event) => {
+  const submit = async (event) => {
     event.preventDefault();
-    console.log({
+
+    const data = {
       title: name,
       author: author,
-      category: selectedCategory,
+      categories: selectedCategory.map(cat => cat.name),
       description: textdes,
       isbn: barcode,
       publisher: publisher,
       publishDate: selectedDate,
       language: language,
-      image: imageData,
+      image: imageData[0].split(',')[1],
       location: location,
-    })
+    };
+
+    try {
+      const response = await fetch.post('/books', data);
+
+      await popup.fire({
+        icon: 'success',
+        title: 'Create successful!',
+        text: `${response.data.msg}`,
+      })
+
+      navigate('/staff');
+    } catch (error) {
+      await popup.fire({
+        icon: 'error',
+        title: 'Create Failed!',
+        text: error.message,
+      })
+    }
+  }
+
+  if (!categories) {
+    return (
+      <div className="w-full h-full bg-gray-50">
+        <div className='fixed pt-12 ml-[3%] z-50'>
+          <Link to={'/staff'}>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="absolute left-[3%] w-6 h-6 -translate-y-4 text-center">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+            </svg></Link>
+        </div>
+        <NavbarStaff
+          bgcolor='bg-white hover:drop-shadow-md'
+          textcolor='text-black'
+        />
+      </div>
+    );
   }
 
   return (
     <>
       <div className='w-full h-full bg-gray-50'>
-      <div className='fixed pt-12 ml-[3%] z-50'>
-            <Link to={'/staff'}>
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="absolute left-[3%] w-6 h-6 -translate-y-4 text-center">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
-                    </svg></Link>
-            </div>
+        <div className='fixed pt-12 ml-[3%] z-50'>
+          <Link to={'/staff'}>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="absolute left-[3%] w-6 h-6 -translate-y-4 text-center">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+            </svg></Link>
+        </div>
         <NavbarStaff
           bgcolor='bg-white hover:drop-shadow-md'
           textcolor='text-black'
@@ -206,7 +259,7 @@ export default function Newbook() {
                   <Autocomplete
                     multiple
                     id="tags-standard"
-                    options={category}
+                    options={categories}
                     getOptionLabel={(option) => option.name}
                     filterSelectedOptions
                     renderInput={(params) => (

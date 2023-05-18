@@ -1,39 +1,52 @@
+import { fetch } from '@/utils/Fetch';
+import { createContext, useContext, useEffect, useState } from 'react';
 
-import React, { createContext, useContext, useState } from 'react';
+const AuthContext = createContext({});
 
-export const AuthContext = createContext();
+export const AuthProvider = ({ children }) => {
+  const [user, setUser] = useState(null);
 
-export function useAuth() {
-    return useContext(AuthContext)
-}
-export function AuthProvider(props) {
-    const [ authUser, setAuthUser] = useState(null)
-    const [ isLoggedIn, setIsLoggedIn] = useState(false)
-
-    const login = (email, password) => {
-        if (email === "admin.lib@kmutt.ac.th" && password === "adminlib") {
-          setIsLoggedIn(true);
-          setAuthUser({
-            Name: "John Doe"
-          }) 
-        }
+  useEffect(() => {
+    const getUserData = async () => {
+      try {
+        const response = await fetch.get('/auth/me');
+        setUser(response.data);
+      } catch (error) {
+        setUser(null);
       }
-    const logout = () => {
-          setIsLoggedIn(false);
-          setAuthUser(null) 
-        }
-    const value = {
-        authUser,
-        setAuthUser,
-        isLoggedIn,
-        setIsLoggedIn,
-        login,
-        logout
     }
+    getUserData();
+  }, []);
 
-    return(
-        <AuthContext.Provider value={value}>
-            {props.children}
-        </AuthContext.Provider>
-    )
+  const login = async (email, password) => {
+    try {
+      await fetch.post('/auth/login', {
+        email, password
+      });
+      const response = await fetch.get('/auth/me');
+      setUser(response.data);
+    } catch (error) {
+      return error;
+    }
+  };
+
+  const logout = async () => {
+    const response = await fetch.get('/auth/logout');
+    if (response.status === 200) {
+      setUser(null);
+      window.location.href = '/';
+    }
+  };
+
+  return (
+    <AuthContext.Provider
+      value={{ user, setUser, login, logout }}
+    >
+      {children}
+    </AuthContext.Provider>
+  );
 };
+
+export const useAuth = () => {
+  return useContext(AuthContext);
+}

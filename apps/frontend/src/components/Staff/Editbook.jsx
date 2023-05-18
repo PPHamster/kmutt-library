@@ -10,20 +10,23 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogActions from '@mui/material/DialogActions';
 import Button from '@mui/material/Button';
 import Autocomplete from '@mui/material/Autocomplete';
-import { category } from "@/utils/Category";
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from 'dayjs';
-import { bookdata } from "@/utils/bookdata";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { fetch } from '@/utils/Fetch';
+import { popup } from '@/utils/Popup';
 
 export default function Editbook() {
 
   const { bookid } = useParams();
 
-  const book = bookdata.find((book) => book.bookid === bookid);
+  const navigate = useNavigate();
+
+  const [book, setBook] = useState(null);
+  const [categories, setCategories] = useState(null);
 
   const [name, setName] = useState("");
   const [author, setAuthor] = useState("");
@@ -36,17 +39,31 @@ export default function Editbook() {
   const [selectedDate, setSelectedDate] = useState(null);
 
   useEffect(() => {
-    setName(book.title);
-    setAuthor(book.author);
-    setLocation(book.location)
-    setSelectedCategory(book.category)
-    setLanguage(book.language)
-    setBarcode(book.isbn)
-    setPublisher(book.publisher)
-    setText(book.description)
-    setSelectedDate(book.publishDate)
-    setImageData(book.image)
-  }, [book]);
+    const fetchBook = async () => {
+      const response = await fetch.get(`/books/${bookid}`);
+      const bookRes = response.data;
+
+      setBook(bookRes);
+      setName(bookRes.title);
+      setAuthor(bookRes.author);
+      setLocation(bookRes.location)
+      setSelectedCategory(bookRes.categories)
+      setLanguage(bookRes.language)
+      setBarcode(bookRes.isbn)
+      setPublisher(bookRes.publisher)
+      setText(bookRes.description)
+      setSelectedDate(bookRes.publishDate)
+      setImageData(bookRes.image)
+    }
+
+    const fetchCategories = async () => {
+      const response = await fetch.get('/categories');
+      setCategories(response.data);
+    }
+
+    fetchBook();
+    fetchCategories();
+  }, []);
 
   const handleNameChange = (event) => {
     setName(event.target.value);
@@ -106,8 +123,9 @@ export default function Editbook() {
       name: newcat
     };
 
-    // Add the new category to the categories array
-    category.push(newCategory);
+    setCategories((prev) => {
+      return [...prev, newCategory];
+    });
   }
 
   //upload image
@@ -133,30 +151,70 @@ export default function Editbook() {
   }
 
 
-  const submit = (event) => {
+  const submit = async (event) => {
     event.preventDefault();
-    console.log({
+
+    const data = {
       title: name,
       author: author,
-      category: selectedCategory,
+      categories: selectedCategory.map(cat => cat.name),
       description: textdes,
       isbn: barcode,
       publisher: publisher,
       publishDate: selectedDate,
       language: language,
-      image: imageData,
       location: location,
-    })
+    };
+
+    try {
+      const response = await fetch.put(`/books/${bookid}`, data);
+      
+      if (typeof imageData !== 'string') {
+        await fetch.put(`/books/${bookid}/image`, { image: imageData[0].split(',')[1] });
+      }
+
+      await popup.fire({
+        icon: 'success',
+        title: 'Update successful!',
+        text: `${response.data.msg}`,
+      })
+
+      navigate('/staff');
+    } catch (error) {
+      await popup.fire({
+        icon: 'error',
+        title: 'Update Failed!',
+        text: error.message,
+      })
+    }
   }
+
+  if (!book || !categories) {
+    return (
+      <div className='w-full h-full bg-gray-50'>
+        <div className='fixed pt-12 ml-[3%] z-50'>
+          <Link to={'/staff'}>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="absolute left-[3%] w-6 h-6 -translate-y-4 text-center">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+            </svg></Link>
+        </div>
+        <NavbarStaff
+          bgcolor='bg-white hover:drop-shadow-md'
+          textcolor='text-black'
+        />
+      </div>
+    );
+  }
+
   return (
     <>
       <div className='w-full h-full bg-gray-50'>
-      <div className='fixed pt-12 ml-[3%] z-50'>
-            <Link to={'/staff'}>
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="absolute left-[3%] w-6 h-6 -translate-y-4 text-center">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
-                    </svg></Link>
-            </div>
+        <div className='fixed pt-12 ml-[3%] z-50'>
+          <Link to={'/staff'}>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="absolute left-[3%] w-6 h-6 -translate-y-4 text-center">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+            </svg></Link>
+        </div>
         <NavbarStaff
           bgcolor='bg-white hover:drop-shadow-md'
           textcolor='text-black'
@@ -237,8 +295,8 @@ export default function Editbook() {
                   </Dialog>
                   <Autocomplete
                     multiple
-                    options={category}
-                    InputLabelProps={{
+                    options={categories}
+                    inputlabelprops={{
                       shrink: true,
                     }}
                     getOptionLabel={(option) => option.name}
@@ -250,7 +308,7 @@ export default function Editbook() {
                         placeholder='ระบุ Category'
                       />
                     )}
-                    defaultValue={category.filter(cat => book.category.includes(cat.name))}
+                    defaultValue={categories.filter(cat => book.categories.map(ca => ca.name).includes(cat.name))}
                     onChange={(event, value) => {
                       setSelectedCategory(value)
                     }}
@@ -292,7 +350,7 @@ export default function Editbook() {
                       <DatePicker
                         label="วันที่ตีพิมพ์"
                         defaultValue={dayjs(book.publishDate)}
-                        InputLabelProps={{
+                        inputlabelprops={{
                           shrink: true,
                         }}
                         onChange={handleDateChange} />
@@ -312,14 +370,14 @@ export default function Editbook() {
                     onChange={handleText}
                     label="รายละเอียด"
                     defaultValue={book.description}
-                    InputLabelProps={{
+                    inputlabelprops={{
                       shrink: true,
                     }}
                     placeholder="เรื่องย่อหรือรายละเอียดหนังสือ .."
                   />
                 </div>
                 <div className="my-[3vh] ml-[11.5vh]">
-                <h2 className=' font-normal font-kanit text-orange-600 text-sm text-left mb-2'>หากไม่ต้องการเปลี่ยนรูป ไม่ต้อง Upload รูปใด ๆ</h2>
+                  <h2 className=' font-normal font-kanit text-orange-600 text-sm text-left mb-2'>หากไม่ต้องการเปลี่ยนรูป ไม่ต้อง Upload รูปใด ๆ</h2>
                   <input
                     type="file"
                     className="file:rounded-full file:bg-white file:hover:bg-gray-200 file:font-normal file:font-poppins file:text-black file:ease-out file:duration-300 file:border-2 font-poppins file:p-[8px] file:px-[20px] file:mr-5"
@@ -327,7 +385,7 @@ export default function Editbook() {
                     accept="image/*"
                     onChange={onImageChange}
                   />
-                  
+
                   {Array.isArray(imageData) && imageData.map((dataURL, idx) => (
                     <img key={idx} className="w-3/12" src={dataURL} />
                   ))}

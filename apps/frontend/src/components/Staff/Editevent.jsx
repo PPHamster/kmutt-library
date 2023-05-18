@@ -17,14 +17,18 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import dayjs from 'dayjs';
 import { eventdata } from "@/utils/eventdata";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { fetch } from '@/utils/Fetch';
+import { popup } from '@/utils/Popup';
 
 export default function Editevent() {
 
   const { eventid } = useParams();
 
-  // Find the event data
-  const events = eventdata.find((events) => events.eventid === eventid);
+  const navigate = useNavigate();
+
+  const [event, setEvent] = useState(null);
+  const [categories, setCategories] = useState(null);
 
   const [name, setName] = useState("");
   const [location, setLocation] = useState("");
@@ -32,14 +36,28 @@ export default function Editevent() {
   const [textdes, setText] = useState("");
 
   useEffect(() => {
-    setName(events.eventname);
-    setLocation(events.location);
-    setSelectedCategory(events.category);
-    setText(events.eventdes);
-    setImageData(events.image);
-    setSelectedDate(dayjs(events.meetingtime));
-    setSelectedDateEnd(dayjs(events.endtime));
-  }, [events]);
+    const fetchEvent = async () => {
+      const response = await fetch.get(`/events/${eventid}`);
+      const eventRes = response.data;
+
+      setEvent(eventRes);
+      setName(eventRes.name);
+      setLocation(eventRes.location);
+      setSelectedCategory(eventRes.categories);
+      setText(eventRes.description);
+      setImageData(eventRes.image);
+      setSelectedDate(dayjs(eventRes.meetingTime));
+      setSelectedDateEnd(dayjs(eventRes.endTime));
+    }
+
+    const fetchCategories = async () => {
+      const response = await fetch.get('/event-categories');
+      setCategories(response.data);
+    }
+
+    fetchEvent();
+    fetchCategories();
+  }, []);
 
   const handleNameChange = (event) => {
     setName(event.target.value);
@@ -78,8 +96,9 @@ export default function Editevent() {
       name: newcat
     };
 
-    // Add the new category to the categories array
-    eventcategory.push(newCategory);
+    setCategories((prev) => {
+      return [...prev, newCategory];
+    });
   }
 
   //upload image
@@ -104,7 +123,7 @@ export default function Editevent() {
     setImages([...e.target.files]);
   }
 
-  const [selectedDate, setSelectedDate] = useState(dayjs(events.meetingtime));
+  const [selectedDate, setSelectedDate] = useState(null);
   const [selectedDateEnd, setSelectedDateEnd] = useState(null);
 
   const handleDateChange = (date) => {
@@ -115,28 +134,67 @@ export default function Editevent() {
     setSelectedDateEnd(dateend);
   };
 
-  const submit = (event) => {
+  const submit = async (event) => {
     event.preventDefault();
-    console.log({
-      name: name,
-      category: selectedCategory,
-      description: textdes,
-      image: imageData,
-      location: location,
-      meetingtime: selectedDate,
-      endtime: selectedDateEnd,
-    })
 
+    const data = {
+      name: name,
+      categories: selectedCategory.map(cat => cat.name),
+      description: textdes,
+      location: location,
+      meetingTime: selectedDate,
+      endTime: selectedDateEnd,
+    };
+
+    try {
+      const response = await fetch.put(`/events/${eventid}`, data);
+      
+      if (typeof imageData !== 'string') {
+        await fetch.put(`/events/${eventid}/image`, { image: imageData[0].split(',')[1] });
+      }
+
+      await popup.fire({
+        icon: 'success',
+        title: 'Update successful!',
+        text: `${response.data.msg}`,
+      })
+
+      navigate('/staff');
+    } catch (error) {
+      await popup.fire({
+        icon: 'error',
+        title: 'Update Failed!',
+        text: error.message,
+      })
+    }
   }
+
+  if (!event || !categories) {
+    return (
+      <div className='w-full h-full bg-gray-50'>
+        <div className='fixed pt-12 ml-[3%] z-50'>
+          <Link to={'/staff'}>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="absolute left-[3%] w-6 h-6 -translate-y-4 text-center">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+            </svg></Link>
+        </div>
+        <NavbarStaff
+          bgcolor='bg-white hover:drop-shadow-md'
+          textcolor='text-black'
+        />
+      </div>
+    );
+  }
+
   return (
     <>
       <div className='w-full h-full bg-gray-50'>
-      <div className='fixed pt-12 ml-[3%] z-50'>
-            <Link to={'/staff'}>
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="absolute left-[3%] w-6 h-6 -translate-y-4 text-center">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
-                    </svg></Link>
-            </div>
+        <div className='fixed pt-12 ml-[3%] z-50'>
+          <Link to={'/staff'}>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="absolute left-[3%] w-6 h-6 -translate-y-4 text-center">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+            </svg></Link>
+        </div>
         <NavbarStaff
           bgcolor='bg-white hover:drop-shadow-md'
           textcolor='text-black'
@@ -155,7 +213,7 @@ export default function Editevent() {
                   <TextField
                     required
                     label="ชื่อกิจกรรม"
-                    defaultValue={events.eventname}
+                    defaultValue={event.name}
                     inputlabelprops={{
                       shrink: true,
                     }}
@@ -165,7 +223,7 @@ export default function Editevent() {
                   />
                   <TextField
                     label="สถานที่จัดกิจกรรม"
-                    defaultValue={events.location}
+                    defaultValue={event.location}
                     InputLabelProps={{
                       shrink: true,
                     }}
@@ -173,7 +231,7 @@ export default function Editevent() {
                     multiline
                     maxRows={1}
                   />
-                  
+
                   <div className="absolute mt-[1.5%] ml-[44%]">
                     <Button onClick={() => toggleOpen(true)}>
                       เพิ่ม Category
@@ -207,11 +265,12 @@ export default function Editevent() {
                     </form>
                   </Dialog>
                   <Autocomplete
+                    isOptionEqualToValue={(option, value) => option.id === value.id}
                     multiple
                     onChange={(event, value) => {
                       setSelectedCategory(value)
                     }}
-                    options={eventcategory}
+                    options={categories}
                     getOptionLabel={(option) => option.name}
                     filterSelectedOptions
                     renderInput={(params) => (
@@ -221,28 +280,28 @@ export default function Editevent() {
                         placeholder="โปรดระบุ Category หรือกด เพิ่ม Category"
                       />
                     )}
-                    defaultValue={eventcategory.filter(cat => events.category.includes(cat.name))}
+                    defaultValue={categories.filter(cat => event.categories.map(ca => ca.name).includes(cat.name))}
                   />
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DemoContainer components={['DateTimePicker', 'DateTimePicker']}>
                       <DateTimePicker
                         label="วัน-เวลาเริ่มกิจกรรม"
-                        defaultValue={dayjs(events.meetingtime)}
+                        defaultValue={dayjs(event.meetingTime)}
                         InputLabelProps={{
                           shrink: true,
                         }}
                         ampm={false}
                         value={selectedDate}
                         onChange={handleDateChange} />
-                        <DateTimePicker
-                          label="วัน-เวลาสิ้นสุดกิจกรรม"
-                          defaultValue={dayjs(events.meetingtime)}
-                          InputLabelProps={{
-                            shrink: true,
-                          }}
-                          ampm={false}
-                          value={selectedDateEnd}
-                          onChange={handleDateEndChange} />
+                      <DateTimePicker
+                        label="วัน-เวลาสิ้นสุดกิจกรรม"
+                        defaultValue={dayjs(event.endTime)}
+                        InputLabelProps={{
+                          shrink: true,
+                        }}
+                        ampm={false}
+                        value={selectedDateEnd}
+                        onChange={handleDateEndChange} />
                     </DemoContainer>
                   </LocalizationProvider>
                   <TextField
@@ -259,7 +318,7 @@ export default function Editevent() {
                     onChange={handleText}
                     label="รายละเอียด"
                     placeholder="เรื่องย่อหรือรายละเอียดกิจกรรม .."
-                    defaultValue={events.eventdes}
+                    defaultValue={event.description}
                     InputLabelProps={{
                       shrink: true,
                     }}
