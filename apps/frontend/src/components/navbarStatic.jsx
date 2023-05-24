@@ -3,9 +3,11 @@ import { Link } from "react-router-dom";
 import Badge from '@mui/material/Badge';
 import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
+import Avatar from '@mui/material/Avatar';
 import PeopleIcon from '@mui/icons-material/People';
 import IconButton from '@mui/material/IconButton';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import { useAuth } from '@/contexts/AuthContext';
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
   '& .MuiBadge-badge': {
@@ -22,6 +24,8 @@ export default function NavbarStatic(props) {
   //navbar&list class css
   const navbarClass = "fixed flex justify-between pt-2 h-[100px] top-0 left-0 w-full z-50 transition ease-in-out duration-1000 " + props.bgcolor;
   const textClass = "relative font-normal font-poppins mt-1 ease-in-out duration-300 hover:font-bold hover:border-t-4 " + props.textcolor;
+
+  const { user } = useAuth()
 
   // list style
   const listClass = "float-left list-none ml-5 mr-5 mt-0.5";
@@ -46,18 +50,24 @@ export default function NavbarStatic(props) {
           </li>
         </nav>
         <div className='flex flex-row justify-center items-center mt-2 mr-12'>
-          <div className='mr-2'>
-            <Link to="/signin">
-              <Button size='small' startIcon={<PeopleIcon />}>
-                Login
-              </Button>
-            </Link>
-          </div>
-          <IconButton aria-label="cart">
-            <StyledBadge badgeContent={0} color="secondary">
-              <ShoppingCartIcon />
-            </StyledBadge>
-          </IconButton>
+            {
+              user ?
+                <>
+                  <Link to="/profile">
+                    <Avatar alt="Remy Sharp" src={user.image} sx={{ width: 42, height: 42 }} />
+                  </Link>
+                  <IconButton aria-label="cart">
+                    <StyledBadge badgeContent={0} color="secondary">
+                      <ShoppingCartIcon />
+                    </StyledBadge>
+                  </IconButton>
+                </> :
+                <Link to="/signin">
+                  <Button size='small' startIcon={<PeopleIcon />}>
+                    Login
+                  </Button>
+                </Link>
+            }
         </div>
       </div>
     </>

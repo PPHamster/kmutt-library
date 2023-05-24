@@ -6,15 +6,17 @@ import Button from '@mui/material/Button';
 import PeopleIcon from '@mui/icons-material/People';
 import IconButton from '@mui/material/IconButton';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import Avatar from '@mui/material/Avatar';
+import { useAuth } from '@/contexts/AuthContext';
 
-const StyledBadge = styled(Badge) (({ theme }) => ({
+const StyledBadge = styled(Badge)(({ theme }) => ({
     '& .MuiBadge-badge': {
-      right: -3,
-      top: 13,
-      border: `2px solid ${theme.palette.background.paper}`,
-      padding: '0 4px',
+        right: -3,
+        top: 13,
+        border: `2px solid ${theme.palette.background.paper}`,
+        padding: '0 4px',
     },
-  }));
+}));
 
 export default function Navbar() {
     const [scrolled, setScrolled] = React.useState(false);
@@ -35,19 +37,21 @@ export default function Navbar() {
     let textClass = "relative font-normal font-poppins mt-1 ease-in-out duration-300 text-black hover:font-bold hover:border-t-4";
 
     // scroll class css 
-    if (scrolled) 
-    {
+    if (scrolled) {
         navbarClass.push("bg-brown2");
         textClass = "relative font-normal font-poppins mt-1 ease-in-out duration-300 text-white hover:font-bold hover:border-t-4";
     };
 
     // list style
     const listClass = "float-left list-none ml-5 mr-5 mt-0.5";
+
+    const { user } = useAuth()
+
     return (
         <>
             <div className={navbarClass.join(" ")}>
                 <div>
-                    <img src='./image/educationPana12.jpg' className='h-[80px] m-auto object-scale-down ml-8 mt-2'/>
+                    <img src='./image/educationPana12.jpg' className='h-[80px] m-auto object-scale-down ml-8 mt-2' />
                 </div>
                 <nav className='flex justify-center items-center mt-2'>
                     <li className={listClass}>
@@ -70,19 +74,28 @@ export default function Navbar() {
                             <p className={textClass}>Blog</p>
                         </Link>
                     </li>
-                </nav>  
+                </nav>
                 <div className='flex flex-row justify-center items-center mt-2 mr-12'>
-                    <div className='mr-2'>
-                        <Button href="/signin" variant="contained" size='small' startIcon={<PeopleIcon />}>
-                            Login
-                        </Button>
-                    </div>
-                    <IconButton aria-label="cart">
-                        <StyledBadge badgeContent={0} color="secondary">
-                           <ShoppingCartIcon />
-                        </StyledBadge>
-                    </IconButton>
-            </div>
+                    {
+                        user ?
+                            <>
+                                <Link to="/profile">
+                                    <Avatar alt="Remy Sharp" src={user.image} sx={{ width: 42, height: 42 }} />
+                                </Link>
+                                <IconButton aria-label="cart">
+                                    <StyledBadge badgeContent={0} color="secondary">
+                                        <ShoppingCartIcon />
+                                    </StyledBadge>
+                                </IconButton>
+                            </>
+                            :
+                            <Link to="/signin">
+                                <Button size='small' startIcon={<PeopleIcon />}>
+                                    Login
+                                </Button>
+                            </Link>
+                    }
+                </div>
             </div>
         </>
     )
