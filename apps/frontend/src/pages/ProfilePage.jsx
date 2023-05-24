@@ -51,7 +51,7 @@ export default function ProfilePage() {
 
         fetchOrders();
         fetchBooks();
-    })
+    }, [])
 
     return (
         <>
@@ -59,7 +59,7 @@ export default function ProfilePage() {
                 bgcolor='bg-white hover:drop-shadow-md'
                 textcolor='text-black'
             />
-            <div className='grid grid-flow-col auto-cols-max w-full w-full'>
+            <div className='grid grid-flow-col auto-cols-max w-full'>
                 <div className='ml-[10vw] mt-[120px]'>
                     <div className='drop-shadow-md'>
                         <Avatar sx={{ bgcolor: red[50], width: 300, height: 300 }} src={user.image} >
@@ -67,11 +67,11 @@ export default function ProfilePage() {
                     </div>
                 </div>
                 {/* edit profile name */}
-                <div className='ml-[180px] mt-[120px] flex flex-col mt-12 justify-items-center'>
+                <div className='ml-[180px] mt-[120px] flex flex-col justify-items-center'>
 
                     <h1 className='font-kanit font-bold text-[#454545] text-2xl mt-6'>{user.firstname + " " + user.lastname}</h1>
                     <h1 className='font-kanit font-normal text-[#454545] text-2lg mt-6'>{"Email: " + user.email}</h1>
-                    <h1 className='font-kanit font-normal text-[#454545] text-2lg mt-6'>{"Tel" + user.tel}</h1>
+                    <h1 className='font-kanit font-normal text-[#454545] text-2lg mt-6'>{"Tel: " + user.tel}</h1>
                     <h1 className='font-kanit font-normal text-[#454545] text-2lg mt-6'>{"Regist Year: " + user.registYear}</h1>
                     <h1 className='font-kanit font-normal text-[#454545] text-2lg mt-6'>{"Major: " + user.branch}</h1>
                 </div>

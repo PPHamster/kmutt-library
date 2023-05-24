@@ -108,10 +108,11 @@ export default function StaffBook() {
       })
 
     } catch (error) {
+      const thisError = error.response.data.message;
       await popup.fire({
         icon: 'error',
         title: 'Create Failed!',
-        text: error.message,
+        text: Array.isArray(thisError) ? thisError.join(' / ') : thisError,
       })
     }
   }
@@ -151,10 +152,11 @@ export default function StaffBook() {
       })
 
     } catch (error) {
+      const thisError = error.response.data.message;
       await popup.fire({
         icon: 'error',
         title: 'Update Failed!',
-        text: error.message,
+        text: Array.isArray(thisError) ? thisError.join(' / ') : thisError,
       })
     }
 
@@ -189,10 +191,11 @@ export default function StaffBook() {
       })
 
     } catch (error) {
+      const thisError = error.response.data.message;
       await popup.fire({
         icon: 'error',
         title: 'Delete Failed!',
-        text: error.message,
+        text: Array.isArray(thisError) ? thisError.join(' / ') : thisError,
       })
     }
 

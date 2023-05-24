@@ -76,7 +76,7 @@ export default function SignIn() {
       popup.fire({
         icon: 'error',
         title: 'Login failed!',
-        text: loginError.message,
+        text: loginError.response.data.message,
       });
     }
   };

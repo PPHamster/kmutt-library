@@ -137,10 +137,11 @@ export default function NewEvent() {
       
       navigate('/staff');
     } catch (error) {
+      const thisError = error.response.data.message;
       await popup.fire({
         icon: 'error',
         title: 'Create Failed!',
-        text: error.message,
+        text: Array.isArray(thisError) ? thisError.join(' / ') : thisError,
       })
     }
 
