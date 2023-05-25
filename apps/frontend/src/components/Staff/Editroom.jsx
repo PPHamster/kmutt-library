@@ -189,10 +189,11 @@ export default function Editroom() {
 
       navigate('/staff');
     } catch (error) {
+      const thisError = error.response.data.message;
       await popup.fire({
         icon: 'error',
         title: 'Update Failed!',
-        text: error.message,
+        text: Array.isArray(thisError) ? thisError.join(' / ') : thisError,
       })
     }
   }
@@ -270,6 +271,7 @@ export default function Editroom() {
                       renderInput={(params) => <TextField {...params} label='สถานะ' />}
                     />
                   </div>
+                  
                   <div className="absolute mt-[1.5%] ml-[44%]">
                     <Button onClick={() => toggleOpen(true)}>
                       เพิ่มช่วงเวลา

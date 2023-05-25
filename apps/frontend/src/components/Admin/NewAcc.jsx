@@ -80,6 +80,7 @@ export default function NewAcc() {
                                     onClick={submit}
                                 >
                                     <p className="font-poppins text-md p-[8px] px-[20px]">Submit</p>
+                                    
                                 </button>
                             </Box>
                         </div>

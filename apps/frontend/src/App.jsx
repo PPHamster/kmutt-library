@@ -19,6 +19,7 @@ import Editevent from './components/Staff/Editevent';
 import Editroom from './components/Staff/Editroom';
 import AdminPage from './pages/AdminPage';
 import NewAcc from './components/Admin/NewAcc';
+import ProfilePage from './pages/ProfilePage';
 
 export const App = () => {
   return (
@@ -44,6 +45,8 @@ export const App = () => {
           <Route path='/signin' element= { < SignIn />} />
           <Route path='/admin' element= { < AdminPage />} />
           <Route path='/admin/newaccount' element= { < NewAcc />} />
+          <Route path='/profile' element={<ProfilePage/>}/>
+          <Route path='/admin/newaccount' element= { < NewAcc />} /> 
         </Routes>
       </BrowserRouter>
     </AuthProvider>
