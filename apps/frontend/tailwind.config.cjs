@@ -8,7 +8,7 @@ module.exports = {
     extend: {
       backgroundImage: {
         //background image
-        'library': "url('./image/kmutt_library.jpg')",
+        'library': "url('/image/kmutt_library.jpg')",
       },
       fontFamily: {
         // english font family

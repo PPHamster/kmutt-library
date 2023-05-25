@@ -1,15 +1,19 @@
 import { useParams } from "react-router-dom";
 import { useState, useEffect } from 'react';
 import NavbarStatic from "@/components/NavbarStatic";
-import { Link } from "react-router-dom";
 import Footer from '@/components/Footer';
 import { fetch } from '@/utils/Fetch';
+import { useAuth } from '@/contexts/AuthContext';
+import { popup } from '@/utils/Popup';
 
 export default function EventbyId() {
   const { eventid } = useParams();
 
   const [event, setEvent] = useState(null);
   const [participants, setParticipants] = useState(null);
+  const [downloadMember, setDownloadMember] = useState(true);
+
+  const { user } = useAuth();
 
   useEffect(() => {
     const fetchEvent = async () => {
@@ -23,8 +27,53 @@ export default function EventbyId() {
     }
 
     fetchEvent();
-    fetchParticipants();
-  }, []);
+    if (downloadMember) {
+      fetchParticipants();
+      setDownloadMember(false);
+    }
+  }, [downloadMember]);
+
+  const joinEvent = async (eventId, eventName) => {
+    try {
+      await fetch.post(`/events/${eventId}/join`);
+
+      setDownloadMember(true);
+
+      await popup.fire({
+        icon: 'success',
+        title: 'Join successful!',
+        text: `Join ${eventName} successfully`,
+      })
+
+    } catch (error) {
+      await popup.fire({
+        icon: 'error',
+        title: 'Join Failed!',
+        text: error.response.data.message,
+      })
+    }
+  }
+
+  const leaveEvent = async (eventId, eventName) => {
+    try {
+      await fetch.delete(`/events/${eventId}/join`);
+
+      setDownloadMember(true);
+
+      await popup.fire({
+        icon: 'success',
+        title: 'Leave successful!',
+        text: `Leave ${eventName} successfully`,
+      })
+
+    } catch (error) {
+      await popup.fire({
+        icon: 'error',
+        title: 'Leave Failed!',
+        text: error.response.data.message,
+      })
+    }
+  }
 
   const imgevent = ' max-w-[60%] h-full';
 
@@ -92,12 +141,18 @@ export default function EventbyId() {
         <p className='font-semibold font-kanit text-orange-600 text-lg text-left mt-6 ml-4'>{formattedMeetingTime} - {formattedMeetingEndTime}</p>
         <p className='font-semibold font-kanit text-[#454545] text-3xl text-left mt-2 ml-4'>{event.name}</p>
         <p className='font-normal font-kanit text-[#454545] text-lg text-left mt-1 ml-4'>{event.categories.map(cat => cat.name).join(' / ')}</p>
-        <Link to={`*`}>
-          <button
-            className="absolute right-[15%] -translate-y-20 w-[80px] p-[10px] h-auto rounded-full bg-[#0092BF]  hover:bg-[#007396] font-semibold font-poppins text-white my-[20px] ease-out duration-300"
-          >join
-          </button>
-        </Link>
+        {
+          user && participants.some(par => par.id === user.id) ?
+            <button
+              className="absolute right-[15%] -translate-y-20 w-[80px] p-[10px] h-auto rounded-full bg-[#0092BF]  hover:bg-[#007396] font-semibold font-poppins text-white my-[20px] ease-out duration-300" onClick={() => { leaveEvent(event.id, event.name) }}
+            >Leave
+            </button>
+            :
+            <button
+              className="absolute right-[15%] -translate-y-20 w-[80px] p-[10px] h-auto rounded-full bg-[#0092BF]  hover:bg-[#007396] font-semibold font-poppins text-white my-[20px] ease-out duration-300" onClick={() => { joinEvent(event.id, event.name) }}
+            >Join
+            </button>
+        }
       </div>
       <hr className=" border-2 mt-5 mx-[10%]" />
       <div className="mx-[10%] pl-10 pr-[5%] mb-[10%]">
