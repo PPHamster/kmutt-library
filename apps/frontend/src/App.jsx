@@ -17,6 +17,8 @@ import { AuthProvider } from '@/contexts/AuthContext';
 import Editbook from './components/Staff/Editbook';
 import Editevent from './components/Staff/Editevent';
 import Editroom from './components/Staff/Editroom';
+import AdminPage from './pages/AdminPage';
+import NewAcc from './components/Admin/NewAcc';
 
 export const App = () => {
   return (
@@ -40,6 +42,8 @@ export const App = () => {
           <Route path='/staff/event/:eventid/edit' element={ <Editevent/> }/>
           <Route path='/staff' element={ <StaffPage /> } />
           <Route path='/signin' element= { < SignIn />} />
+          <Route path='/admin' element= { < AdminPage />} />
+          <Route path='/admin/newaccount' element= { < NewAcc />} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>

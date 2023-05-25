@@ -66,7 +66,7 @@ export default function Borrowbook() {
   //find unique language in bookdata
   books.forEach(book => {
     if (!Language.includes(book.language)) {
-      language.push(book.language);
+      Language.push(book.language);
     }
   });
   //language state 

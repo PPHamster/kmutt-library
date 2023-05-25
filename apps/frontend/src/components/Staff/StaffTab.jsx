@@ -35,7 +35,7 @@ function StaffTab() {
   ];
 
   return (
-    <div className="pt-[15vh] w-[80%] mx-[10%] mb-[12.8%]">
+    <div className="pt-[15vh] w-[80%] mx-[10%] mb-[17%]">
       {accordions.map((accordion, index) => (
         <div
           key={index}

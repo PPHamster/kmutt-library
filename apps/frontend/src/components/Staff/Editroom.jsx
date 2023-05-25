@@ -63,9 +63,7 @@ export default function Editroom() {
     setLocation(event.target.value);
   };
 
-  const handleStatusChange = (event) => {
-    setStatus(event.target.value);
-  }
+  const statusoption = ['Open', 'Maintaining', 'Closed'];
 
   //for search timeperiod
   const [filteredtime, setFilteredTime] = useState([]);
@@ -261,16 +259,17 @@ export default function Editroom() {
                     multiline
                     maxRows={1}
                   />
-                  <TextField
-                    label="สถานะ"
-                    defaultValue={room.status}
-                    inputlabelprops={{
-                      shrink: true,
-                    }}
-                    onChange={handleStatusChange}
-                    multiline
-                    maxRows={1}
-                  />
+                  <div className="flex items-center">
+                    <Autocomplete
+                      onChange={(event, newValue) => {
+                        setStatus(newValue);
+                      }}
+                      options={statusoption}
+                      defaultValue={room.status}
+                      filterSelectedOptions
+                      renderInput={(params) => <TextField {...params} label='สถานะ' />}
+                    />
+                  </div>
                   <div className="absolute mt-[1.5%] ml-[44%]">
                     <Button onClick={() => toggleOpen(true)}>
                       เพิ่มช่วงเวลา
