@@ -5,7 +5,7 @@ INSERT INTO `Branch` (name) VALUES ('Admin');
 INSERT INTO `User` VALUES (
   '00000000000',
   'admin.lib@kmutt.ac.th',
-  '$2b$12$FfvggKRexXbD3gBLyD5obefXvTJRlCGzg1.0Thy8fvGKJVvr4zIG6',
+  '$2b$12$c7WoVTj4DdxXPAdlj2dVUuEgV3gIeImOqPlS/s2iIfoE3kE/hO8N6',
   '0812345678',
   'Admin',
   'Library',
