@@ -20,8 +20,9 @@ import { eventdata } from "@/utils/eventdata";
 import { Link, useNavigate } from "react-router-dom";
 import { fetch } from '@/utils/Fetch';
 import { popup } from '@/utils/Popup';
+import { WithUser } from '@/components/Hoc/WithUser';
 
-export default function Editevent() {
+function Editevent() {
 
   const { eventid } = useParams();
 
@@ -354,3 +355,5 @@ export default function Editevent() {
     </>
   )
 }
+
+export default WithUser(Editevent);

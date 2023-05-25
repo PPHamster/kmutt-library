@@ -3,8 +3,9 @@ import NavbarStaff from '@/components/NavbarStaff'
 import StaffTab from '@/components/Staff/StaffTab'
 import { Link } from 'react-router-dom'
 import Footer from '@/components/Footer'
+import { WithUser } from '@/components/Hoc/WithUser'
 
-export const StaffPage = () => {
+const StaffPage = () => {
 
   return (
     <>
@@ -26,3 +27,5 @@ export const StaffPage = () => {
     </>
   )
 }
+
+export default WithUser(StaffPage);

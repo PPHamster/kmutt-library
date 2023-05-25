@@ -14,6 +14,7 @@ import DialogActions from '@mui/material/DialogActions';
 import Button from '@mui/material/Button';
 import { popup } from '@/utils/Popup';
 import { useNavigate } from 'react-router-dom';
+import { WithUser } from '@/components/Hoc/WithUser';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -26,7 +27,7 @@ const MenuProps = {
   },
 };
 
-export default function Newblog() {
+function Newblog() {
 
   const navigate = useNavigate();
 
@@ -290,3 +291,5 @@ export default function Newblog() {
     </>
   )
 }
+
+export default WithUser(Newblog);

@@ -16,8 +16,9 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { Link, useNavigate } from "react-router-dom";
 import { fetch } from '@/utils/Fetch';
 import { popup } from '@/utils/Popup';
+import { WithUser } from '@/components/Hoc/WithUser';
 
-export default function Newbook() {
+function Newbook() {
 
   const navigate = useNavigate();
 
@@ -343,3 +344,5 @@ export default function Newbook() {
     </>
   )
 }
+
+export default WithUser(Newbook);

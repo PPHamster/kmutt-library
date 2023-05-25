@@ -2,8 +2,9 @@ import React from 'react'
 import NavbarAdmin from '@/components/NavbarAdmin'
 import Footer from '@/components/Footer'
 import UserManage from '@/components/Admin/UserManage'
+import { WithUser } from '@/components/Hoc/WithUser'
 
-export default function AdminPage () {
+function AdminPage () {
 
   return (
     <>
@@ -18,3 +19,5 @@ export default function AdminPage () {
     </>
   )
 }
+
+export default WithUser(AdminPage);

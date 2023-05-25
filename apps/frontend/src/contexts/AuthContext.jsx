@@ -34,7 +34,6 @@ export const AuthProvider = ({ children }) => {
     const response = await fetch.get('/auth/logout');
     if (response.status === 200) {
       setUser(null);
-      window.location.href = '/';
     }
   };
 

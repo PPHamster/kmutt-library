@@ -12,8 +12,8 @@ export default function navbarStaff(props) {
     const { user } = useAuth();
 
     useEffect(() => {
-      if (user && (user.role !== 'Admin' && user.role !== 'Staff')) navigate('/');
-    }, [user]);
+      if (user.role !== 'Admin' && user.role !== 'Staff') navigate('/');
+    }, []);
 
     return (
         <>

@@ -16,10 +16,11 @@ import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import { Link, useNavigate } from "react-router-dom";
 import { fetch } from '@/utils/Fetch';
 import { popup } from '@/utils/Popup';
+import { WithUser } from '@/components/Hoc/WithUser';
 
 const filter = createFilterOptions();
 
-export default function NewRoom() {
+function NewRoom() {
 
   const navigate = useNavigate();
 
@@ -348,3 +349,5 @@ export default function NewRoom() {
     </>
   )
 }
+
+export default WithUser(NewRoom);

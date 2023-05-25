@@ -17,10 +17,11 @@ import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import { Link } from "react-router-dom";
 import { fetch } from '@/utils/Fetch';
 import { popup } from '@/utils/Popup';
+import { WithUser } from '@/components/Hoc/WithUser';
 
 const filter = createFilterOptions();
 
-export default function Editroom() {
+function Editroom() {
 
   const { roomid } = useParams();
 
@@ -369,3 +370,5 @@ export default function Editroom() {
     </>
   )
 }
+
+export default WithUser(Editroom);

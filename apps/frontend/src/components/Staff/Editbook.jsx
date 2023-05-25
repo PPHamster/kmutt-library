@@ -18,8 +18,9 @@ import dayjs from 'dayjs';
 import { Link, useNavigate } from "react-router-dom";
 import { fetch } from '@/utils/Fetch';
 import { popup } from '@/utils/Popup';
+import { WithUser } from '@/components/Hoc/WithUser';
 
-export default function Editbook() {
+function Editbook() {
 
   const { bookid } = useParams();
 
@@ -405,3 +406,5 @@ export default function Editbook() {
     </>
   )
 }
+
+export default WithUser(Editbook);

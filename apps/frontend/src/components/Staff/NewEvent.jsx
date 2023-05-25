@@ -16,8 +16,9 @@ import { fetch } from '@/utils/Fetch';
 import { popup } from '@/utils/Popup';
 import Button from '@mui/material/Button';
 import { Link, useNavigate } from "react-router-dom";
+import { WithUser } from '@/components/Hoc/WithUser';
 
-export default function NewEvent() {
+function NewEvent() {
   
   const navigate = useNavigate();
 
@@ -300,3 +301,5 @@ export default function NewEvent() {
     </>
   )
 }
+
+export default WithUser(NewEvent);

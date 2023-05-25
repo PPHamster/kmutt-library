@@ -28,13 +28,19 @@ export default function RoomService() {
   };
 
   const [selectedTime, setSelectedTime] = useState("8:00 - 10:00");
+  const [timePeriodSelected, setTimePeriodSelected] = useState(0);
 
   const handleChange = (event) => {
     setSelectedTime(event.target.value);
+    const [beginTime, endTime] = event.target.value.split("-").map(time => time.trim());
+    setTimePeriodSelected(room.timePeriods.find((time) => {
+      return time.beginTime === beginTime && time.endTime === endTime;
+    }));
   };
 
   const handleOnClick = () => {
-    console.log(selectedDate.format("YYYY-MM-DD"), selectedTime)
+    console.log(selectedDate.format("YYYY-MM-DD"))
+    console.log(timePeriodSelected.id)
   }
 
   const timePeriodToString = (timePeriod) => {
@@ -58,6 +64,7 @@ export default function RoomService() {
       const response = await fetch.get(`rooms/${roomid}`);
       setRoom(response.data);
       setSelectedTime(timePeriodToString(response.data.timePeriods[0]));
+      setTimePeriodSelected(response.data.timePeriods[0])
     }
 
     fetchData();

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import NavbarAdmin from "../NavbarAdmin";
+import NavbarAdmin from "@/components/NavbarAdmin";
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
@@ -7,8 +7,9 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogActions from '@mui/material/DialogActions';
+import { WithUser } from '@/components/Hoc/WithUser';
 
-export default function NewAcc() {
+function NewAcc() {
 
 
 
@@ -90,3 +91,5 @@ export default function NewAcc() {
         </>
     )
 }
+
+export default WithUser(NewAcc);
