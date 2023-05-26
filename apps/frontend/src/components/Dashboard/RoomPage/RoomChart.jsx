@@ -6,36 +6,36 @@ import Title from '@/components/Dashboard/Title';
 // Generate Sales Data
 const data = [
   {
-    title: 'Chainsawman, vol. 1',
-    BookCount: 20,
+    name: 'Chainsawman, vol. 1',
+    RoomCount: 20,
   },
   {
-    title: 'Chainsawman, vol. 2',
-    BookCount: 12,
+    name: 'Chainsawman, vol. 2',
+    RoomCount: 12,
   },
   {
-    title: 'Chainsawman, vol. 3',
-    BookCount: 23,
+    name: 'Chainsawman, vol. 3',
+    RoomCount: 23,
   },
   {
-    title: 'Chainsawman, vol. 4',
-    BookCount: 45,
+    name: 'Chainsawman, vol. 4',
+    RoomCount: 45,
   },
   {
-    title: 'Chainsawman, vol. 5',
-    BookCount: 34,
+    name: 'Chainsawman, vol. 5',
+    RoomCount: 34,
   },
 ];
 
 // get data 0 - 10
-const chartbook = data.slice(0, 10).sort(function(a, b) {return b.BookCount - a.BookCount});
+const chartbook = data.slice(0, 10).sort(function(a, b) {return b.RoomCount - a.RoomCount});
 
-export default function Chartbook() {
+export default function Roomchart() {
   const theme = useTheme();
 
   return (
     <React.Fragment>
-      <Title>Most order books</Title>
+      <Title>Most discussing books</Title>
       <ResponsiveContainer>
         <BarChart
           data={chartbook}
@@ -47,8 +47,7 @@ export default function Chartbook() {
           }}
         >
           <XAxis
-            dataKey="title"
-            type='category'
+            dataKey="name"
             stroke={theme.palette.text.secondary}
             style={theme.typography.body2}
           />
@@ -70,7 +69,7 @@ export default function Chartbook() {
           </YAxis>
           <Tooltip />
           <Legend />
-          <Bar dataKey="BookCount" fill="#8884d8" />
+          <Bar dataKey="RoomCount" fill="#8994d8" />
         </BarChart>
       </ResponsiveContainer>
     </React.Fragment>

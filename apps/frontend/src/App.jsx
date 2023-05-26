@@ -19,9 +19,11 @@ import { CartProvider } from '@/contexts/CartContext';
 import Editbook from '@/components/Staff/Editbook';
 import Editevent from '@/components/Staff/Editevent';
 import Editroom from '@/components/Staff/Editroom';
-import Dashboard from './components/Dashboard/OrdersPage/Dashboard';
-import BookOrder from './components/Dashboard/BookPage/BookOrder';
-import Blogorder from './components/Dashboard/ฺBlogPage/BlogOrder';
+import Dashboard from '@/components/Dashboard/OrdersPage/Dashboard';
+import BookOrder from '@/components/Dashboard/BookPage/BookOrder';
+import Blogorder from '@/components/Dashboard/ฺBlogPage/BlogOrder';
+import Eventorder from '@/components/Dashboard/EventPage/EventOrder';
+import RoomOrder from '@/components/Dashboard/RoomPage/RoomOrder';
 import AdminPage from '@/pages/AdminPage';
 import NewAcc from '@/components/Admin/NewAcc';
 import EditAcc from './components/Admin/EditAcc';
@@ -57,7 +59,10 @@ export const App = () => {
             <Route path='/admin/dashboard' element={ <Dashboard /> } />
             <Route path='/admin/dashboard/book' element={ <BookOrder /> } />
             <Route path='/admin/dashboard/blog' element={ <Blogorder /> } />
+            <Route path='/admin/dashboard/event' element={ <Eventorder /> } />
+            <Route path='/admin/dashboard/room' element={ <RoomOrder /> } />
             <Route path='/profile' element={<ProfilePage />} />
+            <Route path='/order' element={<Checkout />} />
             <Route path='*' element={<NotFound />} />
           </Routes>
         </BrowserRouter>

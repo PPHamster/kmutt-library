@@ -30,12 +30,12 @@ const data = [
 // get data 0 - 10
 const chartbook = data.slice(0, 10).sort(function(a, b) {return b.BookCount - a.BookCount});
 
-export default function Chartbook() {
+export default function Eventchart() {
   const theme = useTheme();
 
   return (
     <React.Fragment>
-      <Title>Most order books</Title>
+      <Title>Most discussing books</Title>
       <ResponsiveContainer>
         <BarChart
           data={chartbook}
@@ -48,7 +48,6 @@ export default function Chartbook() {
         >
           <XAxis
             dataKey="title"
-            type='category'
             stroke={theme.palette.text.secondary}
             style={theme.typography.body2}
           />
@@ -70,7 +69,7 @@ export default function Chartbook() {
           </YAxis>
           <Tooltip />
           <Legend />
-          <Bar dataKey="BookCount" fill="#8884d8" />
+          <Bar dataKey="BookCount" fill="#8444d8" />
         </BarChart>
       </ResponsiveContainer>
     </React.Fragment>

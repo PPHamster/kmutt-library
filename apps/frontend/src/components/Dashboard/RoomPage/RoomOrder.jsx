@@ -16,8 +16,8 @@ import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import { mainListItems } from '../listItems';
-import Chartbook from './ChartBook';
-import Books from './Books';
+import Roomchart from './RoomChart';
+
 
 const drawerWidth = 240;
 
@@ -68,7 +68,7 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 // TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
 
-export default function BookOrder() {
+export default function RoomOrder() {
   const [open, setOpen] = React.useState(true);
   const toggleDrawer = () => {
     setOpen(!open);
@@ -103,7 +103,7 @@ export default function BookOrder() {
               noWrap
               sx={{ flexGrow: 1 }}
             >
-              Books
+              Room
             </Typography>
             <IconButton to='/'>
                 <KeyboardBackspaceIcon/>
@@ -144,22 +144,16 @@ export default function BookOrder() {
           <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
             <Grid container spacing={3}>
               {/* Chart */}
-              <Grid item xs={12}>
+              <Grid item xs={12} md={8} lg={9}>
                 <Paper
                   sx={{
                     p: 2,
                     display: 'flex',
                     flexDirection: 'column',
-                    height: 460,
+                    height: 480,
                   }}
                 >
-                  <Chartbook />
-                </Paper>
-              </Grid>
-              {/* Recent Books add */}
-              <Grid item xs={12}>
-                <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
-                  <Books />
+                  <Roomchart />
                 </Paper>
               </Grid>
             </Grid>
