@@ -132,7 +132,7 @@ export class BookRepository {
   public async getAllBookInteractByUserId(userId: string): Promise<Book[]> {
     const [rows] = await this.connection.query(
       `
-      SELECT b.* FROM User AS u
+      SELECT b.*, o.id AS orderId FROM User AS u
       INNER JOIN \`Order\` AS o ON o.userId = u.id
       INNER JOIN OrderItem AS oi ON oi.orderId = o.id AND oi.returnedDate IS NULL
       INNER JOIN Book AS b ON b.id = oi.bookId
