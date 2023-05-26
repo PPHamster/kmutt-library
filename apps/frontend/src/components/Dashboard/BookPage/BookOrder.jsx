@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import MuiDrawer from '@mui/material/Drawer';
@@ -105,9 +106,11 @@ export default function BookOrder() {
             >
               Books
             </Typography>
-            <IconButton to='/'>
-                <KeyboardBackspaceIcon/>
-            </IconButton>
+            <Link to='/'>
+              <IconButton>
+                  <KeyboardBackspaceIcon/>
+              </IconButton>
+            </Link>
           </Toolbar>
         </AppBar>
         <Drawer variant="permanent" open={open}>

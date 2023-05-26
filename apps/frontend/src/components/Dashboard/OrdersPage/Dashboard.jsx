@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import MuiDrawer from '@mui/material/Drawer';
@@ -9,11 +10,9 @@ import List from '@mui/material/List';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
-import Badge from '@mui/material/Badge';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
-import Link from '@mui/material/Link';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
@@ -108,9 +107,11 @@ export default function Dashboard() {
             >
               Dashboard
             </Typography>
-            <IconButton to='/'>
-                <KeyboardBackspaceIcon/>
-            </IconButton>
+            <Link to='/'>
+              <IconButton>
+                  <KeyboardBackspaceIcon/>
+              </IconButton>
+            </Link>
           </Toolbar>
         </AppBar>
         <Drawer variant="permanent" open={open}>
