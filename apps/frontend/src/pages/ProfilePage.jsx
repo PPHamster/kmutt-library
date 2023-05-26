@@ -42,6 +42,16 @@ function ProfilePage() {
         fetchBooks();
     }, []);
 
+    const cancelQueue = (order,book) => {
+        const response = fetch.delete('/orders/' + order.id + '/' + book.id);
+        window.location.reload();
+    }
+
+    const returnBook = (order,book) => {
+        const response = fetch.put('/orders/' + order.id + '/' + book.id + '/return');
+        window.location.reload();
+    }
+
     return (
         <>
             <NavbarStatic
@@ -112,15 +122,38 @@ function ProfilePage() {
                                                             <Typography variant="h5" component="div">
                                                                 {book.title}
                                                             </Typography>
-                                                            <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                                                                {book.receivedDate}
-                                                            </Typography>
+                                                            {(() => {
+                                                                if (book.receivedDate == null) {
+                                                                    return <Typography variant="body2">
+                                                                        <br></br>
+                                                                    </Typography>
+                                                                } else {
+                                                                    return (<Typography variant="body2">
+                                                                        {book.receivedDate}
+                                                                    </Typography>)
+                                                                }
+
+                                                            })()}
                                                             <Typography variant="body2">
                                                                 {book.description}
                                                             </Typography>
                                                         </CardContent>
                                                         <CardActions>
                                                             <Button size="small">Learn More</Button>
+                                                            {(() => {
+                                                                if (book.receivedDate == null) {
+                                                                    return (
+                                                                        <Button onClick={() => cancelQueue(orderItem,book)} variant="outlined" color="error" size="small">Cancel Queue</Button>
+                                                                    )
+                                                                } else if (book.returnedDate != null) {
+                                                                    return null
+
+                                                                } else {
+                                                                    return (
+                                                                        <Button onClick={() => returnBook(orderItem,book)} variant="outlined" color="error" size="small">Return</Button>
+                                                                    )
+                                                                }
+                                                            })()}
                                                         </CardActions>
                                                     </Card>
                                                 </div>
