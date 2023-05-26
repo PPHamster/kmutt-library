@@ -1,4 +1,5 @@
 import { fetch } from '@/utils/Fetch';
+import { useAuth } from '@/contexts/AuthContext';
 import { createContext, useContext, useEffect, useState } from 'react';
 
 const CartContext = createContext({});
@@ -6,6 +7,7 @@ const CartContext = createContext({});
 export const CartProvider = ({ children }) => {
   const [cart, setCart] = useState([]);
   const [download, setDownload] = useState(true);
+  const { user } = useAuth();
 
   useEffect(() => {
     const getCartItem = async () => {
@@ -18,7 +20,7 @@ export const CartProvider = ({ children }) => {
       }
     }
     getCartItem();
-  }, [download]);
+  }, [download, user]);
 
   const addCart = async (bookId) => {
     try {

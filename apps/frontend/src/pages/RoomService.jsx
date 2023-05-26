@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { fetch } from '@/utils/Fetch';
+import { popup } from '@/utils/Popup';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -14,23 +15,11 @@ import 'dayjs/locale/en';
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
-import { useEffect } from 'react';
-
-const data = [
-  { id: 69070501001, firstname: 'Haahahahahahaaa', lastname: 'Mairuruururururuur', email: 'john@example.com', tel: '1234567890', role: 'User', branch: 'COMPUTER ENGINEERING', registYear: 2020, blacklist: false },
-  { id: 69070501002, firstname: 'John', lastname: 'Doe', email: 'johnnathanlnwza007@example.com', tel: '1234567890', role: 'Admin', branch: 'Branch A', registYear: 2020, blacklist: false },
-  { id: 69070501003, firstname: 'John', lastname: 'Doe', email: 'john@example.com', tel: '1234567890', role: 'User', branch: 'Branch A', registYear: 2020, blacklist: false },
-  { id: 69070501004, firstname: 'John', lastname: 'Doe', email: 'john@example.com', tel: '1234567890', role: 'User', branch: 'Branch A', registYear: 2020, blacklist: false },
-  { id: 69070501005, firstname: 'John', lastname: 'Doe', email: 'john@example.com', tel: '1234567890', role: 'User', branch: 'Branch A', registYear: 2020, blacklist: false },
-  { id: 69070501006, firstname: 'John', lastname: 'Doe', email: 'john@example.com', tel: '1234567890', role: 'User', branch: 'Branch A', registYear: 2020, blacklist: false },
-  { id: 69070501007, firstname: 'John', lastname: 'Doe', email: 'john@example.com', tel: '1234567890', role: 'User', branch: 'Branch A', registYear: 2020, blacklist: false },
-  { id: 69070501008, firstname: 'John', lastname: 'Doe', email: 'john@example.com', tel: '1234567890', role: 'User', branch: 'Branch A', registYear: 2020, blacklist: false },
-  { id: 69070501009, firstname: 'John', lastname: 'Doe', email: 'john@example.com', tel: '1234567890', role: 'User', branch: 'Branch A', registYear: 2020, blacklist: false },
-  { id: 69070501010, firstname: 'John', lastname: 'Doe', email: 'john@example.com', tel: '1234567890', role: 'Admin', branch: 'Branch A', registYear: 2020, blacklist: false },
-];
+import { useNavigate } from 'react-router-dom';
 
 export default function RoomService() {
   const { roomid } = useParams();
+  const navigate = useNavigate();
 
   //style
   const headStyle = "font-poppins font-semibold text-xl mb-2"
@@ -44,6 +33,7 @@ export default function RoomService() {
 
   const [selectedTime, setSelectedTime] = useState("8:00 - 10:00");
   const [timePeriodSelected, setTimePeriodSelected] = useState(0);
+  const [allUser, setAllUser] = useState(null);
   const [user, setUser] = useState([]);
 
   const handleChange = (event) => {
@@ -54,9 +44,34 @@ export default function RoomService() {
     }));
   };
 
-  const handleOnClick = () => {
+  const handleOnClick = async () => {
     console.log(selectedDate.format("YYYY-MM-DD"))
     console.log(timePeriodSelected.id)
+    console.log(user)
+
+    const data = {
+      date: selectedDate,
+      userIds: user.map(u => u.id),
+    };
+
+    try {
+      const response = await fetch.post(`/rooms/${roomid}/time-period/${timePeriodSelected.id}/book`, data);
+
+      await popup.fire({
+        icon: 'success',
+        title: 'Booking successful!',
+        text: `${response.data.msg}`,
+      })
+
+      navigate('/service')
+    } catch (error) {
+      const thisError = error.response.data.message;
+      await popup.fire({
+        icon: 'error',
+        title: 'Booking Failed!',
+        text: Array.isArray(thisError) ? thisError.join(' / ') : thisError,
+      })
+    }
   }
 
   const timePeriodToString = (timePeriod) => {
@@ -76,17 +91,23 @@ export default function RoomService() {
   }
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchRoom = async () => {
       const response = await fetch.get(`rooms/${roomid}`);
       setRoom(response.data);
       setSelectedTime(timePeriodToString(response.data.timePeriods[0]));
       setTimePeriodSelected(response.data.timePeriods[0])
     }
 
-    fetchData();
+    const fetchUser = async () => {
+      const response = await fetch.get('/users');
+      setAllUser(response.data);
+    }
+
+    fetchRoom();
+    fetchUser();
   }, []);
 
-  if (!room) {
+  if (!room || !allUser) {
     return (
       <div className="min-h-screen">
         <NavbarStatic
@@ -170,7 +191,7 @@ export default function RoomService() {
                 >
                   <Autocomplete
                     multiple
-                    options={data}
+                    options={allUser}
                     getOptionLabel={(option) => `${option.id}, ${option.firstname}`}
                     filterSelectedOptions
                     renderInput={(params) => (
@@ -191,7 +212,7 @@ export default function RoomService() {
               <p className='mb-2'>| ผู้เข้าใช้งาน</p>
                 <ul className="ml-6">
                   {user.map((data, index) => (
-                    <li key={index}> {data.firstname.trim()} {data.lastname.trim()} {data.branch.trim()}</li>
+                    <li key={index}> {data.firstname.trim()} {data.lastname.trim()} {data.branch.trim()} Year: {new Date().getFullYear() - data.registYear}</li>
                   ))}
                 </ul>
               </div>

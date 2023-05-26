@@ -10,6 +10,7 @@ import {
   Min,
   Max,
   MinLength,
+  IsBoolean,
 } from 'class-validator';
 
 export class UserCreateDto {
@@ -91,6 +92,17 @@ export class UserUpdateByAdminDto {
   @IsOptional()
   @IsNotEmpty()
   @IsString()
+  @MaxLength(20)
+  public id?: string;
+
+  @IsOptional()
+  @IsEmail()
+  @MaxLength(150)
+  public email?: string;
+
+  @IsOptional()
+  @IsNotEmpty()
+  @IsString()
   @MinLength(6)
   @MaxLength(20)
   public password?: string;
@@ -110,6 +122,10 @@ export class UserUpdateByAdminDto {
   @IsString()
   @MaxLength(150)
   public lastname?: string;
+
+  @IsOptional()
+  @IsBoolean()
+  public isBlacklist?: boolean;
 
   @IsOptional()
   @IsInt()

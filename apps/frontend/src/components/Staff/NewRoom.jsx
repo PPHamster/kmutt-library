@@ -149,7 +149,7 @@ function NewRoom() {
     event.preventDefault();
     const data = {
       name: name,
-      image: imageData[0].split(',')[1],
+      image: imageData.length > 0 ? imageData[0].split(',')[1] : undefined,
       location: location,
       timePeriods: value.map((tp) => {
         return { beginTime: tp.beginTime, endTime: tp.endTime }

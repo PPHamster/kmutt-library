@@ -29,6 +29,10 @@ export class UserService {
     return this.userRepository.getAllUserWithRoleAndBranch();
   }
 
+  public async getAllUserWithRoleAndBranchFromAdmin() {
+    return this.userRepository.getAllUserWithRoleAndBrachFromAdmin();
+  }
+
   public async updateUserById(data: UserUpdateDto, id: string) {
     if (Object.keys(data).length === 0)
       throw new BadRequestException('No data that want to update');
@@ -79,6 +83,10 @@ export class UserService {
   }
 
   public async deleteUserById(id: string) {
+    if (id === '00000000000') {
+      throw new BadRequestException("Can't delete king of admin");
+    }
+
     await this.userRepository.deleteUserById(id);
 
     this.imageService.deleteImageFromName('users', `${id}.png`);

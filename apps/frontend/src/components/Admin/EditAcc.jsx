@@ -19,21 +19,12 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 
-const roles = [
-  { id: 1, name: 'User' }, { id: 2, name: 'Staff' }, { id: 3, name: 'Admin' }
-]
-
-const branchs = [
-  { id: 1, name: 'COMPUTER ENGINEERING' }, { id: 2, name: 'MECHANICAL ENGINEERING' }, { id: 3, name: 'CIVIL ENGINEERING' }
-]
-
 function EditAcc() {
 
   const { id } = useParams();
 
   const navigate = useNavigate();
 
-  const [Acc, setAcc] = useState(null);
   const [Id, setId] = useState("");
   const [Fname, setFName] = useState("");
   const [Lname, setLName] = useState("");
@@ -44,6 +35,10 @@ function EditAcc() {
   const [branch, setBranch] = useState(null);
   const [role, setRole] = useState(null);
   const [blacklist, setBlacklist] = useState(1)//ใส่ defaultValue ตรงนี้
+
+  const [user, setUser] = useState(null);
+  const [roles, setRoles] = useState(null);
+  const [branchs, setBranchs] = useState(null);
 
   const handleIdChange = (event) => {
     setId(event.target.value);
@@ -81,11 +76,18 @@ function EditAcc() {
   const [open, toggleOpen] = useState(false);
   const [inputEditValue, setInputEditValue] = useState('');
 
+  const [openRole, toggleOpenRole] = useState(false);
+  const [inputRoleEditValue, setInputRoleEditValue] = useState('');
+
   const handleClose = () => {
-    setInputEditValue(null);
+    setInputEditValue('');
     toggleOpen(false);
   };
 
+  const handleCloseRole = () => {
+    setInputRoleEditValue('');
+    toggleOpenRole(false);
+  }
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -93,8 +95,22 @@ function EditAcc() {
     addBranch(inputEditValue);
   };
 
+  const handleRoleSubmit = (event) => {
+    event.preventDefault();
+    handleCloseRole();
+    addRole(inputRoleEditValue);
+  }
+
   function addBranch(newbranch) {
-    console.log('testo!')
+    setBranchs((prev) => {
+      return [...prev, { id: NaN, name: newbranch }];
+    });
+  }
+
+  function addRole(newrole) {
+    setRoles((prev) => {
+      return [...prev, { id: NaN, name: newrole }];
+    });
   }
 
   //upload image
@@ -115,26 +131,91 @@ function EditAcc() {
     });
   }, [images]);
 
+  useEffect(() => {
+    const fetchUser = async () => {
+      const response = await fetch.get(`/users/${id}`);
+      const resUser = response.data;
+      setUser(resUser);
+      setId(resUser.id);
+      setFName(resUser.firstname);
+      setLName(resUser.lastname);
+      setEmail(resUser.email);
+      setTel(resUser.tel);
+      setYear(resUser.registYear);
+      setBranch(resUser.branch);
+      setRole(resUser.role);
+      setBlacklist(resUser.isBlacklist);
+    }
+
+    const fetchRoles = async () => {
+      const response = await fetch.get('/roles');
+      setRoles(response.data);
+    }
+
+    const fetchBranchs = async () => {
+      const response = await fetch.get('/branchs');
+      setBranchs(response.data);
+    }
+
+    fetchUser();
+    fetchRoles();
+    fetchBranchs();
+  }, []);
+
   function onImageChange(e) {
     setImages([...e.target.files]);
   }
 
-  const submit = (event) => {
-    event.preventDefault();
-    console.log(
-      Id,
-      Fname,
-      Lname,
-      email,
-      password,
-      tel,
-      year,
-      branch,
-      role,
-      imageData,
-      blacklist,
-    );
+  const submit = async (event) => {
 
+    event.preventDefault();
+
+    const data = {
+      id: Id,
+      firstname: Fname,
+      lastname: Lname,
+      email: email,
+      password: password === '' ? undefined : password,
+      tel: tel,
+      registYear: +year,
+      branch: branch.name,
+      role: role.name,
+      isBlacklist: blacklist === 1,
+    };
+
+    try {
+      const response = await fetch.put(`/users/${id}/admin`, data);
+
+      if (imageData.length > 0) {
+        await fetch.put(`/users/${id}/image`, { image: imageData[0].split(',')[1] });
+      }
+
+      await popup.fire({
+        icon: 'success',
+        title: 'Update successful!',
+        text: `${response.data.msg}`,
+      })
+
+      navigate('/admin');
+    } catch (error) {
+      const thisError = error.response.data.message;
+      await popup.fire({
+        icon: 'error',
+        title: 'Update Failed!',
+        text: Array.isArray(thisError) ? thisError.join(' / ') : thisError,
+      })
+    }
+  }
+
+  if (!user || !roles || !branchs) {
+    return (
+      <div className="w-full h-screen bg-gray-50">
+        <NavbarAdmin
+          bgcolor='bg-white hover:drop-shadow-md'
+          textcolor='text-black'
+        />
+      </div>
+    );
   }
 
   return (
@@ -162,7 +243,7 @@ function EditAcc() {
                     multiline
                     maxRows={2}
                     onChange={handleIdChange}
-                  // defaultValue={}
+                    defaultValue={user.id}
                   />
                   <TextField
                     required
@@ -170,7 +251,7 @@ function EditAcc() {
                     multiline
                     maxRows={2}
                     onChange={handleFNameChange}
-                  // defaultValue={}
+                    defaultValue={user.firstname}
                   />
                   <TextField
                     required
@@ -178,6 +259,7 @@ function EditAcc() {
                     multiline
                     maxRows={2}
                     onChange={handleLNameChange}
+                    defaultValue={user.lastname}
                   />
                   <TextField
                     required
@@ -185,41 +267,40 @@ function EditAcc() {
                     autoComplete="email"
                     autoFocus
                     onChange={handleEmailChange}
-                  // defaultValue={}
+                    defaultValue={user.email}
                   />
                   <TextField
                     required
-                    label="รหัสผ่าน"
+                    label="รหัสผ่าน (ไม่ใส่คือไม่เปลี่ยน)"
                     type="password"
                     autoComplete="current-password"
                     onChange={handlePasswordChange}
-                  // defaultValue={}
                   />
                   <TextField
                     label="เบอร์โทรศัพท์"
                     type="tel"
                     maxRows={1}
                     onChange={handleTelChange}
-                  // defaultValue={}
+                    defaultValue={user.tel}
                   />
                   <FormControl sx={{ m: 1, minWidth: 120 }}>
-                  <InputLabel id='blacklistLebel'>Blacklist</InputLabel>
-                  <Select
-                  labelId="blacklistLabel"
-                    value={blacklist}
-                    label="Blacklist"
-                    onChange={handleBlacklistChange}
-                  >
-                    <MenuItem value={0}>False</MenuItem>
-                    <MenuItem value={1}>True</MenuItem>
-                  </Select>
+                    <InputLabel id='blacklistLebel'>Blacklist</InputLabel>
+                    <Select
+                      labelId="blacklistLabel"
+                      value={blacklist}
+                      label="Blacklist"
+                      onChange={handleBlacklistChange}
+                    >
+                      <MenuItem value={0}>False</MenuItem>
+                      <MenuItem value={1}>True</MenuItem>
+                    </Select>
                   </FormControl>
                   <TextField
                     label="ปีเข้าศึกษา"
                     type="text"
                     maxRows={1}
                     onChange={handleYearChange}
-                  // defaultValue={}
+                    defaultValue={user.registYear}
                   />
                   <div className="absolute mt-[1.5%] ml-[44%]">
                     <Button onClick={() => toggleOpen(true)}>
@@ -254,6 +335,7 @@ function EditAcc() {
                     </form>
                   </Dialog>
                   <Autocomplete
+                    isOptionEqualToValue={(option, value) => option.name === value.name}
                     id="tags-standard"
                     options={branchs}
                     getOptionLabel={(option) => option.name}
@@ -268,17 +350,50 @@ function EditAcc() {
                     onChange={(event, value) => {
                       setBranch(value)
                     }}
-                  // defaultValue={}
+                    defaultValue={branchs.find(branch => branch.name === user.branch)}
                   />
+                  <div className="absolute mt-[1.5%] ml-[44%]">
+                    <Button onClick={() => toggleOpenRole(true)}>
+                      เพิ่มตำแหน่ง
+                    </Button>
+                  </div>
+                  {/* add role */}
+                  <Dialog open={openRole} onClose={handleCloseRole}>
+                    <form onSubmit={handleRoleSubmit}>
+                      <DialogTitle className='text-center'>เพิ่มตำแหน่ง</DialogTitle>
+                      <hr />
+                      <DialogContent>
+                        <DialogContentText className='px-5'>
+                          โปรดระบุตำแหน่งใหม่
+                        </DialogContentText>
+                        <div className='flex justify-center'>
+                          <TextField
+                            autoFocus
+                            margin="dense"
+                            value={inputRoleEditValue}
+                            type="text"
+                            variant="standard"
+                            onChange={(e) => {
+                              setInputRoleEditValue(e.target.value)
+                            }}
+                          /></div>
+                      </DialogContent>
+                      <DialogActions>
+                        <Button onClick={handleCloseRole}>ยกเลิก</Button>
+                        <Button type="submit">ยืนยัน</Button>
+                      </DialogActions>
+                    </form>
+                  </Dialog>
                   <Autocomplete
+                    isOptionEqualToValue={(option, value) => option.name === value.name}
                     onChange={(event, newValue) => {
                       setRole(newValue);
                     }}
                     options={roles}
                     getOptionLabel={(option) => option.name}
                     filterSelectedOptions
-                    renderInput={(params) => <TextField {...params} label='Role' />}
-                  // defaultValue={}
+                    renderInput={(params) => <TextField {...params} label='ตำแหน่ง' />}
+                    defaultValue={roles.find(role => role.name === user.role)}
                   />
                 </div>
                 <div className="my-[3vh] ml-[11.5vh]">

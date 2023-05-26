@@ -107,11 +107,13 @@ export default function Navbar() {
                 <Link to="/profile" className="mr-[10px]">
                   <Avatar alt="Remy Sharp" src={user.image} sx={{ width: 42, height: 42 }} />
                 </Link>
-                <IconButton aria-label="cart">
-                  <StyledBadge badgeContent={cart.length} color="secondary">
-                    <ShoppingCartIcon />
-                  </StyledBadge>
-                </IconButton>
+                <Link to="/order">
+                  <IconButton aria-label="cart">
+                    <StyledBadge badgeContent={cart.length} color="secondary">
+                      <ShoppingCartIcon />
+                    </StyledBadge>
+                  </IconButton>
+                </Link>
               </>
               :
               <Link to="/signin">

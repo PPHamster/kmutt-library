@@ -121,7 +121,7 @@ function NewEvent() {
       name: name,
       categories: selectedCategory.map(cat => cat.name),
       description: textdes,
-      image: imageData[0].split(',')[1],
+      image: imageData.length > 0 ? imageData[0].split(',')[1] : undefined,
       location: location,
       meetingTime: selectedDate,
       endTime: selectedDateEnd,

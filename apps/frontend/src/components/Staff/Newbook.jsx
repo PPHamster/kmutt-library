@@ -146,7 +146,7 @@ function Newbook() {
       publisher: publisher,
       publishDate: selectedDate,
       language: language,
-      image: imageData[0].split(',')[1],
+      image: imageData.length > 0 ? imageData[0].split(',')[1] : undefined,
       location: location,
     };
 

@@ -30,6 +30,12 @@ export class UserController {
     return res.status(HttpStatus.OK).json(users);
   }
 
+  @Get('admin')
+  public async getAllUserFromAdmin(@Res() res: Response) {
+    const users = await this.userService.getAllUserWithRoleAndBranchFromAdmin();
+    return res.status(HttpStatus.OK).json(users);
+  }
+
   @Get(':userId')
   public async getUserById(@Param('userId') id: string, @Res() res: Response) {
     const user = await this.userService.getUserById(id);

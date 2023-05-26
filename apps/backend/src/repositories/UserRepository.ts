@@ -58,8 +58,24 @@ export class UserRepository {
       LEFT JOIN Role AS r ON u.roleId = r.id
       LEFT JOIN Branch AS b ON u.branchId = b.id
       WHERE r.name != ? GROUP BY u.id
+      ORDER BY u.id
       `,
       ['Admin'],
+    );
+
+    return rows as any[] as User[];
+  }
+
+  public async getAllUserWithRoleAndBrachFromAdmin(): Promise<User[]> {
+    const [rows] = await this.connection.query(
+      `
+      SELECT u.id, u.email, u.tel, u.firstname, u.lastname, u.image,
+      u.isBlacklist, u.registYear, r.name AS role, b.name AS branch FROM User AS u
+      LEFT JOIN Role AS r ON u.roleId = r.id
+      LEFT JOIN Branch AS b ON u.branchId = b.id
+      GROUP BY u.id
+      ORDER BY u.id
+      `,
     );
 
     return rows as any[] as User[];
