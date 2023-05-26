@@ -20,6 +20,7 @@ import Editevent from '@/components/Staff/Editevent';
 import Editroom from '@/components/Staff/Editroom';
 import AdminPage from '@/pages/AdminPage';
 import NewAcc from '@/components/Admin/NewAcc';
+import EditAcc from './components/Admin/EditAcc';
 import ProfilePage from '@/pages/ProfilePage';
 import NotFound from '@/pages/NotFoundPage';
 
@@ -48,6 +49,7 @@ export const App = () => {
             <Route path='/signin' element={< SignIn />} />
             <Route path='/admin' element={< AdminPage />} />
             <Route path='/admin/newaccount' element={< NewAcc />} />
+            <Route path='/admin/:id/edit' element={< EditAcc />} />
             <Route path='/profile' element={<ProfilePage />} />
             <Route path='*' element={<NotFound />} />
           </Routes>
