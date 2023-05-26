@@ -2,16 +2,82 @@ import React, { useEffect, useState } from "react";
 import NavbarAdmin from "@/components/NavbarAdmin";
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
+import Autocomplete from '@mui/material/Autocomplete';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogActions from '@mui/material/DialogActions';
 import { WithUser } from '@/components/Hoc/WithUser';
+import Button from '@mui/material/Button';
+
+const roles = [
+    { id: 1, name: 'User' }, { id: 2, name: 'Staff' }, { id: 3, name: 'Admin' }
+]
+
+const branchs = [
+    { id: 1, name: 'COMPUTER ENGINEERING' }, { id: 2, name: 'MECHANICAL ENGINEERING' }, { id: 3, name: 'CIVIL ENGINEERING' }
+]
 
 function NewAcc() {
 
+    const [Id, setId] = useState("");
+    const [Fname, setFName] = useState("");
+    const [Lname, setLName] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [tel, setTel] = useState("");
+    const [year, setYear] = useState("");
+    const [branch, setBranch] = useState(null);
+    const [role, setRole] = useState(null);
 
+    const handleIdChange = (event) => {
+        setId(event.target.value);
+      };
+
+    const handleFNameChange = (event) => {
+        setFName(event.target.value);
+      };
+
+      const handleLNameChange = (event) => {
+        setLName(event.target.value);
+      };
+
+      const handleEmailChange = (event) => {
+        setEmail(event.target.value);
+      };
+
+      const handlePasswordChange = (event) => {
+        setPassword(event.target.value);
+      };
+
+      const handleTelChange = (event) => {
+        setTel(event.target.value);
+      };
+
+      const handleYearChange = (event) => {
+        setYear(event.target.value);
+      };
+
+    //add
+    const [open, toggleOpen] = useState(false);
+    const [inputEditValue, setInputEditValue] = useState('');
+
+    const handleClose = () => {
+        setInputEditValue(null);
+        toggleOpen(false);
+    };
+
+
+    const handleSubmit = (event) => {
+        event.preventDefault();
+        handleClose();
+        addBranch(inputEditValue);
+    };
+
+    function addBranch(newbranch) {
+        console.log('testo!')
+    }
 
     //upload image
     const [images, setImages] = useState([]);
@@ -35,12 +101,21 @@ function NewAcc() {
         setImages([...e.target.files]);
     }
 
-    const submit = async (event) => {
+    const submit = (event) => {
         event.preventDefault();
+        console.log(
+            Id,
+            Fname,
+            Lname,
+            email,
+            password,
+            tel,
+            year,
+            branch,
+            role,
+            imageData,
+        );
 
-        const data = {
-            image: imageData[0].split(',')[1],
-        };
     }
 
     return (
@@ -61,7 +136,111 @@ function NewAcc() {
                                 autoComplete="off"
                             >
                                 <div className="my-[3vh] mx-[5vh]">
-
+                                    <TextField
+                                        required
+                                        label="Id"
+                                        type={"number"}
+                                        multiline
+                                        maxRows={2}
+                                        onChange={handleIdChange}
+                                    />
+                                    <TextField
+                                        required
+                                        label="ชื่อ"
+                                        multiline
+                                        maxRows={2}
+                                        onChange={handleFNameChange}
+                                    />
+                                    <TextField
+                                        required
+                                        label="นามสกุล"
+                                        multiline
+                                        maxRows={2}
+                                        onChange={handleLNameChange}
+                                    />
+                                    <TextField
+                                        required
+                                        label="อีเมล"
+                                        autoComplete="email"
+                                        autoFocus
+                                        onChange={handleEmailChange}
+                                    />
+                                    <TextField
+                                        required
+                                        label="รหัสผ่าน"
+                                        type="password"
+                                        autoComplete="current-password"
+                                        onChange={handleEmailChange}
+                                    />
+                                    <TextField
+                                        label="เบอร์โทรศัพท์"
+                                        type="tel"
+                                        maxRows={1}
+                                        onChange={handleTelChange}
+                                    />
+                                    <TextField
+                                        label="ปีเข้าศึกษา"
+                                        type="text"
+                                        maxRows={1}
+                                        onChange={handleYearChange}
+                                    />
+                                    <div className="absolute mt-[1.5%] ml-[44%]">
+                                        <Button onClick={() => toggleOpen(true)}>
+                                            เพิ่มสาขาวิชา
+                                        </Button>
+                                    </div>
+                                    {/* add */}
+                                    <Dialog open={open} onClose={handleClose}>
+                                        <form onSubmit={handleSubmit}>
+                                            <DialogTitle className='text-center'>เพิ่มสาขาวิชา</DialogTitle>
+                                            <hr />
+                                            <DialogContent>
+                                                <DialogContentText className='px-5'>
+                                                    โปรดระบุสาขาวิชาใหม่
+                                                </DialogContentText>
+                                                <div className='flex justify-center'>
+                                                    <TextField
+                                                        autoFocus
+                                                        margin="dense"
+                                                        value={inputEditValue}
+                                                        type="text"
+                                                        variant="standard"
+                                                        onChange={(e) =>
+                                                            setInputEditValue(e.target.value)
+                                                        }
+                                                    /></div>
+                                            </DialogContent>
+                                            <DialogActions>
+                                                <Button onClick={handleClose}>ยกเลิก</Button>
+                                                <Button type="submit">ยืนยัน</Button>
+                                            </DialogActions>
+                                        </form>
+                                    </Dialog>
+                                    <Autocomplete
+                                        id="tags-standard"
+                                        options={branchs}
+                                        getOptionLabel={(option) => option.name}
+                                        filterSelectedOptions
+                                        renderInput={(params) => (
+                                            <TextField
+                                                {...params}
+                                                label="สาขาวิชา"
+                                                placeholder="ระบุสาขาวิชาหรือกด เพิ่มสาขาวิชา"
+                                            />
+                                        )}
+                                         onChange={(event, value) => {
+                                             setBranch(value)
+                                         }}
+                                    />
+                                    <Autocomplete
+                                         onChange={(event, newValue) => {
+                                             setRole(newValue);
+                                         }}
+                                        options={roles}
+                                        getOptionLabel={(option) => option.name}
+                                        filterSelectedOptions
+                                        renderInput={(params) => <TextField {...params} label='Role' />}
+                                    />
                                 </div>
                                 <div className="my-[3vh] ml-[11.5vh]">
                                     <input type="file"
@@ -81,7 +260,7 @@ function NewAcc() {
                                     onClick={submit}
                                 >
                                     <p className="font-poppins text-md p-[8px] px-[20px]">Submit</p>
-                                    
+
                                 </button>
                             </Box>
                         </div>
