@@ -13,11 +13,15 @@ import NewEvent from '@/components/Staff/NewEvent';
 import StaffPage from '@/pages/StaffPage';
 import Newblog from '@/components/Blog/NewBlog';
 import SignIn from '@/pages/SigninPage';
+import Checkout from '@/components/Order/OrderPage';
 import { AuthProvider } from '@/contexts/AuthContext';
 import { CartProvider } from '@/contexts/CartContext';
 import Editbook from '@/components/Staff/Editbook';
 import Editevent from '@/components/Staff/Editevent';
 import Editroom from '@/components/Staff/Editroom';
+import Dashboard from './components/Dashboard/OrdersPage/Dashboard';
+import BookOrder from './components/Dashboard/BookPage/BookOrder';
+import Blogorder from './components/Dashboard/ฺBlogPage/BlogOrder';
 import AdminPage from '@/pages/AdminPage';
 import NewAcc from '@/components/Admin/NewAcc';
 import EditAcc from './components/Admin/EditAcc';
@@ -50,6 +54,9 @@ export const App = () => {
             <Route path='/admin' element={< AdminPage />} />
             <Route path='/admin/newaccount' element={< NewAcc />} />
             <Route path='/admin/:id/edit' element={< EditAcc />} />
+            <Route path='/admin/dashboard' element={ <Dashboard /> } />
+            <Route path='/admin/dashboard/book' element={ <BookOrder /> } />
+            <Route path='/admin/dashboard/blog' element={ <Blogorder /> } />
             <Route path='/profile' element={<ProfilePage />} />
             <Route path='*' element={<NotFound />} />
           </Routes>

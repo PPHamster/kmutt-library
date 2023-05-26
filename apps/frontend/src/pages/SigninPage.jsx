@@ -80,6 +80,16 @@ export default function SignIn() {
       });
     }
   };
+  
+  const handleForgotPassword = (event) => {
+    event.preventDefault();
+    popup.fire({
+      title: 'forgot password',
+      icon: 'info',
+      text: 'ตั้งสติและนึกดีๆ รหัสผ่านเป็นสิ่งสำคัญในชีวิต',
+      confirmButtonText: 'OK',
+    });
+  }
 
   return (
     <>
@@ -144,7 +154,7 @@ export default function SignIn() {
               </Button>
               <Grid container>
                 <Grid item xs>
-                  <Link href="#" variant="body2">
+                  <Link onClick={handleForgotPassword} variant="body2">
                     Forgot password?
                   </Link>
                 </Grid>
