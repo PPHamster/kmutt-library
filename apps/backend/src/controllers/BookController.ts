@@ -95,6 +95,19 @@ export class BookController {
     return res.status(HttpStatus.OK).json(cartItem);
   }
 
+  @Get('interact')
+  @UseGuards(AuthGuard)
+  public async getAllBookInteract(
+    @RequestUser() user: User,
+    @Res() res: Response,
+  ) {
+    const booksWithCount = await this.bookService.getAllBookInteractByUserId(
+      user.id,
+    );
+
+    return res.status(HttpStatus.OK).json(booksWithCount);
+  }
+
   @Get('borrowed')
   @UseGuards(AuthGuard)
   public async getAllBookEverBorrowed(

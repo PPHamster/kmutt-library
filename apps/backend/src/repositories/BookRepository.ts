@@ -129,6 +129,21 @@ export class BookRepository {
     return rows as any[] as Book[];
   }
 
+  public async getAllBookInteractByUserId(userId: string): Promise<Book[]> {
+    const [rows] = await this.connection.query(
+      `
+      SELECT b.* FROM User AS u
+      INNER JOIN \`Order\` AS o ON o.userId = u.id
+      INNER JOIN OrderItem AS oi ON oi.orderId = o.id AND oi.returnedDate IS NULL
+      INNER JOIN Book AS b ON b.id = oi.bookId
+      WHERE u.id = ?
+      `,
+      [userId],
+    );
+
+    return rows as any[] as Book[];
+  }
+
   public async updateBookById(option: string, value: any[], id: number) {
     await this.connection.query(`UPDATE Book SET ${option} WHERE id = ?`, [
       ...value,

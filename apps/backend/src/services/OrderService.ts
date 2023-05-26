@@ -77,7 +77,7 @@ export class OrderService {
         } else {
           clearInterval(timeOutInterval);
         }
-      }, 2 * 60 * 1000);
+      }, 2 * 24 * 60 * 60 * 1000);
     } else {
       await this.orderItemRepository.updateOrderItemById(
         orderId,
@@ -190,6 +190,15 @@ export class OrderService {
   }
 
   public async returnItemById(orderId: number, bookId: number) {
+    const orderItem = await this.orderItemRepository.getOrderItemById(
+      orderId,
+      bookId,
+    );
+
+    if (orderItem.receivedDate === null) {
+      throw new BadRequestException("You didn't ever receive this book");
+    }
+
     await this.orderItemRepository.updateOrderItemById(
       orderId,
       bookId,

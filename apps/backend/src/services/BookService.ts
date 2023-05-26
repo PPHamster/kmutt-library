@@ -9,7 +9,7 @@ import {
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { ImageService } from '@/services/ImageService';
 import { OrderItemRepository } from '@/repositories/OrderItemRepository';
-import { BookWithCategories } from 'api-schema';
+import { BookWithCategories, BookWithCount } from 'api-schema';
 
 @Injectable()
 export class BookService {
@@ -157,6 +157,25 @@ export class BookService {
     return booksEverBorrowed.filter((book) =>
       booksCreatedBlog.every((b) => b.id !== book.id),
     );
+  }
+
+  public async getAllBookInteractByUserId(
+    userId: string,
+  ): Promise<BookWithCount[]> {
+    const books = await this.bookRepository.getAllBookInteractByUserId(userId);
+    const booksWithCount: BookWithCount[] = [];
+
+    for (const book of books) {
+      const orderItems =
+        await this.orderItemRepository.getAllItemInQueueByBookId(book.id);
+
+      booksWithCount.push({
+        ...book,
+        count: orderItems.length,
+      });
+    }
+
+    return booksWithCount;
   }
 
   public async updateBookById(id: number, data: BookUpdateDto) {

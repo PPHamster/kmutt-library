@@ -52,6 +52,20 @@ export type BookWithCategories = {
   categories: Category[],
 }
 
+export type BookWithCount = {
+  id: number,
+  title: string,
+  author: string,
+  description: string,
+  isbn: string,
+  publisher: string,
+  publishDate: Date,
+  language: string,
+  image: string,
+  location: string,
+  count: number,
+}
+
 export type Blog = {
   id: number,
   article: string,
