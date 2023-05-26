@@ -11,8 +11,23 @@ import FormControl from '@mui/material/FormControl';
 import NavbarStatic from "@/components/NavbarStatic";
 import dayjs from 'dayjs';
 import 'dayjs/locale/en';
+import Autocomplete from '@mui/material/Autocomplete';
+import TextField from '@mui/material/TextField';
+import Box from '@mui/material/Box';
 import { useEffect } from 'react';
 
+const data = [
+  { id: 69070501001, firstname: 'Haahahahahahaaa', lastname: 'Mairuruururururuur', email: 'john@example.com', tel: '1234567890', role: 'User', branch: 'COMPUTER ENGINEERING', registYear: 2020, blacklist: false },
+  { id: 69070501002, firstname: 'John', lastname: 'Doe', email: 'johnnathanlnwza007@example.com', tel: '1234567890', role: 'Admin', branch: 'Branch A', registYear: 2020, blacklist: false },
+  { id: 69070501003, firstname: 'John', lastname: 'Doe', email: 'john@example.com', tel: '1234567890', role: 'User', branch: 'Branch A', registYear: 2020, blacklist: false },
+  { id: 69070501004, firstname: 'John', lastname: 'Doe', email: 'john@example.com', tel: '1234567890', role: 'User', branch: 'Branch A', registYear: 2020, blacklist: false },
+  { id: 69070501005, firstname: 'John', lastname: 'Doe', email: 'john@example.com', tel: '1234567890', role: 'User', branch: 'Branch A', registYear: 2020, blacklist: false },
+  { id: 69070501006, firstname: 'John', lastname: 'Doe', email: 'john@example.com', tel: '1234567890', role: 'User', branch: 'Branch A', registYear: 2020, blacklist: false },
+  { id: 69070501007, firstname: 'John', lastname: 'Doe', email: 'john@example.com', tel: '1234567890', role: 'User', branch: 'Branch A', registYear: 2020, blacklist: false },
+  { id: 69070501008, firstname: 'John', lastname: 'Doe', email: 'john@example.com', tel: '1234567890', role: 'User', branch: 'Branch A', registYear: 2020, blacklist: false },
+  { id: 69070501009, firstname: 'John', lastname: 'Doe', email: 'john@example.com', tel: '1234567890', role: 'User', branch: 'Branch A', registYear: 2020, blacklist: false },
+  { id: 69070501010, firstname: 'John', lastname: 'Doe', email: 'john@example.com', tel: '1234567890', role: 'Admin', branch: 'Branch A', registYear: 2020, blacklist: false },
+];
 
 export default function RoomService() {
   const { roomid } = useParams();
@@ -29,6 +44,7 @@ export default function RoomService() {
 
   const [selectedTime, setSelectedTime] = useState("8:00 - 10:00");
   const [timePeriodSelected, setTimePeriodSelected] = useState(0);
+  const [user, setUser] = useState([]);
 
   const handleChange = (event) => {
     setSelectedTime(event.target.value);
@@ -109,7 +125,7 @@ export default function RoomService() {
             </div>
           </div>
         </div>
-        <div className="ml-[120px] mt-[50px]">
+        <div className="ml-[120px] mt-[50px] mb-[200px]">
           <p className="font-kanit text-3xl text-blue-700 font-medium ml-[40px] mb-8">การจอง</p>
           <div className="flex flex-row">
             <div className="w-[370px] py-9 bg-white rounded-md drop-shadow-md mb-10">
@@ -144,7 +160,41 @@ export default function RoomService() {
                   </RadioGroup>
                 </FormControl>
               </div>
+              <p className='font-kanit text-2xl text-blue-700 font-light mb-2 mt-4'>ผู้เข้าใช้งาน</p>
+              <div className="ml-6">
+                <Box
+                  component="form"
+                  sx={{ '& .MuiTextField-root': { m: 1, width: '50ch' }, }}
+                  noValidate
+                  autoComplete="off"
+                >
+                  <Autocomplete
+                    multiple
+                    options={data}
+                    getOptionLabel={(option) => `${option.id}, ${option.firstname}`}
+                    filterSelectedOptions
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        label="User"
+                        placeholder="ระบุผู้ใช้งานทั้งหมด"
+                      />
+                    )}
+                    onChange={(event, value) => {
+                      setUser(value)
+                    }}
+                  />
+                </Box>
+              </div>
               <div className="mt-8 ml-1 font-kanit text-md">| {selectedDate.format("YYYY-MM-DD")} เวลา {selectedTime}</div>
+              <div className=" ml-1 font-kanit text-md">
+              <p className='mb-2'>| ผู้เข้าใช้งาน</p>
+                <ul className="ml-6">
+                  {user.map((data, index) => (
+                    <li key={index}> {data.firstname.trim()} {data.lastname.trim()} {data.branch.trim()}</li>
+                  ))}
+                </ul>
+              </div>
               <button
                 className="w-[110px] h-[30px] rounded-full bg-white border-2 hover:bg-gray-200 font-regular font-poppins text-[#696969] text-md mt-[22px] ease-out duration-300"
                 onClick={handleOnClick}

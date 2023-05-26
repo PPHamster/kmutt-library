@@ -13,6 +13,10 @@ import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
 import { Link, useNavigate } from "react-router-dom";
 import { fetch } from '@/utils/Fetch';
 import { popup } from '@/utils/Popup';
@@ -275,12 +279,21 @@ function Newbook() {
                       setSelectedCategory(value)
                     }}
                   />
-                  <TextField
+                  <FormControl sx={{ m: 1, minWidth: 430 }}>
+                  <InputLabel id='Lebel'>ภาษา</InputLabel>
+                  <Select
+                  labelId="Label"
+                    value={language}
                     label="ภาษา"
                     onChange={handleLanguageChange}
-                    multiline
-                    maxRows={1}
-                  />
+                  >
+                    <MenuItem value={'Thai'}>Thai</MenuItem>
+                    <MenuItem value={'English'}>English</MenuItem>
+                    <MenuItem value={'Japanese'}>Japanese</MenuItem>
+                    <MenuItem value={'Chinese'}>Chinese</MenuItem>
+                    <MenuItem value={'Korean'}>Korean</MenuItem>
+                  </Select>
+                  </FormControl>
                   <TextField
                     required
                     label="รหัสบาร์โค้ด"
