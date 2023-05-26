@@ -14,6 +14,10 @@ import { fetch } from '@/utils/Fetch';
 import { popup } from '@/utils/Popup';
 import { WithUser } from '@/components/Hoc/WithUser';
 import Button from '@mui/material/Button';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
 
 const roles = [
   { id: 1, name: 'User' }, { id: 2, name: 'Staff' }, { id: 3, name: 'Admin' }
@@ -39,7 +43,7 @@ function EditAcc() {
   const [year, setYear] = useState("");
   const [branch, setBranch] = useState(null);
   const [role, setRole] = useState(null);
-  const [blacklist, setBlacklist] = useState("")
+  const [blacklist, setBlacklist] = useState(1)//ใส่ defaultValue ตรงนี้
 
   const handleIdChange = (event) => {
     setId(event.target.value);
@@ -68,6 +72,10 @@ function EditAcc() {
   const handleYearChange = (event) => {
     setYear(event.target.value);
   };
+
+  const handleBlacklistChange = (event) => {
+    setBlacklist(event.target.value);
+  }
 
   //add
   const [open, toggleOpen] = useState(false);
@@ -124,6 +132,7 @@ function EditAcc() {
       branch,
       role,
       imageData,
+      blacklist,
     );
 
   }
@@ -161,7 +170,7 @@ function EditAcc() {
                     multiline
                     maxRows={2}
                     onChange={handleFNameChange}
-                    // defaultValue={}
+                  // defaultValue={}
                   />
                   <TextField
                     required
@@ -176,29 +185,41 @@ function EditAcc() {
                     autoComplete="email"
                     autoFocus
                     onChange={handleEmailChange}
-                    // defaultValue={}
+                  // defaultValue={}
                   />
                   <TextField
                     required
                     label="รหัสผ่าน"
                     type="password"
                     autoComplete="current-password"
-                    onChange={handleEmailChange}
-                    // defaultValue={}
+                    onChange={handlePasswordChange}
+                  // defaultValue={}
                   />
                   <TextField
                     label="เบอร์โทรศัพท์"
                     type="tel"
                     maxRows={1}
                     onChange={handleTelChange}
-                    // defaultValue={}
+                  // defaultValue={}
                   />
+                  <FormControl sx={{ m: 1, minWidth: 120 }}>
+                  <InputLabel id='blacklistLebel'>Blacklist</InputLabel>
+                  <Select
+                  labelId="blacklistLabel"
+                    value={blacklist}
+                    label="Blacklist"
+                    onChange={handleBlacklistChange}
+                  >
+                    <MenuItem value={0}>False</MenuItem>
+                    <MenuItem value={1}>True</MenuItem>
+                  </Select>
+                  </FormControl>
                   <TextField
                     label="ปีเข้าศึกษา"
                     type="text"
                     maxRows={1}
                     onChange={handleYearChange}
-                    // defaultValue={}
+                  // defaultValue={}
                   />
                   <div className="absolute mt-[1.5%] ml-[44%]">
                     <Button onClick={() => toggleOpen(true)}>
@@ -247,7 +268,7 @@ function EditAcc() {
                     onChange={(event, value) => {
                       setBranch(value)
                     }}
-                    // defaultValue={}
+                  // defaultValue={}
                   />
                   <Autocomplete
                     onChange={(event, newValue) => {
@@ -257,11 +278,11 @@ function EditAcc() {
                     getOptionLabel={(option) => option.name}
                     filterSelectedOptions
                     renderInput={(params) => <TextField {...params} label='Role' />}
-                    // defaultValue={}
+                  // defaultValue={}
                   />
                 </div>
                 <div className="my-[3vh] ml-[11.5vh]">
-                <h2 className=' font-normal font-kanit text-orange-600 text-sm text-left mb-2'>หากไม่ต้องการเปลี่ยนรูป ไม่ต้อง Upload รูปใด ๆ</h2>
+                  <h2 className=' font-normal font-kanit text-orange-600 text-sm text-left mb-2'>หากไม่ต้องการเปลี่ยนรูป ไม่ต้อง Upload รูปใด ๆ</h2>
                   <input type="file"
                     className=" file:rounded-full file:bg-white
                               file:hover:bg-gray-200 file:font-normal 
