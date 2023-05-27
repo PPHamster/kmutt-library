@@ -21,6 +21,13 @@ export class CartItemService {
       throw new BadRequestException("Can't add more item");
     }
 
+    const booksCanNotAdd =
+      await this.cartItemRepository.getItemCanNotAddCartByUserId(userId);
+
+    if (booksCanNotAdd.some((book) => book.id === bookId)) {
+      throw new BadRequestException('You have this book in order now');
+    }
+
     try {
       await this.cartItemRepository.createCartItem(userId, bookId);
     } catch (error) {
