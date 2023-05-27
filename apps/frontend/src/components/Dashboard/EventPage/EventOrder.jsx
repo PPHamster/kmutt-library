@@ -20,6 +20,9 @@ import { mainListItems } from '../listItems';
 import Eventchart from './EventChart';
 import Allevent from './AllEvent';
 import Events from './Events';
+import { WithUser } from '@/components/Hoc/WithUser';
+import { useAuth } from '@/contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 const drawerWidth = 240;
 
@@ -70,11 +73,18 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 // TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
 
-export default function EventOrder() {
+export default WithUser(function EventOrder() {
   const [open, setOpen] = React.useState(true);
   const toggleDrawer = () => {
     setOpen(!open);
   };
+
+  const { user } = useAuth();
+  const navigate = useNavigate();
+
+  React.useEffect(() => {
+    if (user.role !== 'Admin') navigate('/');
+  }, []);
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -109,7 +119,7 @@ export default function EventOrder() {
             </Typography>
             <Link to='/'>
               <IconButton>
-                  <KeyboardBackspaceIcon/>
+                <KeyboardBackspaceIcon />
               </IconButton>
             </Link>
           </Toolbar>
@@ -185,4 +195,4 @@ export default function EventOrder() {
       </Box>
     </ThemeProvider>
   );
-}
+})

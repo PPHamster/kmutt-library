@@ -13,6 +13,7 @@ import { EventModule } from '@/modules/EventModule';
 import { EventCategoryModule } from '@/modules/EventCategoryModule';
 import { RoomModule } from '@/modules/RoomModule';
 import { TimePeriodModule } from '@/modules/TimePeriodModule';
+import { DashboardModule } from '@/modules/DashboardModule';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { TimePeriodModule } from '@/modules/TimePeriodModule';
     EventCategoryModule,
     RoomModule,
     TimePeriodModule,
+    DashboardModule,
   ],
 })
 export class AppModule {}

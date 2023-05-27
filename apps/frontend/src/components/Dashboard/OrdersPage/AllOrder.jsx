@@ -2,17 +2,7 @@ import * as React from 'react';
 import Link from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
 import Title from '@/components/Dashboard/Title';
-
-const data = [
-  {
-    id: 1,
-    date: '2023-04-11',
-    name:'jone del',
-    isReturned: 1,
-    OrderId: 123,
-    Amount: 1,
-  }
-]
+import { fetch } from '@/utils/Fetch';
 
 function preventDefault(event) {
   event.preventDefault();
@@ -20,6 +10,18 @@ function preventDefault(event) {
 
 
 export default function Allorder() {
+
+  const [data, setData] = React.useState([]);
+
+  React.useEffect(() => {
+    const fetchData = async () => {
+      const response = await fetch.get('/dashboard/orders');
+      setData(response.data);
+    }
+
+    fetchData();
+  }, []);
+
   return (
     <React.Fragment>
       <Title>Recent Orders</Title>
@@ -27,7 +29,7 @@ export default function Allorder() {
         {data.length + " orders"}
       </Typography>
       <Typography color="text.secondary" sx={{ flex: 1 }}>
-        on {new Date().toISOString().split('T')[0]}
+        on {new Date().toLocaleDateString({ timeZone: 'Asia/Bangkok' })}
       </Typography>
     </React.Fragment>
   );

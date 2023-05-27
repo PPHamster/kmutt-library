@@ -42,7 +42,24 @@ export class CartItemService {
   }
 
   public async getAllCartItemWithInfoByUserId(userId: string) {
-    return this.cartItemRepository.getAllCartItemWithInfoByUserId(userId);
+    const books = await this.cartItemRepository.getAllCartItemWithInfoByUserId(
+      userId,
+    );
+
+    const booksWithReady = [];
+
+    for (const book of books) {
+      const isBorrow = await this.orderItemRepository.getBorrowedItemByBookId(
+        book.id,
+      );
+
+      booksWithReady.push({
+        ...book,
+        isReady: isBorrow ? 0 : 1,
+      });
+    }
+
+    return booksWithReady;
   }
 
   public async deleteCartItemById(userId: string, bookId: number) {

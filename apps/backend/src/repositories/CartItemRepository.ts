@@ -26,9 +26,8 @@ export class CartItemRepository {
   public async getAllCartItemWithInfoByUserId(userId: string): Promise<Book[]> {
     const [rows] = await this.connection.query(
       `
-      SELECT b.*, IF(oi.receivedDate IS NOT NULL, 0, 1) AS isReady FROM CartItem AS ci
-      LEFT JOIN Book AS b ON ci.bookId = b.id
-      LEFT JOIN OrderItem AS oi ON b.id = oi.bookId AND oi.returnedDate IS NULL
+      SELECT b.* FROM CartItem AS ci
+      INNER JOIN Book AS b ON ci.bookId = b.id
       WHERE userId = ?
       `,
       [userId],

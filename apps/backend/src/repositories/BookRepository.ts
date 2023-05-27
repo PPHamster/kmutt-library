@@ -32,8 +32,7 @@ export class BookRepository {
   public async getAllBook(): Promise<Book[]> {
     const [rows] = await this.connection.query(
       `
-      SELECT b.*, IF(oi.receivedDate IS NOT NULL, 0, 1) AS isReady FROM Book AS b
-      LEFT JOIN OrderItem AS oi ON b.id = oi.bookId AND oi.returnedDate IS NULL
+      SELECT * FROM Book
       `,
     );
     return rows as any[] as Book[];
@@ -42,9 +41,7 @@ export class BookRepository {
   public async getBookById(id: number): Promise<Book> {
     const [rows] = await this.connection.query(
       `
-      SELECT b.*, IF(oi.receivedDate IS NOT NULL, 0, 1) AS isReady FROM Book AS b
-      LEFT JOIN OrderItem AS oi ON b.id = oi.bookId AND oi.returnedDate IS NULL
-      WHERE id = ?
+      SELECT * FROM Book WHERE id = ?
       `,
       [id],
     );
@@ -114,14 +111,11 @@ export class BookRepository {
   public async getRecommendBooks(count: number): Promise<Book[]> {
     const [rows] = await this.connection.query(
       `
-      SELECT b.*, IF(oi.receivedDate IS NOT NULL, 0, 1) AS isReady FROM (
       SELECT b.* FROM Book AS b
       INNER JOIN OrderItem AS oi ON b.id = oi.bookId
       GROUP BY b.id
       ORDER BY COUNT(*) DESC
       LIMIT ?
-      ) AS b
-      LEFT JOIN OrderItem AS oi ON b.id = oi.bookId AND oi.returnedDate IS NULL
       `,
       [count],
     );

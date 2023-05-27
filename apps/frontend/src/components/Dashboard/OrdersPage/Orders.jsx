@@ -6,18 +6,7 @@ import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Title from '@/components/Dashboard/Title';
-
-// Generate Order Data
-  const data = [
-    {
-      id: 1,
-      date: '2023-04-11',
-      name:'jone del',
-      isReturned: 1,
-      OrderId: 123,
-      Amount: 1,
-    }
-  ]
+import { fetch } from '@/utils/Fetch';
 
 
 function preventDefault(event) {
@@ -25,27 +14,38 @@ function preventDefault(event) {
 }
 
 export default function Orders() {
+  const [data, setData] = React.useState([]);
+
+  React.useEffect(() => {
+    const fetchData = async () => {
+      const response = await fetch.get(`/dashboard/orders/latest?count=${7}`);
+      setData(response.data);
+    }
+
+    fetchData();
+  }, []);
+
   return (
     <React.Fragment>
       <Title>Recent Orders</Title>
       <Table size="small">
         <TableHead>
           <TableRow>
-            <TableCell>Date</TableCell>
-            <TableCell>Name</TableCell>
-            <TableCell>Returned</TableCell>
             <TableCell>Order Id</TableCell>
+            <TableCell>Date</TableCell>
+            <TableCell>User Id</TableCell>
+            <TableCell>Name</TableCell>
             <TableCell align="right">Book Amount (เล่ม)</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {data.map((row) => (
             <TableRow key={row.id}>
-              <TableCell>{row.date}</TableCell>
-              <TableCell>{row.name}</TableCell>
-              <TableCell>{row.isReturned == 1 ? 'yes' : 'no'}</TableCell>
-              <TableCell>{row.OrderId}</TableCell>
-              <TableCell align="right">{row.Amount}</TableCell>
+              <TableCell>{row.id}</TableCell>
+              <TableCell>{new Date(row.createdAt).toLocaleDateString({ timeZone: 'Asia/Bangkok' })}</TableCell>
+              <TableCell>{row.userId}</TableCell>
+              <TableCell>{row.firstname + ' ' + row.lastname}</TableCell>
+              <TableCell align="right">{row.count}</TableCell>
             </TableRow>
           ))}
         </TableBody>

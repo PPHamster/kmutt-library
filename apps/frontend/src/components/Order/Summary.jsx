@@ -15,7 +15,7 @@ export default function OrderSummary({ cartItem, user }) {
       <List disablePadding>
         {cartItem.map((product) => (
           <ListItem key={product.title} sx={{ py: 1, px: 0 }}>
-            <ListItemText primary={product.title} secondary={product.description} />
+            <ListItemText primary={product.title} secondary={product.author} />
             {
               product.isReady ?
                 <Typography variant="body2" sx={{ color: 'green' }}> ready </Typography>

@@ -10,38 +10,49 @@ import EventIcon from '@mui/icons-material/Event';
 import LayersIcon from '@mui/icons-material/Layers';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
+import { Link } from 'react-router-dom';
 
 export const mainListItems = (
   <React.Fragment>
-    <ListItemButton to='/admin/dashboard'>
-      <ListItemIcon>
-        <DashboardIcon />
-      </ListItemIcon>
-      <ListItemText primary="Dashboard" />
-    </ListItemButton>
-    <ListItemButton to='/admin/dashboard/book'>
-      <ListItemIcon>
-        <LibraryBooksIcon />
-      </ListItemIcon>
-      <ListItemText primary="Books" />
-    </ListItemButton>
-    <ListItemButton to='/admin/dashboard/blog'>
-      <ListItemIcon>
-        <ArticleIcon />
-      </ListItemIcon>
-      <ListItemText primary="Blog" />
-    </ListItemButton>
-    <ListItemButton to='/admin/dashboard/event'>
-      <ListItemIcon>
-        <EventIcon />
-      </ListItemIcon>
-      <ListItemText primary="Event" />
-    </ListItemButton>
-    <ListItemButton to='/admin/dashboard/room'>
-      <ListItemIcon>
-        <SchoolIcon />
-      </ListItemIcon>
-      <ListItemText primary="Room" />
-    </ListItemButton>
+    <Link to='/admin/dashboard/order'>
+      <ListItemButton>
+        <ListItemIcon>
+          <DashboardIcon />
+        </ListItemIcon>
+        <ListItemText primary="Order" />
+      </ListItemButton>
+    </Link>
+    <Link to='/admin/dashboard/book'>
+      <ListItemButton>
+        <ListItemIcon>
+          <LibraryBooksIcon />
+        </ListItemIcon>
+        <ListItemText primary="Book" />
+      </ListItemButton>
+    </Link>
+    <Link to='/admin/dashboard/blog'>
+      <ListItemButton>
+        <ListItemIcon>
+          <ArticleIcon />
+        </ListItemIcon>
+        <ListItemText primary="Blog" />
+      </ListItemButton>
+    </Link>
+    <Link to='/admin/dashboard/event'>
+      <ListItemButton>
+        <ListItemIcon>
+          <EventIcon />
+        </ListItemIcon>
+        <ListItemText primary="Event" />
+      </ListItemButton>
+    </Link>
+    <Link to='/admin/dashboard/room'>
+      <ListItemButton>
+        <ListItemIcon>
+          <SchoolIcon />
+        </ListItemIcon>
+        <ListItemText primary="Room" />
+      </ListItemButton>
+    </Link>
   </React.Fragment>
 );

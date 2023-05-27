@@ -49,6 +49,7 @@ export type BookWithCategories = {
   language: string,
   image: string,
   location: string,
+  isReady: number,
   categories: Category[],
 }
 

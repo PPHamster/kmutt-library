@@ -20,6 +20,9 @@ import { mainListItems } from '../listItems';
 import Chart from './Chart';
 import Allorder from './AllOrder';
 import Orders from './Orders';
+import { WithUser } from '@/components/Hoc/WithUser';
+import { useAuth } from '@/contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 const drawerWidth = 240;
 
@@ -70,11 +73,18 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 // TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
 
-export default function Dashboard() {
+export default WithUser(function Dashboard() {
   const [open, setOpen] = React.useState(true);
   const toggleDrawer = () => {
     setOpen(!open);
   };
+
+  const { user } = useAuth();
+  const navigate = useNavigate();
+
+  React.useEffect(() => {
+    if (user.role !== 'Admin') navigate('/');
+  }, []);
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -105,7 +115,7 @@ export default function Dashboard() {
               noWrap
               sx={{ flexGrow: 1 }}
             >
-              Dashboard
+              Order
             </Typography>
             <Link to='/'>
               <IconButton>
@@ -185,4 +195,4 @@ export default function Dashboard() {
       </Box>
     </ThemeProvider>
   );
-}
+})

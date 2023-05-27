@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import MuiDrawer from '@mui/material/Drawer';
@@ -19,6 +19,8 @@ import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import { mainListItems } from '../listItems';
 import Chartbook from './ChartBook';
 import Books from './Books';
+import { WithUser } from '@/components/Hoc/WithUser';
+import { useAuth } from '@/contexts/AuthContext';
 
 const drawerWidth = 240;
 
@@ -69,11 +71,18 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 // TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
 
-export default function BookOrder() {
+export default WithUser(function BookOrder() {
   const [open, setOpen] = React.useState(true);
   const toggleDrawer = () => {
     setOpen(!open);
   };
+
+  const { user } = useAuth();
+  const navigate = useNavigate();
+
+  React.useEffect(() => {
+    if (user.role !== 'Admin') navigate('/');
+  }, []);
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -108,7 +117,7 @@ export default function BookOrder() {
             </Typography>
             <Link to='/'>
               <IconButton>
-                  <KeyboardBackspaceIcon/>
+                <KeyboardBackspaceIcon />
               </IconButton>
             </Link>
           </Toolbar>
@@ -171,4 +180,4 @@ export default function BookOrder() {
       </Box>
     </ThemeProvider>
   );
-}
+})

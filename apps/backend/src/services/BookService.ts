@@ -91,8 +91,13 @@ export class BookService {
         book.id,
       );
 
+      const isBorrow = await this.orderItemRepository.getBorrowedItemByBookId(
+        book.id,
+      );
+
       booksWithCategory.push({
         ...book,
+        isReady: isBorrow ? 0 : 1,
         categories,
       });
     }
@@ -111,8 +116,13 @@ export class BookService {
 
     const categories = await this.categoryRepository.getAllCategoryByBookId(id);
 
+    const isBorrow = await this.orderItemRepository.getBorrowedItemByBookId(
+      book.id,
+    );
+
     const bookWithCategories = {
       ...book,
+      isReady: isBorrow ? 0 : 1,
       categories,
     };
 
@@ -131,8 +141,13 @@ export class BookService {
         book.id,
       );
 
+      const isBorrow = await this.orderItemRepository.getBorrowedItemByBookId(
+        book.id,
+      );
+
       booksWithCategory.push({
         ...book,
+        isReady: isBorrow ? 0 : 1,
         categories,
       });
     }

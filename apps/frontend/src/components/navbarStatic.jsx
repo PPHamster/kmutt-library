@@ -63,6 +63,11 @@ export default function NavbarStatic(props) {
                     <p className={textClass}>Admin</p>
                   </Link>
                 </li>
+                <li className={listClass}>
+                  <Link to='/admin/dashboard/order'>
+                    <p className={textClass}>Dashboard</p>
+                  </Link>
+                </li>
               </>
               : user && user.role === 'Staff' ?
                 <li className={listClass}>
