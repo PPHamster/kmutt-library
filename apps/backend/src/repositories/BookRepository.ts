@@ -1,6 +1,6 @@
 import { BookCreateDto, BookUpdateImageDto } from '@/utils/dtos/BookDto';
 import { Inject, Injectable } from '@nestjs/common';
-import { Book } from 'api-schema';
+import { Book, BookWithCount } from 'api-schema';
 import { Connection } from 'mysql2/promise';
 @Injectable()
 export class BookRepository {
@@ -123,7 +123,9 @@ export class BookRepository {
     return rows as any[] as Book[];
   }
 
-  public async getAllBookInteractByUserId(userId: string): Promise<Book[]> {
+  public async getAllBookInteractByUserId(
+    userId: string,
+  ): Promise<BookWithCount[]> {
     const [rows] = await this.connection.query(
       `
       SELECT b.*, o.id AS orderId FROM User AS u
@@ -135,7 +137,7 @@ export class BookRepository {
       [userId],
     );
 
-    return rows as any[] as Book[];
+    return rows as any[] as BookWithCount[];
   }
 
   public async updateBookById(option: string, value: any[], id: number) {

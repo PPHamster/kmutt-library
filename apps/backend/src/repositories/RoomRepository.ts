@@ -1,6 +1,6 @@
 import { RoomCreateDto, RoomUpdateImageDto } from '@/utils/dtos/RoomDto';
 import { Inject, Injectable } from '@nestjs/common';
-import { Room } from 'api-schema';
+import { Room, RoomUserBooking } from 'api-schema';
 import { Connection } from 'mysql2/promise';
 
 @Injectable()
@@ -52,6 +52,25 @@ export class RoomRepository {
     );
 
     return rows[0];
+  }
+
+  public async getRoomBookingByUserId(
+    userId: string,
+  ): Promise<RoomUserBooking[]> {
+    const [rows] = await this.connection.query(
+      `
+      SELECT r.*, br.date, tp.id AS timePeriodId, tp.beginTime,
+      tp.endTime, br.id AS bookingRoomId FROM BookingMember AS bm
+      INNER JOIN BookingRoom AS br ON br.id = bm.bookingRoomId AND bm.userId = ?
+      INNER JOIN RoomTimePeriod AS rtp ON rtp.id = br.roomTimePeriodId
+      INNER JOIN Room AS r ON r.id = rtp.roomId
+      INNER JOIN TimePeriod AS tp ON tp.id = rtp.timePeriodId
+      WHERE DATE(br.date) >= DATE(CURRENT_TIMESTAMP)
+      `,
+      [userId],
+    );
+
+    return rows as any[] as RoomUserBooking[];
   }
 
   public async updateRoomById(option: string, value: any[], id: number) {

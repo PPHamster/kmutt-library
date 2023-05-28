@@ -50,34 +50,36 @@ export class OrderService {
 
       let notifyLeft = 7;
 
-      const timeOutInterval = setInterval(async () => {
-        if (await this.orderItemRepository.getBorrowedItemByBookId(bookId)) {
-          notifyLeft -= 2;
-          if (notifyLeft === 1) {
+      try {
+        const timeOutInterval = setInterval(async () => {
+          if (await this.orderItemRepository.getBorrowedItemByBookId(bookId)) {
+            notifyLeft -= 2;
+            if (notifyLeft === 1) {
+              clearInterval(timeOutInterval);
+            }
+            await this.mailService.sendEmail({
+              subject: `There are ${notifyLeft} more days left for ${detail.title}.`,
+              text: `You must return this book within ${notifyLeft} days or you will be charged a fine of 5 baht per day.`,
+              to: detail.email,
+              attachments: [
+                {
+                  filename: `${detail.title}.png`,
+                  path: detail.image,
+                },
+              ],
+            });
+
+            await this.orderItemRepository.updateOrderItemById(
+              orderId,
+              bookId,
+              'latestNotify = ?',
+              [new Date()],
+            );
+          } else {
             clearInterval(timeOutInterval);
           }
-          await this.mailService.sendEmail({
-            subject: `There are ${notifyLeft} more days left for ${detail.title}.`,
-            text: `You must return this book within ${notifyLeft} days or you will be charged a fine of 5 baht per day.`,
-            to: detail.email,
-            attachments: [
-              {
-                filename: `${detail.title}.png`,
-                path: detail.image,
-              },
-            ],
-          });
-
-          await this.orderItemRepository.updateOrderItemById(
-            orderId,
-            bookId,
-            'latestNotify = ?',
-            [new Date()],
-          );
-        } else {
-          clearInterval(timeOutInterval);
-        }
-      }, 2 * 24 * 60 * 60 * 1000);
+        }, 2 * 24 * 60 * 60 * 1000);
+      } catch {}
     } else {
       await this.orderItemRepository.updateOrderItemById(
         orderId,

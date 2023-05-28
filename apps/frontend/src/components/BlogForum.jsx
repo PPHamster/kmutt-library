@@ -5,6 +5,7 @@ import Stack from '@mui/material/Stack';
 export default function BlogForum(props) {
 
   const createTime = new Date(props.blog.createdAt).toLocaleString("en-EN", { dateStyle: 'long' });
+  const updateTime = new Date(props.blog.updatedAt).toLocaleString("en-EN", { dateStyle: 'long' });
   return (
     <>
       <div className="w-[80vw] ml-[5vw] mt-[40px] min-h-[333px] max-h-[400px] bg-white rounded-md drop-shadow-md">
@@ -27,6 +28,7 @@ export default function BlogForum(props) {
             </button>
             <div className="flex flex-row mb-3">
               <p className="font-kanit font-extralight text-sm text-gray-400 ml-2">create at {createTime}</p>
+              <p className="font-kanit font-extralight text-sm text-gray-400 ml-2">update at {updateTime}</p>
               <p className="font-kanit font-extralight text-sm text-gray-400 ml-2">create by {props.blog.userId}</p>
             </div>
           </div>

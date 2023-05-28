@@ -1,7 +1,7 @@
 import { RoomService } from '@/services/RoomService';
+import { RequestUser } from '@/utils/decorators/AuthDecorator';
 import {
   BookingRoomCreateDto,
-  BookingRoomDeleteDto,
   RoomCreateDto,
   RoomUpdateDto,
   RoomUpdateImageDto,
@@ -22,6 +22,7 @@ import {
   Res,
   UseGuards,
 } from '@nestjs/common';
+import { User } from 'api-schema';
 import { Response } from 'express';
 
 @Controller('rooms')
@@ -67,6 +68,16 @@ export class RoomController {
   @Get()
   public async getAllRoom(@Res() res: Response) {
     const rooms = await this.roomService.getAllRoom();
+    return res.status(HttpStatus.OK).json(rooms);
+  }
+
+  @Get('interact')
+  @UseGuards(AuthGuard)
+  public async getRoomBookingByUserId(
+    @RequestUser() user: User,
+    @Res() res: Response,
+  ) {
+    const rooms = await this.roomService.getRoomBookingByUserId(user.id);
     return res.status(HttpStatus.OK).json(rooms);
   }
 
@@ -125,18 +136,17 @@ export class RoomController {
     });
   }
 
-  @Delete(':id/time-period/:timePeriodId/book')
+  @Delete(':id/book/:bookingRoomId')
   @UseGuards(AuthGuard, StaffGuard, RoomGuard)
   public async deleteBookingRoomById(
     @Param('id') roomId: number,
-    @Param('timePeriodId') timePeriodId: number,
-    @Body() body: BookingRoomDeleteDto,
+    @Param('bookingRoomId') bookingRoomId: number,
     @Res() res: Response,
   ) {
-    await this.roomService.deleteBookingRoomById(roomId, timePeriodId, body);
+    await this.roomService.deleteBookingRoomById(bookingRoomId);
 
     return res.status(HttpStatus.OK).json({
-      msg: `Delete time period id ${timePeriodId} from room id ${roomId} successfully`,
+      msg: `Delete room booking successfully`,
     });
   }
 }

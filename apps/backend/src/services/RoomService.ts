@@ -5,7 +5,6 @@ import { TimePeriodRepository } from '@/repositories/TimePeriodRepository';
 import { RoomWithTimePeriods } from 'api-schema';
 import {
   BookingRoomCreateDto,
-  BookingRoomDeleteDto,
   RoomCreateDto,
   RoomUpdateDto,
   RoomUpdateImageDto,
@@ -107,6 +106,23 @@ export class RoomService {
     timePeriodId: number,
     data: BookingRoomCreateDto,
   ) {
+    const today = new Date();
+    const timeNow = `${today.getHours()}:${today.getMinutes()}:${today.getSeconds()}`;
+
+    const dateBooking = new Date(data.date);
+
+    const timePeriod = await this.timePeriodRepository.getTimePeriodById(
+      timePeriodId,
+    );
+
+    if (
+      today.getDate() > dateBooking.getDate() ||
+      (today.getDate() === dateBooking.getDate() &&
+        timeNow > timePeriod.endTime)
+    ) {
+      throw new BadRequestException("Can't booking in past time");
+    }
+
     await this.bookingRoomRepository.createBookingRoom(
       roomId,
       timePeriodId,
@@ -205,6 +221,10 @@ export class RoomService {
     );
   }
 
+  public async getRoomBookingByUserId(userId: string) {
+    return this.roomRepository.getRoomBookingByUserId(userId);
+  }
+
   public async updateRoomById(id: number, data: RoomUpdateDto) {
     if (Object.keys(data).length === 0)
       throw new BadRequestException('No data that want to update');
@@ -254,18 +274,7 @@ export class RoomService {
     );
   }
 
-  public async deleteBookingRoomById(
-    roomId: number,
-    timePeriodId: number,
-    data: BookingRoomDeleteDto,
-  ) {
-    const bookingRoom =
-      await this.bookingRoomRepository.getBookingRoomByRoomAndTimePeriodId(
-        roomId,
-        timePeriodId,
-        this.toDateString(data.date),
-      );
-
-    await this.bookingRoomRepository.deleteBookingRoomById(bookingRoom.id);
+  public async deleteBookingRoomById(id: number) {
+    return this.bookingRoomRepository.deleteBookingRoomById(id);
   }
 }

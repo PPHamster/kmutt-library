@@ -212,7 +212,7 @@ export default function RoomService() {
               <p className='mb-2'>| ผู้เข้าใช้งาน</p>
                 <ul className="ml-6">
                   {user.map((data, index) => (
-                    <li key={index}> {data.firstname.trim()} {data.lastname.trim()} {data.branch.trim()} Year: {new Date().getFullYear() - data.registYear}</li>
+                    <li key={index}> {data.firstname.trim()} {data.lastname.trim()} {data.branch.trim()} Year: {new Date().getFullYear() - data.registYear + (new Date().getMonth() >= 7 ? 1 : 0)}</li>
                   ))}
                 </ul>
               </div>

@@ -64,6 +64,7 @@ export type BookWithCount = {
   language: string,
   image: string,
   location: string,
+  orderId: number,
   count: number,
 }
 
@@ -146,6 +147,7 @@ export type Room = {
   id: number,
   name: string,
   location: string,
+  status: string,
   image: string,
 }
 
@@ -154,7 +156,21 @@ export type RoomWithTimePeriods = {
   name: string,
   location: string,
   image: string,
+  status: string,
   timePeriods: TimePeriod[],
+}
+
+export type RoomUserBooking = {
+  id: number,
+  name: string,
+  location: string,
+  status: string,
+  image: string,
+  date: Date,
+  timePeriodId: number,
+  beginTime: string,
+  endTime: string,
+  bookingRoomId: number,
 }
 
 export type Role = {

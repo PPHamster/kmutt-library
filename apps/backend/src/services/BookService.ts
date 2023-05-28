@@ -186,7 +186,10 @@ export class BookService {
 
       booksWithCount.push({
         ...book,
-        count: orderItems.length,
+        count:
+          orderItems.findIndex((item) => {
+            return item.orderId === book.orderId;
+          }) + 1,
       });
     }
 

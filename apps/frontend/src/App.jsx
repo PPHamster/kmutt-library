@@ -64,8 +64,8 @@ export const App = () => {
             <Route path='/admin/dashboard/room' element={ <RoomOrder /> } />
             <Route path='/profile' element={<ProfilePage />} />
             <Route path='/order' element={<Checkout />} />
-            <Route path='*' element={<NotFound />} />
             <Route path='/blog/myblog' element={<Myblog />} />
+            <Route path='*' element={<NotFound />} />
           </Routes>
         </BrowserRouter>
       </CartProvider>
