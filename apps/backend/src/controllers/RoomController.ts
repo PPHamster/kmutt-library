@@ -137,7 +137,7 @@ export class RoomController {
   }
 
   @Delete(':id/book/:bookingRoomId')
-  @UseGuards(AuthGuard, StaffGuard, RoomGuard)
+  @UseGuards(AuthGuard, RoomGuard)
   public async deleteBookingRoomById(
     @Param('id') roomId: number,
     @Param('bookingRoomId') bookingRoomId: number,
