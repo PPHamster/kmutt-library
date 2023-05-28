@@ -6,29 +6,7 @@ import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Title from '@/components/Dashboard/Title';
-
-/*CREATE TABLE `Event` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(150) NOT NULL,
-  `location` TEXT NOT NULL,
-  `meetingTime` DATETIME NOT NULL,
-  `endTime` DATETIME NOT NULL,
-  `image` VARCHAR(150) NOT NULL,
-  `description` TEXT NOT NULL,
-  */
-// Generate Order Data
-  const data = [
-    {
-      id: 1,
-      name:'jone del',
-      location: '1st floor',
-      meetingTime: '19:00',
-      endTime: '20:00',
-      iamge: "",
-      description: "123",
-    }
-  ]
-
+import { fetch } from '@/utils/Fetch';
 
 function preventDefault(event) {
   event.preventDefault();
@@ -36,7 +14,17 @@ function preventDefault(event) {
 
 export default function Events() {
 
-  const eventdata = data.reverse();
+  const [data, setData] = React.useState([]);
+
+  React.useEffect(() => {
+    const fetchData = async () => {
+      const response = await fetch.get(`/dashboard/events/latest?count=${7}`)
+      setData(response.data);
+    }
+
+    fetchData();
+  }, []);
+
   return (
     <React.Fragment>
       <Title>Recent Events</Title>
@@ -44,17 +32,17 @@ export default function Events() {
         <TableHead>
           <TableRow>
             <TableCell>Name</TableCell>
-            <TableCell>StartTime</TableCell>
-            <TableCell>EndTime</TableCell>
+            <TableCell>Start Time</TableCell>
+            <TableCell>End Time</TableCell>
             <TableCell align="right">Location</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {eventdata.map((row) => (
+          {data.map((row) => (
             <TableRow key={row.id}>
               <TableCell>{row.name}</TableCell>
-              <TableCell>{row.meetingTime}</TableCell>
-              <TableCell>{row.endTime}</TableCell>
+              <TableCell>{row.meetingTime.split('T')[1].split('.')[0].slice(0, 5)}</TableCell>
+              <TableCell>{row.endTime.split('T')[1].split('.')[0].slice(0, 5)}</TableCell>
               <TableCell align="right">{row.location}</TableCell>
             </TableRow>
           ))}

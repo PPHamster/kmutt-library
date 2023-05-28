@@ -2,43 +2,28 @@ import * as React from 'react';
 import { useTheme } from '@mui/material/styles';
 import { BarChart, Bar, Tooltip, XAxis, Legend, YAxis, Label, ResponsiveContainer } from 'recharts';
 import Title from '@/components/Dashboard/Title';
-
-// Generate Sales Data
-const data = [
-  {
-    name: 'Chainsawman, vol. 1',
-    RoomCount: 20,
-  },
-  {
-    name: 'Chainsawman, vol. 2',
-    RoomCount: 12,
-  },
-  {
-    name: 'Chainsawman, vol. 3',
-    RoomCount: 23,
-  },
-  {
-    name: 'Chainsawman, vol. 4',
-    RoomCount: 45,
-  },
-  {
-    name: 'Chainsawman, vol. 5',
-    RoomCount: 34,
-  },
-];
-
-// get data 0 - 10
-const chartbook = data.slice(0, 10).sort(function(a, b) {return b.RoomCount - a.RoomCount});
+import { fetch } from '@/utils/Fetch';
 
 export default function Roomchart() {
   const theme = useTheme();
+
+  const [data, setData] = React.useState([]);
+
+  React.useEffect(() => {
+    const fetchData = async () => {
+      const response = await fetch.get(`/dashboard/rooms/${7}`)
+      setData(response.data);
+    }
+
+    fetchData();
+  }, []);
 
   return (
     <React.Fragment>
       <Title>Most discussing books</Title>
       <ResponsiveContainer>
         <BarChart
-          data={chartbook}
+          data={data}
           margin={{
             top: 16,
             right: 16,
@@ -69,7 +54,7 @@ export default function Roomchart() {
           </YAxis>
           <Tooltip />
           <Legend />
-          <Bar dataKey="RoomCount" fill="#8994d8" />
+          <Bar dataKey="count" fill="#8994d8" />
         </BarChart>
       </ResponsiveContainer>
     </React.Fragment>

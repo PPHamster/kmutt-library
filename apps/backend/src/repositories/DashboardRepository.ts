@@ -46,4 +46,102 @@ export class DashboardRepository {
 
     return rows;
   }
+
+  public async getBooksWithCount(count: number) {
+    const [rows] = await this.connection.query(
+      `
+      SELECT b.title, COUNT(*) AS \`count\` FROM Book AS b
+      INNER JOIN OrderItem AS oi ON b.id = oi.bookId
+      GROUP BY b.id
+      ORDER BY \`count\` DESC
+      LIMIT ?
+      `,
+      [count],
+    );
+
+    return rows;
+  }
+
+  public async getLatestBooks(count: number) {
+    const [rows] = await this.connection.query(
+      `
+      SELECT * FROM Book
+      ORDER BY id DESC
+      LIMIT ?
+      `,
+      [count],
+    );
+
+    return rows;
+  }
+
+  public async getAllBlogs() {
+    const [rows] = await this.connection.query('SELECT * FROM Blog');
+
+    return rows;
+  }
+
+  public async getBlogsWithCount(count: number) {
+    const [rows] = await this.connection.query(
+      `
+      SELECT b.title, COUNT(*) AS \`count\` FROM Blog AS bl
+      INNER JOIN Book AS b ON bl.bookId = b.id
+      GROUP BY b.id
+      ORDER BY \`count\` DESC
+      LIMIT ?
+      `,
+      [count],
+    );
+
+    return rows;
+  }
+
+  public async getAllEvent() {
+    const [rows] = await this.connection.query('SELECT * FROM Event');
+
+    return rows;
+  }
+
+  public async getLatestEvent(count: number) {
+    const [rows] = await this.connection.query(
+      `
+      SELECT * FROM Event
+      ORDER BY id DESC
+      LIMIT ?
+      `,
+      [count],
+    );
+
+    return rows;
+  }
+
+  public async getEventsWithCount(count: number) {
+    const [rows] = await this.connection.query(
+      `
+      SELECT e.name, COUNT(*) AS \`count\` FROM Event AS e
+      INNER JOIN EventMember AS em ON em.eventId = e.id
+      GROUP BY e.id
+      ORDER BY \`count\` DESC
+      LIMIT ?
+      `,
+      [count],
+    );
+
+    return rows;
+  }
+
+  public async getRoomsWithCount(count: number) {
+    const [rows] = await this.connection.query(
+      `
+      SELECT r.name, COUNT(*) AS \`count\` FROM Room AS r
+      INNER JOIN RoomTimePeriod AS rtp ON r.id = rtp.roomId
+      INNER JOIN BookingRoom AS br ON rtp.id = br.roomTimePeriodId
+      GROUP BY r.id
+      ORDER BY \`count\` DESC
+      `,
+      [count],
+    );
+
+    return rows;
+  }
 }
