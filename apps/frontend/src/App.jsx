@@ -29,6 +29,7 @@ import NewAcc from '@/components/Admin/NewAcc';
 import EditAcc from './components/Admin/EditAcc';
 import ProfilePage from '@/pages/ProfilePage';
 import NotFound from '@/pages/NotFoundPage';
+import Myblog from './components/Blog/Myblog';
 
 export const App = () => {
   return (
@@ -64,6 +65,7 @@ export const App = () => {
             <Route path='/profile' element={<ProfilePage />} />
             <Route path='/order' element={<Checkout />} />
             <Route path='*' element={<NotFound />} />
+            <Route path='/blog/myblog' element={<Myblog />} />
           </Routes>
         </BrowserRouter>
       </CartProvider>
