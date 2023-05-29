@@ -74,22 +74,46 @@ export class RoomService {
       );
     }
 
-    const roomTimePeriodValues: (string | number)[] = [];
-    const roomTimePeriodQuery = timePeriods
-      .map((timePeriod) => {
-        roomTimePeriodValues.push(
-          roomId,
-          timePeriod.beginTime,
-          timePeriod.endTime,
-        );
-        return `(?, (SELECT id FROM TimePeriod WHERE beginTime = ? AND endTime = ?))`;
-      })
-      .join(', ');
+    const timesThatRoomHave =
+      await this.timePeriodRepository.getAllTimePeriodByRoomId(roomId);
 
-    await this.timePeriodRepository.createManyRoomTimePeriod(
-      roomTimePeriodQuery,
-      roomTimePeriodValues,
-    );
+    const timesMustDelete = timesThatRoomHave.filter((timePeriod) => {
+      return !timePeriods.some(
+        (tp) =>
+          tp.beginTime === timePeriod.beginTime &&
+          tp.endTime === timePeriod.endTime,
+      );
+    });
+
+    for (const tp of timesMustDelete) {
+      await this.roomRepository.deleteTimePeriodFromRoomById(roomId, tp.id);
+    }
+
+    const timesMustAdd = timePeriods.filter((timePeriod) => {
+      return !timesThatRoomHave.some((tp) => {
+        tp.beginTime === timePeriod.beginTime &&
+          tp.endTime === timePeriod.endTime;
+      });
+    });
+
+    if (timesMustAdd.length > 0) {
+      const roomTimePeriodValues: (string | number)[] = [];
+      const roomTimePeriodQuery = timesMustAdd
+        .map((timePeriod) => {
+          roomTimePeriodValues.push(
+            roomId,
+            timePeriod.beginTime,
+            timePeriod.endTime,
+          );
+          return `(?, (SELECT id FROM TimePeriod WHERE beginTime = ? AND endTime = ?))`;
+        })
+        .join(', ');
+
+      await this.timePeriodRepository.createManyRoomTimePeriod(
+        roomTimePeriodQuery,
+        roomTimePeriodValues,
+      );
+    }
   }
 
   public async createRoom(data: RoomCreateDto) {
@@ -254,7 +278,6 @@ export class RoomService {
     await this.roomRepository.updateRoomById(updateQuery, values, id);
 
     if (data.timePeriods) {
-      await this.timePeriodRepository.deleteAllTimePeriodFromRoomById(id);
       await this.createAndAddTimePeriod(id, data.timePeriods);
     }
   }
