@@ -65,7 +65,10 @@ export class RoomRepository {
       INNER JOIN RoomTimePeriod AS rtp ON rtp.id = br.roomTimePeriodId
       INNER JOIN Room AS r ON r.id = rtp.roomId
       INNER JOIN TimePeriod AS tp ON tp.id = rtp.timePeriodId
-      WHERE DATE(br.date) >= DATE(CURRENT_TIMESTAMP)
+      WHERE DATE(br.date) > DATE(CURRENT_TIMESTAMP)
+      OR (DATE(br.date) = DATE(CURRENT_TIMESTAMP)
+      AND HOUR(tp.beginTime) > HOUR(CURRENT_TIMESTAMP))
+      ORDER BY br.date, tp.beginTime
       `,
       [userId],
     );

@@ -20,6 +20,17 @@ import { popup } from '@/utils/Popup';
 
 function ProfilePage() {
 
+  function isDateAfterOrEqual(day1, day2) {
+    return !(
+      day1.getFullYear() < day2.getFullYear() ||
+      (day1.getFullYear() === day2.getFullYear() &&
+        day1.getMonth() < day2.getMonth()) ||
+      (day1.getFullYear() === day2.getFullYear() &&
+        day1.getMonth() === day2.getMonth() &&
+        day1.getDate() < day2.getDate())
+    );
+  }
+
   const infoBook = 'max-h-[200px] max-w-[200px] rounded-lg object-scale-down mt-[20px]';
 
   const { user, logout, setDownload } = useAuth();
@@ -441,7 +452,7 @@ function ProfilePage() {
           </thead>
           <tbody className='h-[300px]'>
             {myrooms.map((room) => {
-              const meetingTime = new Date(room.date);
+              const meetingTime = new Date(new Date(room.date).toLocaleDateString({ timeZone: 'Asia/Bangkok' }));
 
               // format the date using the toLocaleString() method
               const DateRoom = meetingTime.toLocaleString("th-TH", {
@@ -457,9 +468,8 @@ function ProfilePage() {
               const today = new Date();
               const timeNow = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
 
-              return (today.getDate() < meetingTime.getDate() ||
-              (today.getDate() === meetingTime.getDate() &&
-                timeNow < room.beginTime)) ? (
+
+              return (
                 <tr key={room.id}>
                   <td className='border px-[10px] text-lg'>{room.name}</td>
                   <td className='border px-[10px] text-lg'>{room.location}</td>
@@ -471,7 +481,7 @@ function ProfilePage() {
                       onClick={() => { handleOpenRoom(room) }}>Cancel</button>
                   </td>
                 </tr>
-              ) : null
+              )
             })}
           </tbody>
         </table>
