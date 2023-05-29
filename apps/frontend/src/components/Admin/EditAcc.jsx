@@ -221,6 +221,13 @@ function EditAcc() {
   return (
     <>
       <div className='w-full h-full bg-gray-50'>
+        <div className='fixed pt-12 ml-[3%] z-50'>
+          <Link to={'/admin'}>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="absolute left-[3%] w-6 h-6 -translate-y-4 text-center">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+            </svg>
+          </Link>
+        </div>
         <NavbarAdmin
           bgcolor='bg-white hover:drop-shadow-md'
           textcolor='text-black'

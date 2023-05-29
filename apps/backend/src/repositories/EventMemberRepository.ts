@@ -40,7 +40,7 @@ export class EventMemberRepository {
       `
       SELECT u.id, u.email, u.tel, u.firstname, u.lastname, u.image,
       u.isBlacklist, u.registYear, r.name AS role, b.name AS branch FROM EventMember AS em
-      INNER JOIN User AS u ON em.userId = u.id
+      INNER JOIN User AS u ON em.userId = u.id AND !u.isBlacklist
       INNER JOIN Role AS r ON u.roleId = r.id
       INNER JOIN Branch AS b ON u.branchId = b.id
       WHERE em.eventId = ?

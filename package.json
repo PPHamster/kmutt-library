@@ -9,6 +9,8 @@
   ],
   "scripts": {
     "dev": "turbo run dev",
+    "build": "turbo run build",
+    "start": "turbo run start:prod",
     "dev:frontend": "yarn dev --filter=frontend",
     "dev:backend": "yarn dev --filter=backend",
     "db:generate": "npx ts-node packages/database"

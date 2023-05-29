@@ -20,7 +20,7 @@ export default function Roomchart() {
 
   return (
     <React.Fragment>
-      <Title>Most discussing books</Title>
+      <Title>Most frequently booked room</Title>
       <ResponsiveContainer>
         <BarChart
           data={data}
@@ -54,7 +54,7 @@ export default function Roomchart() {
           </YAxis>
           <Tooltip />
           <Legend />
-          <Bar dataKey="count" fill="#8994d8" />
+          <Bar dataKey="count" fill="#545B77" />
         </BarChart>
       </ResponsiveContainer>
     </React.Fragment>

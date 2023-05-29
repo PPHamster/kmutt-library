@@ -1,5 +1,7 @@
 import { AuthService } from '@/services/AuthService';
 import { UserCreateDto, UserLoginDto } from '@/utils/dtos/UserDto';
+import { AdminGuard } from '@/utils/guards/AdminGuard';
+import { AuthGuard } from '@/utils/guards/AuthGuard';
 import {
   Body,
   Controller,
@@ -8,6 +10,7 @@ import {
   Post,
   Req,
   Res,
+  UseGuards,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 
@@ -16,6 +19,7 @@ export class AuthController {
   public constructor(private readonly authService: AuthService) {}
 
   @Post('register')
+  @UseGuards(AuthGuard, AdminGuard)
   public async register(@Body() body: UserCreateDto, @Res() res: Response) {
     await this.authService.register(body);
     return res

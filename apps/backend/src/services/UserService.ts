@@ -37,6 +37,10 @@ export class UserService {
     if (Object.keys(data).length === 0)
       throw new BadRequestException('No data that want to update');
 
+    if (id === '00000000000') {
+      throw new BadRequestException("Can't edit king of admin");
+    }
+
     if (data.password) {
       data = { ...data, password: await bcrypt.hash(data.password, 12) };
     }
@@ -54,6 +58,10 @@ export class UserService {
 
   public async updateUserByIdFromAdmin(data: UserUpdateByAdminDto, id: string) {
     if (Object.keys(data).length === 0) throw new BadRequestException();
+
+    if (id === '00000000000') {
+      throw new BadRequestException("Can't edit king of admin");
+    }
 
     if (data.password) {
       data = { ...data, password: await bcrypt.hash(data.password, 12) };

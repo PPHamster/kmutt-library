@@ -5,6 +5,7 @@ import {
   Injectable,
   BadRequestException,
   UnauthorizedException,
+  ForbiddenException,
 } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
@@ -79,10 +80,18 @@ export class AuthService {
         data.id,
       );
 
+      if (user.isBlacklist) {
+        throw new ForbiddenException();
+      }
+
       return user;
     } catch (error) {
+      if (error instanceof ForbiddenException) {
+        throw new ForbiddenException("You're not allowed to access this.");
+      }
+
       if (error instanceof Error) {
-        throw new UnauthorizedException();
+        throw new UnauthorizedException('You must login first.');
       }
     }
   }

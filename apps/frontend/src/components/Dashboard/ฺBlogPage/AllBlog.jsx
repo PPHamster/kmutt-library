@@ -21,9 +21,9 @@ export default function Deposits() {
   }, []);
   return (
     <React.Fragment>
-      <Title>all blogs</Title>
+      <Title>All Blogs</Title>
       <Typography component="p" variant="h4">
-        {data.length + "  blogs"}
+        {data.length + "  Blogs"}
       </Typography>
       <Typography color="text.secondary" sx={{ flex: 1 }}>
         on {new Date().toLocaleDateString({ timeZone: 'Asia/Bangkok' })}

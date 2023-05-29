@@ -20,7 +20,7 @@ export default function Eventchart() {
 
   return (
     <React.Fragment>
-      <Title>Most discussing books</Title>
+      <Title>Most event that people attending</Title>
       <ResponsiveContainer>
         <BarChart
           data={data}
@@ -54,7 +54,7 @@ export default function Eventchart() {
           </YAxis>
           <Tooltip />
           <Legend />
-          <Bar dataKey="count" fill="#8444d8" />
+          <Bar dataKey="count" fill="#996666" />
         </BarChart>
       </ResponsiveContainer>
     </React.Fragment>

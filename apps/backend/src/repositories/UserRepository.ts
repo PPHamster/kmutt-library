@@ -57,7 +57,8 @@ export class UserRepository {
       u.isBlacklist, u.registYear, r.name AS role, b.name AS branch FROM User AS u
       LEFT JOIN Role AS r ON u.roleId = r.id
       LEFT JOIN Branch AS b ON u.branchId = b.id
-      WHERE r.name != ? GROUP BY u.id
+      WHERE r.name != ? AND !u.isBlacklist
+      GROUP BY u.id
       ORDER BY u.id
       `,
       ['Admin'],

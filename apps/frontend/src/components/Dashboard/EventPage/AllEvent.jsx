@@ -22,9 +22,9 @@ export default function Allevent() {
 
   return (
     <React.Fragment>
-      <Title>Recent Orders</Title>
+      <Title>All Events</Title>
       <Typography component="p" variant="h4">
-        {data.length + " events"}
+        {data.length + " Events"}
       </Typography>
       <Typography color="text.secondary" sx={{ flex: 1 }}>
         on {new Date().toLocaleDateString({ timeZone: 'Asia/Bangkok' })}
