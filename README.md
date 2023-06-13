@@ -19,7 +19,6 @@ yarn install
 Prepare the database using [**Docker**](https://www.docker.com/)
 ```bash
 docker compose up -d
-yarn db:generate
 ```
 
 To develop all application
@@ -33,6 +32,20 @@ yarn dev:frontend
 yarn dev:backend
 ```
 
+Build project
+```bash
+docker compose -f docker-compose.prod.yaml
+```
+
 Each application will be started in different port
   - **Backend**: http://localhost:3000
   - **Frontend**: http://localhost:3001
+
+Contributer
+| Id | Name |
+|---|---|
+| 64070501002 | Kasinphat Ketchom |
+| 64070501041 | Panumeth Kongsawatkiat |
+| 64070501061 | Shinnapat Koparamestrisin |
+| 64070501078 | Phutsakorn Thunwattanakul |
+| 64070501089 | Akkarachai Pawongjit |
