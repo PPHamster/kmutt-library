@@ -1,0 +1,52 @@
+version: '3.9'
+
+services:
+
+  mysql:
+    image: mysql
+    command: --default-authentication-plugin=mysql_native_password
+    ports:
+      - '3306:3306'
+    volumes:
+      - ./packages/database/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./volumes/db:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: $DB_NAME
+      MYSQL_ROOT_PASSWORD: $DB_PASS
+      TZ: Asia/Bangkok
+
+  phpmyadmin:
+    image: phpmyadmin
+    ports:
+      - '8080:80'
+    environment:
+      PMA_HOST: mysql
+
+  frontend:
+    build:
+      context: .
+      dockerfile: ./frontend.Dockerfile
+    ports:
+      - '3001:3001'
+    environment:
+      VITE_BACKEND_URL: $VITE_BACKEND_URL
+
+  backend:
+    build:
+      context: .
+      dockerfile: ./backend.Dockerfile
+    ports:
+      - '3000:3000'
+    depends_on:
+      - mysql
+    restart: on-failure:10
+    environment:
+      DB_HOST: mysql
+      DB_USER: $DB_USER
+      DB_PASS: $DB_PASS
+      DB_NAME: $DB_NAME
+      FRONTEND_URL: $FRONTEND_URL
+      BACKEND_URL: $BACKEND_URL
+      JWT_SECRET: $JWT_SECRET
+      EMAIL_USERNAME: $EMAIL_USERNAME
+      EMAIL_PASSWORD: $EMAIL_PASSWORD
