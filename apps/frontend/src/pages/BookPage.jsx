@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { fetch } from '@/utils/Fetch';
-import NavbarStatic from "@/components/NavbarStatic";
+import NavbarStatic from "@/components/navbarStatic";
 
 export const BookPage = () => {
   const { bookid } = useParams();

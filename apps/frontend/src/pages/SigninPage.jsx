@@ -13,7 +13,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import NavbarStatic from '@/components/NavbarStatic';
+import NavbarStatic from '@/components/navbarStatic';
 import { popup } from '@/utils/Popup';
 import { useNavigate } from 'react-router-dom';
 

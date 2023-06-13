@@ -1,5 +1,5 @@
 import Footer from '@/components/Footer';
-import NavbarStatic from "@/components/NavbarStatic";
+import NavbarStatic from "@/components/navbarStatic";
 import Borrowbook from "@/components/Service/BorrowBook";
 
 export const ServicePage = () => {

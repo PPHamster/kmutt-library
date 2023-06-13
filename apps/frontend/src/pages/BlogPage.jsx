@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import NavbarStatic from "@/components/NavbarStatic";
+import NavbarStatic from "@/components/navbarStatic";
 import { Link } from "react-router-dom"
 import Fab from '@mui/material/Fab';
 import AddIcon from '@mui/icons-material/Add';

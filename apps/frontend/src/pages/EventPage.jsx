@@ -1,4 +1,4 @@
-import NavbarStatic from "@/components/NavbarStatic";
+import NavbarStatic from "@/components/navbarStatic";
 import JoinEvent from "@/components/Event/JoinEvent";
 import Footer from '@/components/Footer';
 

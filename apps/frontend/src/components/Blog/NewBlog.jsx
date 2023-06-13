@@ -4,7 +4,7 @@ import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import { InputLabel, Select, MenuItem, FormHelperText, FormControl } from "@mui/material";
 import Autocomplete from '@mui/material/Autocomplete';
-import NavbarStatic from "../NavbarStatic";
+import NavbarStatic from "@/components/navbarStatic";
 import { blogdata } from "@/utils/blogdata";
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';

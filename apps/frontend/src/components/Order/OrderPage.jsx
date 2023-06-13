@@ -12,7 +12,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Orderlist from './OrderList';
 import Review from './Review';
 import OrderSummary from './Summary';
-import NavbarStatic from '../navbarStatic';
+import NavbarStatic from '@/components/navbarStatic';
 import { WithUser } from '@/components/Hoc/WithUser';
 import { fetch } from '@/utils/Fetch';
 import { popup } from '@/utils/Popup';

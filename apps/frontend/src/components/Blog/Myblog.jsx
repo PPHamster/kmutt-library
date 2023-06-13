@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import NavbarStatic from "@/components/NavbarStatic";
+import NavbarStatic from "@/components/navbarStatic";
 import Footer from '@/components/Footer';
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';

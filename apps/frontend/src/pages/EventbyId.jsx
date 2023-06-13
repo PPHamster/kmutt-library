@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 import { useState, useEffect } from 'react';
-import NavbarStatic from "@/components/NavbarStatic";
+import NavbarStatic from "@/components/navbarStatic";
 import Footer from '@/components/Footer';
 import { fetch } from '@/utils/Fetch';
 import { useAuth } from '@/contexts/AuthContext';

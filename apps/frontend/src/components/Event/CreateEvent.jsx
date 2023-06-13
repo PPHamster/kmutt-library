@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import NavbarStatic from "../navbarStatic";
+import NavbarStatic from "@/components/navbarStatic";
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
