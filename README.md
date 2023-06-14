@@ -34,7 +34,7 @@ yarn dev:backend
 
 Build project
 ```bash
-docker compose -f docker-compose.prod.yaml
+docker compose -f docker-compose.prod.yaml up -d
 ```
 
 Each application will be started in different port
@@ -42,10 +42,10 @@ Each application will be started in different port
   - **Frontend**: http://localhost:3001
 
 Contributer
-| Id | Name |
+| Student Id | Name |
 |---|---|
-| 64070501002 | Kasinphat Ketchom |
-| 64070501041 | Panumeth Kongsawatkiat |
-| 64070501061 | Shinnapat Koparamestrisin |
-| 64070501078 | Phutsakorn Thunwattanakul |
-| 64070501089 | Akkarachai Pawongjit |
+| 64070501002 | <a href="https://github.com/kasinphatspam" target="_blank">Kasinphat Ketchom</a> |
+| 64070501041 | <a href="https://github.com/Kobayashi-UwU" target="_blank">Panumeth Kongsawatkiat</a> |
+| 64070501061 | <a href="https://github.com/PPHamster" target="_blank">Shinnapat Koparamestrisin</a> |
+| 64070501078 | <a href="https://github.com/cinnamonjs" target="_blank">Phutsakorn Thunwattanakul</a> |
+| 64070501089 | <a href="https://github.com/Akkarachai6787" target="_blank">Akkarachai Pawongjit</a> |
