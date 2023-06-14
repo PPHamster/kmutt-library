@@ -41,7 +41,7 @@ Each application will be started in different port
   - **Backend**: http://localhost:3000
   - **Frontend**: http://localhost:3001
 
-Contributer
+## 🧑‍💻 Contributer
 | Student Id | Name |
 |---|---|
 | 64070501002 | <a href="https://github.com/kasinphatspam" target="_blank">Kasinphat Ketchom</a> |
